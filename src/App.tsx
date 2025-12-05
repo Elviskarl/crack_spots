@@ -1,7 +1,25 @@
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/home/Home";
+import Map from "./pages/map/Map";
+import About from "./pages/about/About";
+
 function App() {
-  return (
-    <div>App</div>
-  )
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path="/" element={<Navbar />}>
+        <Route index element={<Home />} />
+        <Route path="map" element={<Map />} />
+        <Route path="about" element={<About />} />
+      </Route>
+    )
+  );
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;
