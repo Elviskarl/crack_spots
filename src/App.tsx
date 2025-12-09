@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/home/Home";
 import Map from "./pages/map/Map";
 import About from "./pages/about/About";
+import NotFound from "./components/error/NotFound";
 
 function App() {
   const router = createBrowserRouter(
@@ -16,6 +17,7 @@ function App() {
         <Route index element={<Home />} />
         <Route path="map" element={<Map />} />
         <Route path="about" element={<About />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     )
   );
