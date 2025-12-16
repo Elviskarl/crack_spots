@@ -6,6 +6,6 @@ section.not_found_container{
   background-repeat: no-repeat;
   background-size: cover;
   height: auto;
+  min-height: calc(100vh - var(--navbar-height));
   width: 100vw;
-  height: calc(100vh - 10rem);
 }

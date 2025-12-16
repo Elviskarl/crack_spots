@@ -1,0 +1,20 @@
+nav,
+.main-nav-section {
+  display: flex;
+  align-items: center;
+}
+nav {
+  justify-content: center;
+  padding: 2rem 1rem;
+  min-height: var(--navbar-height);
+  background-color: hsla(0, 0%, 0%, 0.35);
+  position: relative;
+  color: var(--white-color);
+}
+.main-nav-section {
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+nav a{
+  padding: 1rem;
+}
