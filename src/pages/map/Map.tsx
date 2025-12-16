@@ -1,9 +1,18 @@
+import LeafletMap from "./components/leaflet-map/LeafletMap";
+import Sidebar from "./components/sidebar/Sidebar";
+import "./styles/index.css";
+
 function Map() {
   return (
     <>
-      <h1>Map</h1>
+      <section className="map-section-container">
+        <Sidebar />
+        <div className="map-container">
+          <LeafletMap />
+        </div>
+      </section>
     </>
-  )
+  );
 }
 
-export default Map
+export default Map;

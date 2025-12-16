@@ -1,0 +1,22 @@
+.map-section-container {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  height: 100vh;
+  margin-top: calc(-1 * var(--navbar-height));
+  padding-top: var(--navbar-height);
+}
+.sidebar {
+  grid-column: 1 / span 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.map-container {
+  grid-column: 2 / span 9;
+  height: 100%;
+}
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+}
