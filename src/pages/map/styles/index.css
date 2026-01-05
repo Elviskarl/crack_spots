@@ -4,19 +4,35 @@
   height: 100vh;
   margin-top: calc(-1 * var(--navbar-height));
   padding-top: var(--navbar-height);
+  padding-right: 5px;
+  padding-bottom: 5px;
 }
 .sidebar {
-  grid-column: 1 / span 1;
+  grid-column: 1 / span 2;
   display: flex;
-  align-items: center;
   justify-content: center;
   height: 100%;
+  background-color: var(--tertiary-tint);
+}
+.sidebar-wrapper {
+  width: 95%;
 }
 .map-container {
-  grid-column: 2 / span 9;
+  grid-column: 3 / span 9;
   height: 100%;
 }
 .leaflet-container {
   height: 100%;
   width: 100%;
+}
+input#upload-file {
+  display: none;
+}
+.sidebar-list {
+  display: flex;
+  flex-direction: column;
+}
+.sidebar-heading {
+  border-bottom: 1px solid var(--secondary-shade);
+  padding: 0.5rem;
 }
