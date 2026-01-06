@@ -109,3 +109,6 @@ span {
 small {
   font-size: var(--text-sm);
 }
+img {
+  display: inline-block;
+}
