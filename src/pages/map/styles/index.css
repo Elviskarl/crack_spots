@@ -1,7 +1,16 @@
 button {
   font-size: var(--text-base);
-  padding: 0.3rem;
+  padding: 1rem;
   font-family: inherit;
+  border: none;
+  border-radius: 8px;
+  color: var(--white-color);
+  background-color: var(--accent-tint);
+  cursor: pointer;
+}
+button:hover{
+  color: var(--accent-tint);
+  background-color: var(--white-color);
 }
 table {
   background-color: var(--secondary-tint);
@@ -47,7 +56,7 @@ tr:nth-of-type(odd) {
   display: flex;
   justify-content: center;
   height: 100%;
-  background-color: var(--tertiary-tint);
+  background-color: hsla(28, 78%, 68%, 0.6);
   overflow-y: auto;
 }
 .sidebar-wrapper {

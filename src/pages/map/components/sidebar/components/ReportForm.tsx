@@ -67,17 +67,33 @@ export default function ReportForm() {
   function handleClick() {
     fileInputRef.current?.click();
   }
+  function handleDragOver(e: DragEvent) {
+    e.preventDefault();
+  }
+  function handleDrop(e: DragEvent) {
+    e.preventDefault();
+    if (e.dataTransfer) {
+      const filesList = e.dataTransfer.files;
+      const file = Array.from(filesList)[0];
+      console.log(file);
+    }
+  }
   return (
     <>
       <div className="form-container report-upload-form">
         <form action={handleSubmit} className="report-form">
-          <div className="draggable-container">
+          <div
+            className="draggable-container"
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+          >
             <input
               type="file"
               name="file"
               id="upload-file"
               ref={fileInputRef}
               onChange={(e) => handleFileChange(e)}
+              accept="image/jpg, image/jpeg, image/webp, .png, .jpg, .jpeg"
             />
             <div className="drop-area-container">
               <span> Drag & Drop or </span>
