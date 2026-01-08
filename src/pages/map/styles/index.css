@@ -3,6 +3,36 @@ button {
   padding: 0.3rem;
   font-family: inherit;
 }
+table {
+  background-color: var(--secondary-tint);
+  border-collapse: collapse;
+  width: 100%;
+}
+th,
+td,
+caption {
+  padding: 1rem;
+}
+caption,
+th {
+  text-align: left;
+}
+tbody tr,
+tfoot tr {
+  color: var(--white-color);
+}
+caption {
+  color: var(--primary-base);
+  font-size: var(--text-h5);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+}
+th {
+  background-color: rgba(245, 209, 142, 0.897);
+}
+tr:nth-of-type(odd) {
+  background-color: hsla(245, 63%, 47%, 0.3);
+}
 .map-section-container {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
@@ -87,7 +117,7 @@ input[type="file"] {
   align-items: center;
   justify-content: center;
 }
-.preview-image{
+.preview-image {
   width: 100%;
   height: auto;
 }
