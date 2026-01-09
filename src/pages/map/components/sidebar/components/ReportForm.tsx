@@ -8,7 +8,7 @@ export interface CoordinateData {
 
 import { useState, useRef, useEffect, type ChangeEvent } from "react";
 import ReportPreview from "./ReportPreview";
-import * as ExifReader from "exifreader";
+import { readFile } from "../../../utils/utils";
 
 export default function ReportForm() {
   const [file, setFile] = useState<File | null>(null);
@@ -24,6 +24,21 @@ export default function ReportForm() {
     };
   }, [imageUrl]);
 
+  async function processImage(param: File) {
+    try {
+      setFile(param);
+      const data = await readFile(param);
+      if (!data) throw new Error("Invalid Data");
+      const url = URL.createObjectURL(param);
+      setCoordinates({
+        ...data,
+      });
+      setImageUrl(url);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   function handleSubmit(formData: FormData) {
     const imageData = formData.get("file");
     console.log(imageData);
@@ -33,49 +48,21 @@ export default function ReportForm() {
     if (!files) return;
     if (files.length > 0) {
       const file = files[0];
-      const url = URL.createObjectURL(file);
-      ExifReader.load(file).then((data) => {
-        if (
-          !data.DateTimeOriginal ||
-          !data.GPSLatitude ||
-          !data.GPSLatitudeRef ||
-          !data.GPSLongitude ||
-          !data.GPSLongitudeRef
-        )
-          return;
-        const DateTimeOriginal = data.DateTimeOriginal.description;
-        let GPSLatitude = data.GPSLatitude.description;
-        let GPSLongitude = data.GPSLongitude.description;
-        const GPSLatitudeRef = data.GPSLatitudeRef.value[0] as "N" | "S";
-        const GPSLongitudeRef = data.GPSLongitudeRef.value[0] as "E" | "W";
-
-        if (GPSLatitudeRef === "S") GPSLatitude *= -1;
-        if (GPSLongitudeRef === "W") GPSLongitude *= -1;
-
-        setCoordinates({
-          DateTimeOriginal,
-          GPSLatitude: Number(GPSLatitude),
-          GPSLatitudeRef,
-          GPSLongitude: Number(GPSLongitude),
-          GPSLongitudeRef,
-        });
-      });
-      setImageUrl(url);
-      setFile(file);
+      processImage(file);
     }
   }
   function handleClick() {
     fileInputRef.current?.click();
   }
-  function handleDragOver(e: DragEvent) {
+  function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
   }
-  function handleDrop(e: DragEvent) {
+  function handleDrop(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
     if (e.dataTransfer) {
       const filesList = e.dataTransfer.files;
       const file = Array.from(filesList)[0];
-      console.log(file);
+      processImage(file);
     }
   }
   return (
@@ -92,7 +79,7 @@ export default function ReportForm() {
               name="file"
               id="upload-file"
               ref={fileInputRef}
-              onChange={(e) => handleFileChange(e)}
+              onChange={handleFileChange}
               accept="image/jpg, image/jpeg, image/webp, .png, .jpg, .jpeg"
             />
             <div className="drop-area-container">
