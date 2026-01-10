@@ -4,17 +4,33 @@ nav,
   align-items: center;
 }
 nav {
-  justify-content: center;
+  justify-content: flex-start;
   padding: 2rem 1rem;
   min-height: var(--navbar-height);
-  background-color: hsla(0, 0%, 0%, 0.35);
+  background-color: hsla(0, 0%, 0%, 0.3);
   position: relative;
   color: var(--white-color);
 }
 .main-nav-section {
-  justify-content: space-between;
-  gap: 1.5rem;
+  justify-content: space-evenly;
+  gap: 3rem;
+  margin-inline: auto;
 }
-nav a{
-  padding: 1rem;
+nav a {
+  padding: 0.5rem;
+  text-decoration: none;
+}
+.image-container img {
+  height: 4rem;
+  width: 4rem;
+}
+.main-nav-section a.active {
+  font-weight: var(--font-weight-bold);
+  color: var(--tertiary-tint);
+  border-bottom: 2px solid var(--tertiary-shade);
+  transition: 0.3s ease-in-out;
+}
+.main-nav-section a:hover,
+.main-nav-section a:focus {
+  transform: scale(1.2, 1.2);
 }

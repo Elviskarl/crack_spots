@@ -111,4 +111,5 @@ small {
 }
 img {
   display: inline-block;
+  max-block-size: 100%;
 }

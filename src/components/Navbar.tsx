@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
+import imgSrc from "../assets/app_logo.png";
 import "./styles/index.css";
 
 function Navbar() {
@@ -6,7 +7,11 @@ function Navbar() {
     <>
       <nav>
         <div className="left-nav-section">
-          <a href="#">Hello</a>
+          <div className="image-container">
+            <NavLink to="/">
+              <img src={imgSrc} alt="App logo" className="app-image-logo" />
+            </NavLink>
+          </div>
         </div>
         <ul className="main-nav-section">
           <li>
