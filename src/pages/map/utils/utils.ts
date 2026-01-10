@@ -1,5 +1,6 @@
 import * as ExifReader from "exifreader";
 import type { CoordinateData } from "../components/sidebar/components/ReportForm";
+import { CustomError } from "../../../components/error/CustomError";
 
 export async function readFile(
   param: File
@@ -13,7 +14,9 @@ export async function readFile(
       !data.GPSLongitude ||
       !data.GPSLongitudeRef
     )
-      return;
+      throw new Error(
+        "The selected file is not Geo-tagged. Please select another image."
+      );
     const DateTimeOriginal = data.DateTimeOriginal.description;
     let GPSLatitude = Number(data.GPSLatitude.description);
     let GPSLongitude = Number(data.GPSLongitude.description);
@@ -30,6 +33,22 @@ export async function readFile(
       GPSLongitudeRef: GPSLongitudeRef[0] as "E" | "W",
     };
   } catch (err) {
-    console.log(err);
+    console.error(err);
+  }
+}
+
+const ALLOWED_MIME_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
+
+export function validateFile(file: File) {
+  if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+    throw new CustomError(
+      "INVALID_FILE_TYPE",
+      "Please upload a JPG, PNG, or WEBP image."
+    );
   }
 }

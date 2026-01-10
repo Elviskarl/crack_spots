@@ -8,7 +8,7 @@ export interface CoordinateData {
 
 import { useState, useRef, useEffect, type ChangeEvent } from "react";
 import ReportPreview from "./ReportPreview";
-import { readFile } from "../../../utils/utils";
+import { readFile, validateFile } from "../../../utils/utils";
 
 export default function ReportForm() {
   const [file, setFile] = useState<File | null>(null);
@@ -26,6 +26,7 @@ export default function ReportForm() {
 
   async function processImage(param: File) {
     try {
+      validateFile(param);
       setFile(param);
       const data = await readFile(param);
       if (!data) throw new Error("Invalid Data");
