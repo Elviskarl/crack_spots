@@ -40,9 +40,23 @@ export default function ReportForm() {
     }
   }
 
-  function handleSubmit(formData: FormData) {
-    const imageData = formData.get("file");
-    console.log(imageData);
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    try {
+      e.preventDefault();
+      if (!file || !coordinates) throw new Error("File or coordinates missing");
+      const formData = new FormData(e.currentTarget);
+      formData.append("coordinates", JSON.stringify(coordinates));
+      const severity = formData.get("severity");
+      console.log(severity);
+      console.log(formData);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      e.currentTarget.reset();
+      setFile(null);
+      setImageUrl(null);
+      setCoordinates(null);
+    }
   }
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     const files = e.target.files;
@@ -69,7 +83,7 @@ export default function ReportForm() {
   return (
     <>
       <div className="form-container report-upload-form">
-        <form action={handleSubmit} className="report-form">
+        <form onSubmit={handleSubmit} className="report-form">
           <div
             className="draggable-container"
             onDragOver={handleDragOver}
@@ -96,6 +110,41 @@ export default function ReportForm() {
           </div>
           {file && imageUrl && coordinates && (
             <ReportPreview url={imageUrl} coordinateData={coordinates} />
+          )}
+          {file && coordinates && (
+            <fieldset>
+              <legend>Severity: </legend>
+              <label>
+                <input
+                  type="radio"
+                  name="severity"
+                  className="damage-severity"
+                  value="minor"
+                  required
+                />
+                Minor
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="severity"
+                  className="damage-severity"
+                  value="moderate"
+                  required
+                />
+                Moderate
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="severity"
+                  className="damage-severity"
+                  value="extensive"
+                  required
+                />
+                Extensive
+              </label>
+            </fieldset>
           )}
           <button className="submit-button">submit</button>
         </form>
