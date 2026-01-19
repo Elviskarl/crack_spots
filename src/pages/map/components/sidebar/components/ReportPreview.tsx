@@ -1,4 +1,4 @@
-import type { CoordinateData } from "./ReportForm";
+import type { CoordinateData } from "../../../types/index";
 
 interface Params {
   url: string;

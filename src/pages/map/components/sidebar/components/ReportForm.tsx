@@ -1,14 +1,7 @@
-export interface CoordinateData {
-  GPSLatitude: number;
-  GPSLongitude: number;
-  GPSLatitudeRef: "N" | "S";
-  GPSLongitudeRef: "E" | "W";
-  DateTimeOriginal: string;
-}
-
 import { useState, useRef, useEffect, type ChangeEvent } from "react";
 import ReportPreview from "./ReportPreview";
 import { readFile, validateFile } from "../../../utils/utils";
+import type { CoordinateData } from "../../../types";
 
 export default function ReportForm() {
   const [file, setFile] = useState<File | null>(null);
@@ -119,7 +112,7 @@ export default function ReportForm() {
                   type="radio"
                   name="severity"
                   className="damage-severity"
-                  value="minor"
+                  value="low"
                   required
                 />
                 Minor
@@ -129,7 +122,7 @@ export default function ReportForm() {
                   type="radio"
                   name="severity"
                   className="damage-severity"
-                  value="moderate"
+                  value="medium"
                   required
                 />
                 Moderate
@@ -139,7 +132,7 @@ export default function ReportForm() {
                   type="radio"
                   name="severity"
                   className="damage-severity"
-                  value="extensive"
+                  value="high"
                   required
                 />
                 Extensive
