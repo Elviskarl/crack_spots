@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, type ChangeEvent } from "react";
 import ReportPreview from "./ReportPreview";
 import { readFile, validateFile } from "../../../utils/utils";
 import type { CoordinateData } from "../../../types";
+import { uploadReports } from "../../../utils/uploadReports";
 
 export default function ReportForm() {
   const [file, setFile] = useState<File | null>(null);
@@ -33,24 +34,46 @@ export default function ReportForm() {
     }
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (!file || !coordinates) {
+      console.error("File or coordinates missing");
+      return;
+    }
     try {
-      e.preventDefault();
-      if (!file || !coordinates) throw new Error("File or coordinates missing");
-      const formData = new FormData(e.currentTarget);
-      formData.append("coordinates", JSON.stringify(coordinates));
-      const severity = formData.get("severity");
-      console.log(severity);
-      console.log(formData);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      e.currentTarget.reset();
+      const fileCopy = file;
+      const coordsCopy = coordinates;
+
       setFile(null);
+      if (imageUrl) {
+        URL.revokeObjectURL(imageUrl);
+      }
       setImageUrl(null);
       setCoordinates(null);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+
+      const formData = new FormData();
+      formData.append("file", fileCopy);
+      formData.append("coordinates", JSON.stringify(coordsCopy));
+
+      const severityInput = e.currentTarget.querySelector<HTMLInputElement>(
+        'input[name="severity"]:checked',
+      );
+      if (severityInput) {
+        formData.append("severity", severityInput.value);
+      }
+
+      const results = await uploadReports("/api/v1/reports", formData);
+      console.log("Upload successful:", results);
+    } catch (error) {
+      console.error("Error uploading report:", error);
     }
   }
+
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     const files = e.target.files;
     if (!files) return;
@@ -76,7 +99,11 @@ export default function ReportForm() {
   return (
     <>
       <div className="form-container report-upload-form">
-        <form onSubmit={handleSubmit} className="report-form">
+        <form
+          onSubmit={handleSubmit}
+          className="report-form"
+          encType="multipart/form-data"
+        >
           <div
             className="draggable-container"
             onDragOver={handleDragOver}
