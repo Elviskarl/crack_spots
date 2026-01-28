@@ -1,3 +1,4 @@
+import { FetchError } from "../../../components/error/FetchError";
 import type { Report } from "../types/index";
 
 export async function fetchReports(param: string): Promise<Report[]> {
@@ -9,12 +10,12 @@ export async function fetchReports(param: string): Promise<Report[]> {
       method: "GET",
     });
     if (!response.ok) {
-      throw new Error(`Error fetching reports: ${response.statusText}`);
+      throw new FetchError(`Error fetching reports: ${response.statusText}`);
     }
     const data: { message: string; data: Report[] } = await response.json();
     return data["data"];
   } catch (err) {
     console.error(err);
-    return [];
+    throw err;
   }
 }

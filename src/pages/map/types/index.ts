@@ -24,3 +24,8 @@ export interface CoordinateData {
   GPSLongitudeRef: "E" | "W";
   DateTimeOriginal: string;
 }
+
+export interface ErrorMessage {
+  type: string;
+  message: string;
+}
