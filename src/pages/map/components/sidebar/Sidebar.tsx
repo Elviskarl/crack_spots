@@ -1,6 +1,7 @@
 import ReportForm from "./components/ReportForm";
 import uploadImageUrl from "../../../../assets/image-upload-icon.png";
 import upArrowUrl from "../../../../assets/up_arrow.png";
+import "../../styles/sidebar.css";
 
 export default function Sidebar() {
   return (
@@ -11,7 +12,7 @@ export default function Sidebar() {
             <div className="list-heading-container">
               <img
                 src={uploadImageUrl}
-                alt=""
+                alt="Upload Icon"
                 aria-hidden
                 className="small-list-images"
               />

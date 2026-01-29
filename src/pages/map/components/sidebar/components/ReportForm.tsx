@@ -42,7 +42,7 @@ export default function ReportForm() {
           type: "UNKNOWN_ERROR",
           message: "An unknown error occurred while processing the image.",
         });
-      console.error(err);
+        console.error(err);
       }
     }
   }
@@ -90,9 +90,9 @@ export default function ReportForm() {
         setErrorMessage({ type: error.code, message: error.message });
         return;
       } else {
-      console.error("Error uploading report:", error);
+        console.error("Error uploading report:", error);
+      }
     }
-  }
   }
 
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
@@ -151,41 +151,6 @@ export default function ReportForm() {
           </div>
           {file && imageUrl && coordinates && (
             <ReportPreview url={imageUrl} coordinateData={coordinates} />
-          )}
-          {file && coordinates && (
-            <fieldset>
-              <legend>Severity: </legend>
-              <label>
-                <input
-                  type="radio"
-                  name="severity"
-                  className="damage-severity"
-                  value="low"
-                  required
-                />
-                Minor
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="severity"
-                  className="damage-severity"
-                  value="medium"
-                  required
-                />
-                Moderate
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="severity"
-                  className="damage-severity"
-                  value="high"
-                  required
-                />
-                Extensive
-              </label>
-            </fieldset>
           )}
           <button className="submit-button">submit</button>
         </form>

@@ -49,6 +49,39 @@ export default function ReportPreview(props: Params) {
             </tr>
           </tfoot>
         </table>
+        <fieldset>
+          <legend>Severity: </legend>
+          <label>
+            <input
+              type="radio"
+              name="severity"
+              className="damage-severity"
+              value="low"
+              required
+            />
+            Minor
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="severity"
+              className="damage-severity"
+              value="medium"
+              required
+            />
+            Moderate
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="severity"
+              className="damage-severity"
+              value="high"
+              required
+            />
+            Extensive
+          </label>
+        </fieldset>
       </div>
     </>
   );

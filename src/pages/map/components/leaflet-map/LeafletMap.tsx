@@ -4,6 +4,7 @@ import {
   Marker,
   Popup,
   ZoomControl,
+  LayersControl,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useState } from "react";
@@ -37,19 +38,25 @@ function LeafletMap() {
       zoomControl={false}
     >
       <ZoomControl position="topright" />
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+      <LayersControl position="topleft">
+        <LayersControl.Overlay name="OpenStreetMap">
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+        </LayersControl.Overlay>
+        <LayersControl.Overlay checked name="Satellite View">
+          <TileLayer
+            url="https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+            maxZoom={20}
+            subdomains={["mt1", "mt2", "mt3"]}
+          />
+        </LayersControl.Overlay>
+      </LayersControl>
+
       {reports &&
         reports.map((report) => {
-          const {
-            _id,
-            cloudinary_url,
-            severity,
-            location,
-            dateTaken,
-          } = report;
+          const { _id, cloudinary_url, severity, location, dateTaken } = report;
           return (
             <Marker
               key={_id}

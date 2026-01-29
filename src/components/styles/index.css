@@ -7,7 +7,7 @@ nav {
   justify-content: flex-start;
   padding: 2rem 1rem;
   min-height: var(--navbar-height);
-  background-color: hsla(0, 0%, 0%, 0.3);
+  background-color: hsla(229, 31%, 7%, 0.7);
   position: relative;
   color: var(--white-color);
 }
