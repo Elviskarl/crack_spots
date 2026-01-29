@@ -1,4 +1,5 @@
 import type { CoordinateData } from "../../../types/index";
+import "../../../styles/report-preview.css";
 
 interface Params {
   url: string;

@@ -1,0 +1,45 @@
+/* Element styles */
+aside.sidebar {
+  grid-column: 1 / span 2;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  background-color: hsla(28, 78%, 68%, 0.6);
+  overflow-y: auto;
+}
+
+/* component styles */
+
+/* html element sub-styles */
+/* sidebar */
+.sidebar-wrapper {
+  margin-top: 1rem;
+  width: 95%;
+}
+.sidebar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.sidebar-heading,
+.sidebar-item {
+  border: 1px solid var(--secondary-shade);
+  padding: 1rem 0.5rem;
+  height: auto;
+}
+.sidebar-heading {
+  display: flex;
+  justify-content: space-between;
+}
+.small-list-images {
+  height: 30px;
+  width: 30px;
+}
+.list-heading {
+  text-decoration: underline var(--secondary-shade);
+}
+
+/* severity preview */
+.damage-severity {
+  margin-right: 1rem;
+}

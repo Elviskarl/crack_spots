@@ -1,0 +1,41 @@
+/* form element styles */
+button {
+  font-size: var(--text-base);
+  padding: 1rem;
+  font-family: inherit;
+  border: none;
+  border-radius: 8px;
+  color: var(--white-color);
+  background-color: var(--accent-tint);
+  cursor: pointer;
+}
+form.report-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+input[type="file"] {
+  display: none;
+}
+
+/* component styles */
+.drop-area-container {
+  min-height: 15rem;
+  padding: 0.5rem;
+  border: 1px dashed var(--secondary-shade);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* form element sub-styles */
+.submit-button {
+  align-self: center;
+}
+/* state */
+button:hover {
+  color: var(--accent-tint);
+  background-color: var(--white-color);
+}

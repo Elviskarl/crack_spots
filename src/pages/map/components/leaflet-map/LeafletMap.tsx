@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { fetchReports } from "../../utils/fetchReports";
 import type { Report } from "../../types/index";
 import { Icon } from "leaflet";
+import "../../styles/map-container.css";
 
 function LeafletMap() {
   const [reports, setReports] = useState<Report[] | undefined>(undefined);

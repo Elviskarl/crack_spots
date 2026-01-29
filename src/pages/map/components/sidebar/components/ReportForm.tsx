@@ -5,6 +5,7 @@ import type { CoordinateData, ErrorMessage } from "../../../types";
 import { uploadReports } from "../../../utils/uploadReports";
 import { CustomError } from "../../../../../components/error/CustomError";
 import { Notifications } from "./Notifications";
+import "../../../styles/report-form.css";
 
 export default function ReportForm() {
   const [file, setFile] = useState<File | null>(null);
