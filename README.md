@@ -32,7 +32,7 @@ Each report is displayed on a Leaflet map to create a shared, visual record of r
 ## Installation
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Elviskarl/crack_spots.git
 cd crack-spots
 npm install
 npm run dev
