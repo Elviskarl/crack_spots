@@ -154,7 +154,9 @@ export default function ReportForm() {
           )}
           <button className="submit-button">submit</button>
         </form>
-        {errorMessage && <Notifications message={errorMessage} />}
+        {errorMessage && (
+          <Notifications message={errorMessage} func={setErrorMessage} />
+        )}
       </div>
     </>
   );

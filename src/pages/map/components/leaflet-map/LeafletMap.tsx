@@ -39,19 +39,19 @@ function LeafletMap() {
     >
       <ZoomControl position="topright" />
       <LayersControl position="topleft">
-        <LayersControl.Overlay name="OpenStreetMap">
+        <LayersControl.BaseLayer name="OpenStreetMap">
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-        </LayersControl.Overlay>
-        <LayersControl.Overlay checked name="Satellite View">
+        </LayersControl.BaseLayer>
+        <LayersControl.BaseLayer name="Satellite View" checked>
           <TileLayer
             url="https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
             maxZoom={20}
             subdomains={["mt1", "mt2", "mt3"]}
           />
-        </LayersControl.Overlay>
+        </LayersControl.BaseLayer>
       </LayersControl>
 
       {reports &&
@@ -66,17 +66,24 @@ function LeafletMap() {
             >
               <Popup>
                 <div className="report-details-container">
-                  <div className="image-preview-container">
+                  <div className="image-report-preview-container">
                     <img
                       src={cloudinary_url}
                       alt="Road Damage"
                       className="preview-image"
+                      loading="lazy"
                     />
                   </div>
                   <div className="report-info-container">
                     <ul>
-                      <li>Severity: {severity}</li>
-                      <li>Date Taken: {dateTaken}</li>
+                      <li className="report-severity">
+                        <span>Severity:</span>
+                        <span>{severity}</span>
+                      </li>
+                      <li className="report-timestamp">
+                        <span>Date Taken:</span>
+                        <span>{dateTaken}</span>
+                      </li>
                     </ul>
                   </div>
                 </div>

@@ -1,73 +1,39 @@
-# React + TypeScript + Vite
+# Crack-spots
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Crack-spots is a web application that allows users to report faulty road infrastructure using geotagged images and view those reports on an interactive map.
 
-Currently, two official plugins are available:
+## About the Project
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Road infrastructure issues such as potholes, cracks, and damaged signage often go unnoticed until they become serious safety risks. Crack-spots provides a simple way for anyone to document these problems by uploading a photo and confirming its location.  
+Each report is displayed on a Leaflet map to create a shared, visual record of road conditions.
 
-## React Compiler
+## Features (v1.0)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Upload images directly from a phone or computer
+- Automatic extraction of GPS location from geotagged photos
+- Interactive map displaying all submitted reports
+- Marker popups with image preview and details
 
-## Expanding the ESLint configuration
+## How It Works
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Take or upload a photo of a road issue
+2. Verify the detected location on the map
+3. Add a short description and submit
+4. View the report instantly on the map alongside others
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- React
+- Leaflet
+- JavaScript
+- CSS
+- Node/Express (backend)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Installation
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone <your-repo-url>
+cd crack-spots
+npm install
+npm run dev
 ```

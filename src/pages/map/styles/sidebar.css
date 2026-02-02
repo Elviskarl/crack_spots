@@ -35,6 +35,11 @@ aside.sidebar {
   height: 30px;
   width: 30px;
 }
+.list-heading-container{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
 .list-heading {
   text-decoration: underline var(--secondary-shade);
 }

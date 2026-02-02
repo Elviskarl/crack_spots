@@ -2,3 +2,23 @@
   height: 100%;
   width: 100%;
 }
+.leaflet-control-layers label span {
+  font-size: var(--text-base);
+}
+.report-details-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.report-info-container {
+  padding: 1rem;
+}
+.report-info-container ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+/* .report-info-container ul li.report-severity {
+
+} */
