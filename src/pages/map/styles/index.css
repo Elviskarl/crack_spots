@@ -2,9 +2,7 @@
 .map-section-container {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  height: 100vh;
-  margin-top: calc(-1 * var(--navbar-height));
-  padding-top: var(--navbar-height);
+  height: calc(100vh - var(--navbar-height));
   padding-right: 5px;
   padding-bottom: 5px;
 }

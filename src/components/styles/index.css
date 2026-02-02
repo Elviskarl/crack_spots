@@ -5,10 +5,15 @@ nav,
 }
 nav {
   justify-content: flex-start;
-  padding: 2rem 1rem;
+  padding: 1rem;
   min-height: var(--navbar-height);
-  background-color: hsla(229, 31%, 7%, 0.7);
-  position: relative;
+  background-color: var(--secondary-base);
+  background-image: linear-gradient(
+    to right,
+    var(--secondary-tint),
+    var(--secondary-shade)
+  );
+  /* position: relative; */
   color: var(--white-color);
 }
 .main-nav-section {
@@ -19,18 +24,19 @@ nav {
 nav a {
   padding: 0.5rem;
   text-decoration: none;
+  font-weight: var(--font-weight-bold);
 }
 .image-container img {
-  height: 4rem;
-  width: 4rem;
+  height: 5rem;
+  width: 5rem;
 }
 .main-nav-section a.active {
-  font-weight: var(--font-weight-bold);
-  color: var(--tertiary-tint);
+  color: var(--accent-base);
   border-bottom: 2px solid var(--tertiary-shade);
   transition: 0.3s ease-in-out;
 }
 .main-nav-section a:hover,
-.main-nav-section a:focus {
+.main-nav-section a:focus,
+.main-nav-section a.active {
   transform: scale(1.2, 1.2);
 }

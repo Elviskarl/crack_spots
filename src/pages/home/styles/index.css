@@ -7,8 +7,8 @@ ul {
   background-image: url("/src/assets/home_img.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  margin-top: calc(-1 * var(--navbar-height));
-  padding-top: var(--navbar-height);
+  height: calc(100vh - var(--navbar-height));
+  /* padding-top: var(--navbar-height); */
   padding-left: 2rem;
   color: var(--white-color);
   display: flex;
@@ -38,6 +38,6 @@ ul {
 .hero-text {
   font-weight: var(--font-weight-bold);
 }
-.hero-text span{
+.hero-text span {
   padding: 0.5rem;
 }
