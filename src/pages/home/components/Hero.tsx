@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "../styles/index.css";
 
 function Hero() {
@@ -19,6 +20,14 @@ function Hero() {
           Crowd-sourcing better roads:{" "}
           <span className="highlight-text-secondary">You take a photo</span>,{" "}
           <span className="highlight-text-primary">We geo-tag it.</span>
+        </li>
+        <li className="hero-navigation">
+          <Link to="/map" className="hero-navigation-link">
+            <span>Get Started</span>
+          </Link>
+          <Link to="/about" className="hero-navigation-link">
+            <span>Learn More &#8594;</span>
+          </Link>
         </li>
       </ul>
     </section>

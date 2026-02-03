@@ -41,3 +41,33 @@ ul {
 .hero-text span {
   padding: 0.5rem;
 }
+.hero-navigation {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.hero-navigation-link:first-child span{
+  padding: 1rem;
+  background-color: var(--primary-shade);
+  border: none;
+  border-radius: 8px;
+  transition: 0.3s ease-in-out;
+}
+.hero-navigation-link:last-child span{
+  font-weight: var(--font-weight-bold);
+  border-bottom: 2px solid var(--tertiary-tint);
+  padding: 0.5rem;
+  transition: 0.3s ease-in-out;
+}
+
+.hero-navigation-link:first-child span:hover,
+.hero-navigation-link:first-child span:focus{
+  color: var(--primary-shade);
+  background-color: var(--white-color);
+  transform: scale(1.2);
+}
+.hero-navigation-link:last-child span:hover,
+.hero-navigation-link:last-child span:focus{
+  transform: scale(1.2);
+  border-bottom: 2px solid var(--tertiary-shade);
+}
