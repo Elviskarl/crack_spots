@@ -5,7 +5,7 @@ function About() {
   return (
     <>
       <section className="about-section-page">
-        <div className="about-section-intro">
+        <div className="about-section-card">
           <h5>Welcome to Crack-spots</h5>
           <p className="intro-paragraph">
             Road infrastructure issues often go unnoticed or take time to reach
