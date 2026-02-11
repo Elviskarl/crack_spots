@@ -1,0 +1,32 @@
+/* small to large Laptops - 1024 to 1248 px */
+@media (max-width: 78rem) {
+  /* 1248 / 16 = 78 */
+  html {
+    /* 9 /16 = 56.25% */
+    font-size: 56.25%;
+  }
+}
+/* tablets to small Laptops - 848 to 1024 px */
+@media (max-width: 53rem) {
+  /* 848 / 16 = 53 */
+  html {
+    /* 8 /16 = 50% */
+    font-size: 50%;
+  }
+}
+/* phone landscape to tablets - 690 to 1248 px */
+@media (max-width: 43.125rem) {
+  /* 690 / 16 = 43.125 */
+  html {
+    /* 7 /16 = 43.75% */
+    font-size: 43.75%;
+  }
+}
+/*phone potrait to phone landscape - <512 px */
+@media (max-width: 32rem) {
+  /* 512 / 16 = 32 */
+  html {
+    /* 6 / 16 = 37.5% */
+    font-size: 37.5%;
+  }
+}

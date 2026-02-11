@@ -3,7 +3,7 @@ section.about-section-page {
   flex-direction: column;
   background-color: var(--accent-shade);
   /* width: 85%; */
-  height: calc(100vh - var(--navbar-height));
+  /* height: calc(100vh - var(--navbar-height)); */
   /* margin: 0.3rem auto; */
   /* border: 1px solid var(--primary-shade); */
   /* border-radius: 1rem; */
