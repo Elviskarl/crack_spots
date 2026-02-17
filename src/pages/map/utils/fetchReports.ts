@@ -6,9 +6,7 @@ export async function fetchReports(param: string): Promise<Report[]> {
     const request = new Request(param, {
       method: "GET",
     });
-    const response = await fetch(request, {
-      method: "GET",
-    });
+    const response = await fetch(request);
     if (!response.ok) {
       throw new FetchError(`Error fetching reports: ${response.statusText}`);
     }

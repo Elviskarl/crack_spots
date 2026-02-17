@@ -16,6 +16,13 @@ export interface Report {
 export interface GeoPoint {
   type: "Point";
   coordinates: [number, number]; // [longitude, latitude]
+  category?: string; // optional category field for future use
+  address?: {
+    road?: string;
+    city?: string;
+    state?: string;
+    neighbourhood?: string;
+  };
 }
 export interface CoordinateData {
   GPSLatitude: number;

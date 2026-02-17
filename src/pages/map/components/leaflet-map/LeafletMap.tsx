@@ -11,16 +11,26 @@ import { useEffect, useState } from "react";
 import { fetchReports } from "../../utils/fetchReports";
 import type { Report } from "../../types/index";
 import { Icon } from "leaflet";
+import roadNameIcon from "../../../../assets/distance.png";
+import locationNameIcon from "../../../../assets/map.png";
+import neighbourhoodNameIcon from "../../../../assets/neighborhood.png";
+import calenderIcon from "../../../../assets/calendar.png";
+import tagIcon from "../../../../assets/bookmark.png";
 import "../../styles/map-container.css";
 
 function LeafletMap() {
   const [reports, setReports] = useState<Report[] | undefined>(undefined);
   useEffect(() => {
     const url = "/api/v1/reports";
-    fetchReports(url).then((data) => {
-      if (!data) return;
-      setReports(data);
-    });
+    fetchReports(url)
+      .then((data) => {
+        if (!data) return;
+        console.log("Fetched reports:", data[0].dateTaken);
+        setReports(data);
+      })
+      .catch((err) => {
+        console.error("Error fetching reports:", err);
+      });
   }, []);
 
   const customIcon = new Icon({
@@ -60,7 +70,10 @@ function LeafletMap() {
           return (
             <Marker
               key={_id}
-              position={location.coordinates}
+              position={[
+                location.coordinates[1], // latitude
+                location.coordinates[0], // longitude
+              ]}
               title="Report Location"
               icon={customIcon}
             >
@@ -71,18 +84,78 @@ function LeafletMap() {
                       src={cloudinary_url}
                       alt="Road Damage"
                       className="preview-image"
-                      loading="lazy"
                     />
                   </div>
                   <div className="report-info-container">
+                    <h4>Report Details</h4>
                     <ul>
-                      <li className="report-severity">
-                        <span>Severity:</span>
-                        <span>{severity}</span>
+                      <li className="report-details">
+                        <div className="report-details-icon-container">
+                          <img
+                            src={roadNameIcon}
+                            alt=""
+                            className="report-details-icon road-name-icon"
+                          />
+                        </div>
+                        Road Name:
+                        <span className="road-name">
+                          {report.location.address?.road || "unknown"}
+                        </span>
                       </li>
-                      <li className="report-timestamp">
-                        <span>Date Taken:</span>
-                        <span>{dateTaken}</span>
+                      <li className="report-details">
+                        <div className="report-details-icon-container">
+                          <img
+                            src={neighbourhoodNameIcon}
+                            alt=""
+                            className="report-details-icon neighbourhood-name-icon"
+                          />
+                        </div>
+                        Location:
+                        <span className="neighbourhood-name">
+                          {report.location.address?.neighbourhood || "N/A"}
+                        </span>
+                      </li>
+                      <li className="report-details">
+                        <div className="report-details-icon-container">
+                          <img
+                            src={locationNameIcon}
+                            alt=""
+                            className="report-details-icon location-name-icon"
+                          />
+                        </div>
+                        County:
+                        <span className="location-name">
+                          {report.location.address?.state || "N/A"}
+                        </span>
+                      </li>
+                      <li className="report-details">
+                        <div className="report-details-icon-container">
+                          <img
+                            src={calenderIcon}
+                            alt=""
+                            className="report-details-icon calender-name-icon"
+                          />
+                        </div>
+                        Date Taken:
+                        <span className="calender-name">{dateTaken}</span>
+                      </li>
+                      <li className="report-details">
+                        <div className="tag-container">
+                          <div className="report-details-icon-container">
+                            <img
+                              src={tagIcon}
+                              alt=""
+                              className="report-details-icon tag-name-icon"
+                            />
+                          </div>
+                          <span>Tags</span>
+                        </div>
+                        <div className="tag-values">
+                          <div
+                            className={`tag-value-indicator ${severity.toLowerCase()}`}
+                          ></div>
+                          <small>Severity: {severity}</small>
+                        </div>
                       </li>
                     </ul>
                   </div>

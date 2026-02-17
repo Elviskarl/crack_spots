@@ -22,3 +22,51 @@
 /* .report-info-container ul li.report-severity {
 
 } */
+.report-details {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.report-details:nth-child(4) {
+  border-bottom: 1px solid var(--primary-shade);
+}
+.report-details:last-child {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.report-details-icon-container {
+  height: 40px;
+  width: 40px;
+  padding: 5px;
+}
+.report-details-icon {
+  object-fit: cover;
+}
+.tag-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.tag-value-indicator {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+}
+.tag-value-indicator.low {
+  background-color: salmon;
+}
+.tag-value-indicator.medium {
+  background-color: rgb(232, 81, 81);
+}
+.tag-value-indicator.high {
+  background-color: red;
+}
+.tag-values {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+.tag-values small {
+  font-size: var(--text-base);
+}
