@@ -18,7 +18,7 @@ const router = createBrowserRouter(
       <Route path="about" element={<About />} />
       <Route path="*" element={<NotFound />} />
     </Route>
-  )
+  ), { basename: "/crack_spots"}
 );
 function App() {
   return <RouterProvider router={router} />;

@@ -21,11 +21,10 @@ import "../../styles/map-container.css";
 function LeafletMap() {
   const [reports, setReports] = useState<Report[] | undefined>(undefined);
   useEffect(() => {
-    const url = "/api/v1/reports";
+    const url = "https://crackspots-server.onrender.com/api/v1/reports";
     fetchReports(url)
       .then((data) => {
         if (!data) return;
-        console.log("Fetched reports:", data[0].dateTaken);
         setReports(data);
       })
       .catch((err) => {
