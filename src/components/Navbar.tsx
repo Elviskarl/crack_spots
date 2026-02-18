@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import imgSrc from "../assets/app_logo.svg";
+import imgSrc from "../assets/app_logo.jpg";
 import "./styles/index.css";
 
 function Navbar() {
