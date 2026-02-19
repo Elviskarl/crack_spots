@@ -3,7 +3,8 @@ export type ErrorCode =
   | "NO_EXIF_DATA"
   | "NO_GPS_DATA"
   | "EXIF_READ_FAILED"
-  | "Fetch Error";
+  | "Fetch Error"
+  | "SERVER_ERROR";
 
 export class CustomError extends Error {
   code: ErrorCode;

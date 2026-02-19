@@ -38,7 +38,7 @@ function LeafletMap() {
           />
         </LayersControl.BaseLayer>
       </LayersControl>
-      {report && <ReportsContainer reports={report} />}
+      {report && report.length > 0 && <ReportsContainer reports={report} />}
     </MapContainer>
   );
 }

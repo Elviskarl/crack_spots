@@ -61,17 +61,6 @@ export default function ReportForm() {
       const fileCopy = file;
       const coordsCopy = coordinates;
 
-      setFile(null);
-      if (imageUrl) {
-        URL.revokeObjectURL(imageUrl);
-      }
-      setImageUrl(null);
-      setCoordinates(null);
-
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-
       const formData = new FormData();
       formData.append("file", fileCopy);
       formData.append("coordinates", JSON.stringify(coordsCopy));
@@ -84,6 +73,17 @@ export default function ReportForm() {
       }
 
       const results = await uploadReports("/api/v1/reports", formData);
+      if (!results.success) {
+        setErrorMessage({
+          type: "SERVER_ERROR",
+          message: results.message || "Failed to upload report.",
+        });
+        throw new CustomError("SERVER_ERROR", results.message);
+      }
+      // Only clear on success
+      setFile(null);
+      setImageUrl(null);
+      setCoordinates(null);
       console.log("Upload successful:", results);
     } catch (error) {
       if (error instanceof CustomError) {

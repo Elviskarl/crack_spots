@@ -36,3 +36,8 @@ export interface ErrorMessage {
   type: string;
   message: string;
 }
+
+export interface serverResponse {
+  success: boolean;
+  message: string;
+}
