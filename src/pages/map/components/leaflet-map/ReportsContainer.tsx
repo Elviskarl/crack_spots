@@ -1,11 +1,15 @@
 import { Icon } from "leaflet";
 import { Marker, Popup } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
 import type { Report } from "../../types";
 import roadNameIcon from "../../../../assets/distance.png";
 import locationNameIcon from "../../../../assets/map.png";
 import neighbourhoodNameIcon from "../../../../assets/neighborhood.png";
 import calenderIcon from "../../../../assets/calendar.png";
 import tagIcon from "../../../../assets/bookmark.png";
+// Import the required CSS for marker clustering
+import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
+import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
 
 export function ReportsContainer({ reports }: { reports: Report[] }) {
   const customIcon = new Icon({
@@ -15,7 +19,7 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
     popupAnchor: [0, -30],
   });
   return (
-    <>
+    <MarkerClusterGroup>
       {reports.map((report) => {
         const { _id, cloudinary_url, severity, location, dateTaken } = report;
         return (
@@ -115,6 +119,6 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
           </Marker>
         );
       })}
-    </>
+    </MarkerClusterGroup>
   );
 }

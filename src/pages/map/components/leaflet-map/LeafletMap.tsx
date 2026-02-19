@@ -17,8 +17,8 @@ function LeafletMap() {
 
   return (
     <MapContainer
-      center={[-1.286389, 36.817223]}
-      zoom={13}
+      center={[-1.216013888888889, 36.90145277777778]}
+      zoom={14}
       scrollWheelZoom={false}
       zoomControl={false}
     >
