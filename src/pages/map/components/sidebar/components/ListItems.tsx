@@ -1,29 +1,32 @@
 import upArrowUrl from "../../../../../assets/up_arrow.png";
-import uploadImageUrl from "../../../../../assets/image-upload-icon.png";
-import ReportForm from "./ReportForm";
-import { useState, type MouseEvent } from "react";
+import { useState /*type MouseEvent*/ } from "react";
 
-export function ListItems() {
+interface ListItemsProps {
+  imageUrl: string;
+  textContent: string;
+  Component: React.ComponentType;
+}
+
+export function ListItems(props: ListItemsProps) {
   const [isOpen, setIsOpen] = useState(true);
-  function toggleList(e: MouseEvent<HTMLButtonElement>) {
-    if (e.target) {
-      console.log("clicked");
-      setIsOpen((prevVal) => !prevVal);
-    }
+  const { Component, imageUrl, textContent } = props;
+  function toggleList(/*e: MouseEvent<HTMLButtonElement>*/) {
+    setIsOpen((prevVal) => !prevVal);
   }
   return (
-    <>
-      <li className="sidebar-heading">
+    <li className="list-item">
+      <div className="sidebar-heading">
         <div className="list-heading-container">
           <img
-            src={uploadImageUrl}
+            src={imageUrl}
             alt="Upload Icon"
             aria-hidden
             className="small-list-images"
           />
-          <span className="list-heading">Upload</span>
+          <span className="list-heading">{textContent}</span>
         </div>
         <button
+          aria-expanded={isOpen}
           className={`list-heading-toggle ${isOpen ? "closed" : "open"}`}
           onClick={toggleList}
         >
@@ -33,10 +36,10 @@ export function ListItems() {
             className="small-list-images"
           />
         </button>
-      </li>
-      <li className={`sidebar-item ${isOpen ? "open" : "closed"}`}>
-        <ReportForm />
-      </li>
-    </>
+      </div>
+      <div className={`sidebar-item ${isOpen ? "open" : "closed"}`}>
+        <Component />
+      </div>
+    </li>
   );
 }

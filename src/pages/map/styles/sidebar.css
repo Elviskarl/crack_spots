@@ -21,9 +21,11 @@ aside.sidebar {
   flex-direction: column;
   gap: 0.3rem;
 }
+.list-item {
+  border: 1px solid var(--secondary-shade);
+}
 .sidebar-heading,
 .sidebar-item {
-  border: 1px solid var(--secondary-shade);
   padding: 1rem 0.5rem;
   height: auto;
 }
@@ -51,7 +53,7 @@ aside.sidebar {
 
 /* Open state */
 .sidebar-item.open {
-  max-height: 1200px;
+  height: auto;
   opacity: 1;
   transform: translateY(0);
 }
@@ -93,6 +95,10 @@ aside.sidebar {
 .list-heading-toggle:focus {
   transform: scale(1.1);
   background-color: transparent;
+}
+.list-heading-toggle:focus-visible {
+  outline:  1px solid var(--secondary-shade);
+  outline-offset: 1px;
 }
 /* severity preview */
 .damage-severity {
