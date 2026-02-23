@@ -41,3 +41,9 @@ export interface serverResponse {
   success: boolean;
   message: string;
 }
+
+export interface ListItemsProps {
+  imageUrl: string;
+  textContent: string;
+  Component: React.ComponentType;
+}

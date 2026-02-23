@@ -3,8 +3,6 @@
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   height: calc(100vh - var(--navbar-height));
-  padding-right: 5px;
-  padding-bottom: 5px;
 }
 .map-container {
   grid-column: 3 / span 9;

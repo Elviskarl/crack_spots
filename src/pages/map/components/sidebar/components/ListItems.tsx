@@ -1,11 +1,7 @@
 import upArrowUrl from "../../../../../assets/up_arrow.png";
 import { useState /*type MouseEvent*/ } from "react";
-
-interface ListItemsProps {
-  imageUrl: string;
-  textContent: string;
-  Component: React.ComponentType;
-}
+import type { ListItemsProps } from "../../../types";
+import "../../../styles/listItems.css";
 
 export function ListItems(props: ListItemsProps) {
   const [isOpen, setIsOpen] = useState(true);
