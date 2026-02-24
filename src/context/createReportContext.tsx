@@ -1,4 +1,8 @@
 import { createContext } from "react";
 import type { Report } from "../pages/map/types";
 
-export const ReportContext = createContext<Report[] | null>(null);
+interface ReportContextType {
+  reports: Report[];
+}
+
+export const ReportContext = createContext<ReportContextType | null>(null);
