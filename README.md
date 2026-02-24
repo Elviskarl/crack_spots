@@ -37,3 +37,14 @@ cd crack-spots
 npm install
 npm run dev
 ```
+## New in v1.1.0
+- Debounced street search with autocomplete
+- Fly-to functionality for matching reports
+- Marker clustering for improved map readability
+- Refactored map and context logic
+
+## Changelog
+### v1.1.0
+- Added debounced search
+- Refactored map logic and context
+- Improved UX with marker fly-to and popups
