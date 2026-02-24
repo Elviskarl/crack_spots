@@ -4,14 +4,19 @@ import mapImgUrl from "../../../../../assets/location-outline.svg";
 import locationImgUrl from "../../../../../assets/map-outline.svg";
 import imageCategoryUrl from "../../../../../assets/analytics-outline.svg";
 import calenderUrl from "../../../../../assets/calendar-outline.svg";
-
+import leafUrl from "../../../../../assets/leaf-outline.svg";
 interface MatchingReportprops {
   matchingReport: Report[];
+  setSelectedReport: React.Dispatch<React.SetStateAction<Report | null>>;
 }
 
 export default function MatchingReports({
   matchingReport,
+  setSelectedReport,
 }: MatchingReportprops) {
+  function flyToReport(param: Report) {
+    setSelectedReport(param);
+  }
   const matchingReportEl = matchingReport.map((report) => (
     <div className="search-result-card" key={report._id}>
       <div className="search-result-image-container">
@@ -64,8 +69,23 @@ export default function MatchingReports({
           </div>
           <span className="result-detail-date">
             {new Intl.DateTimeFormat("en-GB").format(
-              new Date(report.createdAt),
+              new Date(report.dateTaken),
             )}
+          </span>
+        </li>
+        <li className="result-detail-item">
+          <div className="result-detail-img-container">
+            <img
+              src={leafUrl}
+              alt="Location image"
+              className="result-detail-img"
+            />
+          </div>
+          <span
+            className="result-detail-link"
+            onClick={() => flyToReport(report)}
+          >
+            View on Map
           </span>
         </li>
       </ul>

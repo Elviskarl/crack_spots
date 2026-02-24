@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { Icon } from "leaflet";
 import { Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
@@ -10,8 +11,10 @@ import tagIcon from "../../../../assets/bookmark.png";
 // Import the required CSS for marker clustering
 import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
+import { MapContext } from "../../../../context/createMapContext";
 
 export function ReportsContainer({ reports }: { reports: Report[] }) {
+  const { markerRefs } = useContext(MapContext)!;
   const customIcon = new Icon({
     iconUrl: "https://cdn-icons-png.flaticon.com/128/4904/4904150.png",
     iconSize: [40, 40],
@@ -31,6 +34,11 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
             ]}
             title="Report Location"
             icon={customIcon}
+            ref={(ref) => {
+              if (ref) {
+                markerRefs.current[report._id] = ref;
+              }
+            }}
           >
             <Popup>
               <div className="report-details-container">

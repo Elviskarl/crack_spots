@@ -3,17 +3,60 @@ import {
   TileLayer,
   ZoomControl,
   LayersControl,
+  useMap,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 import "../../styles/map-container.css";
 import { ReportContext } from "../../../../context/createReportContext";
 import { ReportsContainer } from "./ReportsContainer";
+import { MapContext } from "../../../../context/createMapContext";
 
 function LeafletMap() {
-  const report = useContext(ReportContext);
-  console.log(report);
+  const { reports } = useContext(ReportContext)!;
+  const { map, markerRefs, selectedReport } = useContext(MapContext)!;
+
+  useEffect(() => {
+    if (!map) {
+      console.error("Map instance is not available");
+      return;
+    }
+    if (!selectedReport) {
+      console.warn("No report selected");
+      return;
+    }
+    
+    const marker = markerRefs.current[selectedReport._id];
+
+    map.flyTo(
+      [
+        selectedReport.location.coordinates[1],
+        selectedReport.location.coordinates[0],
+      ],
+      19,
+      { duration: 3 },
+    );
+    map.once("moveend", () => {
+      if (marker) {
+        marker.openPopup();
+      } else {
+        console.warn(`Marker for report ID ${selectedReport._id} not found.`);
+      }
+    });
+  });
+
+  function MapInitializer() {
+    const map = useMap();
+    const { setMap } = useContext(MapContext)!;
+    // This function will be implemented to fly to the report location on the map when a report is selected from the sidebar.
+
+    useEffect(() => {
+      setMap(map);
+    }, [map, setMap]);
+
+    return null;
+  }
 
   return (
     <MapContainer
@@ -38,7 +81,8 @@ function LeafletMap() {
           />
         </LayersControl.BaseLayer>
       </LayersControl>
-      {report && report.length > 0 && <ReportsContainer reports={report} />}
+      {reports && reports.length > 0 && <ReportsContainer reports={reports} />}
+      <MapInitializer />
     </MapContainer>
   );
 }
