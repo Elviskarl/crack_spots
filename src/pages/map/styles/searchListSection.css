@@ -47,8 +47,12 @@
   border-radius: 5px;
   cursor: pointer;
 }
-.suggestion-list.no-results{
+.suggestion-list.no-results {
   cursor: default;
   color: var(--secondary-shade);
   border: none;
+}
+.no-results-found {
+  color: var(--secondary-shade);
+  text-align: center;
 }

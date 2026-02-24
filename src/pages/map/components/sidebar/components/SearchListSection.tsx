@@ -1,52 +1,54 @@
 import { useContext, useMemo, useState, type FormEvent } from "react";
 import { ReportContext } from "../../../../../context/createReportContext";
-import "../../../styles/searchListSection.css";
 import searchIconUrl from "../../../../../assets/searchIcon.png";
-import type { Report } from "../../../types";
 import SearchSuggestions from "./SearchSuggestions";
 import MatchingReports from "./MatchingReports";
+import { MapContext } from "../../../../../context/createMapContext";
+import "../../../styles/searchListSection.css";
+import useDebounce from "../../../hooks/Debouncer";
 
 export default function SearchListSection() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const report = useContext(ReportContext);
-  const [matchingReport, setMatchingReport] = useState<Report[]>([]);
+  const { reports } = useContext(ReportContext)!;
+  const { setSelectedReport } = useContext(MapContext)!;
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  const matchingReport = useMemo(() => {
+    if (!reports) return [];
+    const term = debouncedSearchTerm.trim().toLowerCase();
+    if (term === "") return [];
+
+    return reports.filter((report) =>
+      report.location.address?.road?.toLowerCase().includes(term),
+    );
+  }, [debouncedSearchTerm, reports]);
+
+  const hasSearch = debouncedSearchTerm.trim() !== "";
+  const hasResults = matchingReport.length > 0;
 
   // Extract unique street names from the report data
   const streetNames = useMemo(() => {
-    if (!report) return [];
+    if (!reports) return [];
     const uniqueStreetNames = new Set(
-      report
+      reports
         .map((item) => item.location.address?.road?.toLowerCase())
         .filter(Boolean) as string[],
     );
     return Array.from(uniqueStreetNames);
-  }, [report]);
+  }, [reports]);
 
   // Filter street names based on the search term
   const suggestions = useMemo(() => {
-    if (!searchTerm) return [];
     return streetNames.filter((street) =>
-      street.includes(searchTerm.toLowerCase()),
+      street.includes(debouncedSearchTerm.toLowerCase().trim()),
     );
-  }, [streetNames, searchTerm]);
+  }, [streetNames, debouncedSearchTerm]);
 
   // Handle form submission
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsOpen(false);
-    try {
-      if (!report) throw new Error("Report data is unavailable.");
-      const searchResults = report.filter(
-        (item) =>
-          item.location.address?.road?.toLowerCase() ===
-          searchTerm.toLowerCase(),
-      );
-      setMatchingReport(searchResults);
-      console.log(searchResults);
-    } catch (error) {
-      console.error("Error during search:", error);
-    }
   }
 
   return (
@@ -81,11 +83,16 @@ export default function SearchListSection() {
           />
         )}
       </form>
-      {matchingReport.length > 0 ? (
-        <MatchingReports matchingReport={matchingReport} />
-      ) : (
-        <p className="no-results-found">No results found.</p>
-      )}
+      {hasSearch ? (
+        hasResults ? (
+          <MatchingReports
+            matchingReport={matchingReport}
+            setSelectedReport={setSelectedReport}
+          />
+        ) : (
+          <p className="no-results-found">No results found.</p>
+        )
+      ) : null}
     </div>
   );
 }
