@@ -1,38 +1,46 @@
-/* small to large Laptops - 1024 to 1248 px */
+/* small to large Laptops - 1000 to 1248 px */
 @media (max-width: 78rem) {
   /* 1248 / 16 = 78 */
   html {
     /* 9 /16 = 56.25% */
     font-size: 56.25%;
   }
+    aside.sidebar {
+    width: 38%;
+  }
+  .map-container {
+    width: 62%;
+  }
 }
-/* tablets to small Laptops - 848 to 1024 px */
-@media (max-width: 53rem) {
-  /* 848 / 16 = 53 */
+/* tablets to small Laptops - 780 to 1000 px */
+@media (max-width: 62.5rem) {
+  /* 900 / 16 = 53 */
   html {
     /* 8 /16 = 50% */
     font-size: 50%;
   }
-  .map-container {
-    grid-column: 4 / span 8;
-  }
   aside.sidebar {
-    grid-column: 1 / span 3;
+    width: 40%;
+  }
+  .map-container {
+    width: 60%;
   }
 }
-/* phone landscape to tablets - 690 to 1248 px */
-@media (max-width: 43.125rem) {
+/* phone landscape to tablets - 690 to 780 px */
+@media (max-width: 48.75rem) {
   /* 690 / 16 = 43.125 */
   html {
-    /* 7 /16 = 43.75% */
+    /* 7 / 16 = 37.5% */
     font-size: 43.75%;
   }
-}
-/*phone potrait to phone landscape - <512 px */
-@media (max-width: 32rem) {
-  /* 512 / 16 = 32 */
-  html {
-    /* 6 / 16 = 37.5% */
-    font-size: 37.5%;
+    aside.sidebar {
+    width: 45%;
+  }
+  .map-container {
+    width: 55%;
   }
 }
+/*phone potrait to phone landscape - <620 px */
+/* @media (max-width: 32rem) */
+  /* 512 / 16 = 32 */
+
