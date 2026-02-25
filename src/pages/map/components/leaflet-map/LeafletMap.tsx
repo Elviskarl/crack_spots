@@ -26,17 +26,21 @@ function LeafletMap() {
       console.warn("No report selected");
       return;
     }
-    
+
     const marker = markerRefs.current[selectedReport._id];
 
-    map.flyTo(
-      [
-        selectedReport.location.coordinates[1],
-        selectedReport.location.coordinates[0],
-      ],
-      19,
-      { duration: 3 },
-    );
+    // This is to fix a bug where Leaflet is trying to access an internal DOM element that does not exist anymore.
+    map.whenReady(() => {
+      map.flyTo(
+        [
+          selectedReport.location.coordinates[1],
+          selectedReport.location.coordinates[0],
+        ],
+        19,
+        { duration: 3 },
+      );
+    }, [map, selectedReport]);
+    
     map.once("moveend", () => {
       if (marker) {
         marker.openPopup();
@@ -65,8 +69,8 @@ function LeafletMap() {
       scrollWheelZoom={false}
       zoomControl={false}
     >
+      <LayersControl position="topright">
       <ZoomControl position="topright" />
-      <LayersControl position="topleft">
         <LayersControl.BaseLayer name="OpenStreetMap">
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
