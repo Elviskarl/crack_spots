@@ -5,17 +5,21 @@ import searchImageUrl from "../../../../assets/search.png";
 import ReportForm from "./components/ReportForm";
 import SearchListSection from "./components/SearchListSection";
 import menuImageUrl from "../../../../assets/menu-outline.svg";
-import { useState } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 
-export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(true);
+interface SidebarProps {
+  collapsed: boolean;
+  setCollapsed: Dispatch<SetStateAction<boolean>>;
+}
+
+export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
   function toggleSidebar() {
-    setIsOpen((prevVal) => !prevVal);
+    setCollapsed((prevVal) => !prevVal);
   }
   return (
     <aside className="sidebar">
       <section className="sidebar-wrapper">
-        <ul className="sidebar-list">
+        <ul className={`sidebar-list ${collapsed ? "" : "closed"}`}>
           <ListItems
             imageUrl={uploadImageUrl}
             Component={ReportForm}
@@ -28,10 +32,7 @@ export default function Sidebar() {
           />
         </ul>
       </section>
-      <div
-        className={`sidebar-toggle-image-container ${!isOpen ? "" : "closed"}`}
-        onClick={toggleSidebar}
-      >
+      <div className="sidebar-toggle-image-container" onClick={toggleSidebar}>
         <img src={menuImageUrl} alt="menu" />
       </div>
     </aside>

@@ -11,10 +11,15 @@ export function MapContextProvider({
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const markerRefs = useRef<Record<string, L.Marker>>({});
   const [map, setMap] = useState<Map | null>(null);
-
   return (
     <MapContext.Provider
-      value={{ selectedReport, setSelectedReport, markerRefs, map, setMap }}
+      value={{
+        selectedReport,
+        setSelectedReport,
+        markerRefs,
+        map,
+        setMap,
+      }}
     >
       {children}
     </MapContext.Provider>
