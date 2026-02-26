@@ -88,3 +88,17 @@
 .damage-severity {
   margin-right: 1rem;
 }
+
+/* Toogle sidebar */
+ul.sidebar-list.closed .sidebar-heading button,
+ul.sidebar-list.closed .sidebar-item {
+  display: none;
+}
+ul.sidebar-list.closed .sidebar-heading {
+  width: 70px;
+  height: 70px;
+  padding: 10px;
+}
+ul.sidebar-list.closed .small-list-images {
+  text-align: center;
+}

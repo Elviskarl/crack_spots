@@ -7,6 +7,7 @@ aside.sidebar {
   height: 100%;
   background-color: hsla(28, 78%, 68%, 0.6);
   position: relative;
+  transition: 0.5s ease-in-out;
 }
 
 /* component styles */
@@ -33,9 +34,13 @@ aside.sidebar {
 .sidebar-toggle-image-container:hover {
   transform: scale(1.05, 1);
 }
-.sidebar-toggle-image-container.closed
-.sidebar-toggle-image-container img {
+.sidebar-toggle-image-container.closed .sidebar-toggle-image-container img {
   width: 100%;
   height: auto;
   object-fit: cover;
+}
+/* Toogle sidebar */
+aside.sidebar.closed {
+  width: 15rem;
+  gap: 1rem;
 }

@@ -17,7 +17,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
     setCollapsed((prevVal) => !prevVal);
   }
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${collapsed ? "" : "closed"}`}>
       <section className="sidebar-wrapper">
         <ul className={`sidebar-list ${collapsed ? "" : "closed"}`}>
           <ListItems
