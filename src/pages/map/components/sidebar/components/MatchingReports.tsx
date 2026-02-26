@@ -5,18 +5,21 @@ import locationImgUrl from "../../../../../assets/map-outline.svg";
 import imageCategoryUrl from "../../../../../assets/analytics-outline.svg";
 import calenderUrl from "../../../../../assets/calendar-outline.svg";
 import leafUrl from "../../../../../assets/leaf-outline.svg";
+import { useContext } from "react";
+import { MapContext } from "../../../../../context/createMapContext";
 interface MatchingReportprops {
   matchingReport: Report[];
-  setSelectedReport: React.Dispatch<React.SetStateAction<Report | null>>;
 }
 
 export default function MatchingReports({
   matchingReport,
-  setSelectedReport,
 }: MatchingReportprops) {
+  const { setSelectedReport } = useContext(MapContext)!;
+
   function flyToReport(param: Report) {
     setSelectedReport(param);
   }
+
   const matchingReportEl = matchingReport.map((report) => (
     <div className="search-result-card" key={report._id}>
       <div className="search-result-image-container">

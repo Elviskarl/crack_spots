@@ -28,7 +28,6 @@ function LeafletMap() {
     }
 
     const marker = markerRefs.current[selectedReport._id];
-    map.closePopup();
 
     // This is to fix a bug where Leaflet is trying to access an internal DOM element that does not exist anymore.
     map.whenReady(() => {
@@ -41,7 +40,7 @@ function LeafletMap() {
         { duration: 3 },
       );
     }, [map, selectedReport]);
-
+    
     map.once("moveend", () => {
       if (marker) {
         marker.openPopup();
@@ -49,7 +48,7 @@ function LeafletMap() {
         console.warn(`Marker for report ID ${selectedReport._id} not found.`);
       }
     });
-  }, [selectedReport, map, markerRefs]);
+  });
 
   function MapInitializer() {
     const map = useMap();
@@ -71,7 +70,7 @@ function LeafletMap() {
       zoomControl={false}
     >
       <LayersControl position="topright">
-        <ZoomControl position="topright" />
+      <ZoomControl position="topright" />
         <LayersControl.BaseLayer name="OpenStreetMap">
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -86,8 +85,8 @@ function LeafletMap() {
           />
         </LayersControl.BaseLayer>
       </LayersControl>
-      <MapInitializer />
       {reports && reports.length > 0 && <ReportsContainer reports={reports} />}
+      <MapInitializer />
     </MapContainer>
   );
 }

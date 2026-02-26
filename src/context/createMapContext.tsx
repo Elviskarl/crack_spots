@@ -1,17 +1,12 @@
-import {
-  createContext,
-  type Dispatch,
-  type RefObject,
-  type SetStateAction,
-} from "react";
+import { createContext, type RefObject } from "react";
 import type { Report } from "../pages/map/types";
 import type { Map } from "leaflet";
 
 interface MapContextType {
   selectedReport: Report | null;
-  setSelectedReport: Dispatch<SetStateAction<Report | null>>;
+  setSelectedReport: React.Dispatch<React.SetStateAction<Report | null>>;
   map: Map | null;
-  setMap: Dispatch<SetStateAction<Map | null>>;
+  setMap: React.Dispatch<React.SetStateAction<Map | null>>;
   markerRefs: RefObject<Record<string, L.Marker>>;
 }
 

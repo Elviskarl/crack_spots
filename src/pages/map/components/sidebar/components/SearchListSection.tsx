@@ -3,6 +3,7 @@ import { ReportContext } from "../../../../../context/createReportContext";
 import searchIconUrl from "../../../../../assets/searchIcon.png";
 import SearchSuggestions from "./SearchSuggestions";
 import MatchingReports from "./MatchingReports";
+import { MapContext } from "../../../../../context/createMapContext";
 import "../../../styles/searchListSection.css";
 import useDebounce from "../../../hooks/Debouncer";
 
@@ -10,16 +11,18 @@ export default function SearchListSection() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const { reports } = useContext(ReportContext)!;
+  const { setSelectedReport } = useContext(MapContext)!;
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
-  // Find matching Report
   const matchingReport = useMemo(() => {
-    return reports.filter(
-      (report) =>
-        report.location.address?.road?.toLowerCase().trim() ===
-        debouncedSearchTerm,
+    if (!reports) return [];
+    const term = debouncedSearchTerm.trim().toLowerCase();
+    if (term === "") return [];
+
+    return reports.filter((report) =>
+      report.location.address?.road?.toLowerCase().includes(term),
     );
-  }, [reports, debouncedSearchTerm]);
+  }, [debouncedSearchTerm, reports]);
 
   const hasSearch = debouncedSearchTerm.trim() !== "";
   const hasResults = matchingReport.length > 0;
@@ -57,7 +60,7 @@ export default function SearchListSection() {
           className="search-input"
           value={searchTerm}
           onChange={(e) => {
-            const value = e.target.value;
+            const value = e.target.value.trim();
             setSearchTerm(value);
             setIsOpen(true);
           }}
@@ -72,13 +75,11 @@ export default function SearchListSection() {
             className="small-list-images"
           />
         </button>
-        {isOpen && debouncedSearchTerm && (
+        {isOpen && (
           <SearchSuggestions
             setIsOpen={setIsOpen}
             setSearchTerm={setSearchTerm}
             suggestions={suggestions}
-            reports={reports}
-            debouncedSearchTerm={debouncedSearchTerm}
           />
         )}
       </form>
@@ -86,6 +87,7 @@ export default function SearchListSection() {
         hasResults ? (
           <MatchingReports
             matchingReport={matchingReport}
+            setSelectedReport={setSelectedReport}
           />
         ) : (
           <p className="no-results-found">No results found.</p>

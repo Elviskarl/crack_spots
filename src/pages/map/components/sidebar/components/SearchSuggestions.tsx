@@ -1,27 +1,15 @@
-import { type Dispatch, type SetStateAction } from "react";
-import type { Report } from "../../../types";
+import type { Dispatch, SetStateAction } from "react";
 
 interface SearchSuggestionsProps {
   suggestions: string[];
   setSearchTerm: Dispatch<SetStateAction<string>>;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  reports: Report[];
-  debouncedSearchTerm: string;
 }
-
 export default function SearchSuggestions({
   suggestions,
   setSearchTerm,
   setIsOpen,
-  reports,
 }: SearchSuggestionsProps) {
-  function FindMatchingReport(param: string) {
-    if (!reports) return [];
-    reports.filter(
-      (report) => report.location.address?.road?.toLowerCase() === param,
-    );
-    return;
-  }
   return (
     <ul className="search-options active">
       {suggestions.length > 0 ? (
@@ -32,7 +20,6 @@ export default function SearchSuggestions({
               key={suggestion + index}
               onMouseDown={() => {
                 setSearchTerm(suggestion);
-                FindMatchingReport(suggestion);
                 setIsOpen(false);
               }}
             >
