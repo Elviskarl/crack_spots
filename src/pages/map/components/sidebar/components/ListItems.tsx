@@ -2,10 +2,12 @@ import upArrowUrl from "../../../../../assets/up_arrow.png";
 import { useState /*type MouseEvent*/ } from "react";
 import type { ListItemsProps } from "../../../types";
 import "../../../styles/listItems.css";
+import LoadingScreen from "../../../../../components/LoadingScreen";
 
 export function ListItems(props: ListItemsProps) {
   const [isOpen, setIsOpen] = useState(true);
-  const { Component, imageUrl, textContent } = props;
+  const { Component, imageUrl, textContent, requiresLoading, collapsed } =
+    props;
   function toggleList(/*e: MouseEvent<HTMLButtonElement>*/) {
     setIsOpen((prevVal) => !prevVal);
   }
@@ -21,9 +23,14 @@ export function ListItems(props: ListItemsProps) {
           />
           <span className="list-heading">{textContent}</span>
         </div>
+        {requiresLoading ? (
+          !collapsed ? (
+            <LoadingScreen category="notification" />
+          ) : null
+        ) : null}
         <button
           aria-expanded={isOpen}
-          className={`list-heading-toggle ${isOpen ? "closed" : "open"}`}
+          className={`list-heading-toggle ${isOpen ? "open" : "closed"}`}
           onClick={toggleList}
         >
           <img

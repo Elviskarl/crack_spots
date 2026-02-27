@@ -46,4 +46,6 @@ export interface ListItemsProps {
   imageUrl: string;
   textContent: string;
   Component: React.ComponentType;
+  requiresLoading?: boolean;
+  collapsed?: boolean;
 }

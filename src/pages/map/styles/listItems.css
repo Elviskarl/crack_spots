@@ -45,6 +45,7 @@
 .sidebar-heading {
   display: flex;
   justify-content: space-between;
+  position: relative;
 }
 .small-list-images {
   height: 30px;
@@ -101,4 +102,10 @@ ul.sidebar-list.closed .sidebar-heading {
 }
 ul.sidebar-list.closed .small-list-images {
   text-align: center;
+}
+/* handle reports */
+.sidebar-heading > .loading-screen {
+  position: absolute;
+  right: 5.8rem;
+  top: 1rem;
 }

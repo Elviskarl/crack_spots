@@ -17,18 +17,21 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
     setCollapsed((prevVal) => !prevVal);
   }
   return (
-    <aside className={`sidebar ${collapsed ? "" : "closed"}`}>
+    <aside className={`sidebar ${collapsed ? "closed" : ""}`}>
       <section className="sidebar-wrapper">
-        <ul className={`sidebar-list ${collapsed ? "" : "closed"}`}>
+        <ul className={`sidebar-list ${collapsed ? "closed" : ""}`}>
           <ListItems
             imageUrl={uploadImageUrl}
             Component={ReportForm}
             textContent="Upload"
+            requiresLoading={false}
           />
           <ListItems
             imageUrl={searchImageUrl}
             Component={SearchListSection}
             textContent="Search"
+            requiresLoading={true}
+            collapsed={collapsed}
           />
         </ul>
       </section>

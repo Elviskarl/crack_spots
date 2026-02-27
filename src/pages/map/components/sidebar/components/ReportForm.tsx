@@ -6,10 +6,12 @@ import { uploadReports } from "../../../utils/uploadReports";
 import { CustomError } from "../../../../../components/error/CustomError";
 import { Notifications } from "./Notifications";
 import "../../../styles/report-form.css";
+import LoadingScreen from "../../../../../components/LoadingScreen";
 
 export default function ReportForm() {
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [coordinates, setCoordinates] = useState<CoordinateData | null>(null);
   const [errorMessage, setErrorMessage] = useState<ErrorMessage | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -23,6 +25,8 @@ export default function ReportForm() {
   }, [imageUrl]);
 
   async function processImage(param: File) {
+    setIsLoading(true);
+    const start = Date.now();
     try {
       validateFile(param);
       setFile(param);
@@ -44,11 +48,19 @@ export default function ReportForm() {
         });
         console.error(err);
       }
+    } finally {
+      const elapsed = Date.now() - start;
+      const remaining = Math.max(0, 3000 - elapsed);
+
+      setTimeout(() => {
+        setIsLoading(false);
+      }, remaining);
     }
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setIsLoading(true);
 
     if (!file || !coordinates) {
       setErrorMessage({
@@ -92,6 +104,8 @@ export default function ReportForm() {
       } else {
         console.error("Error uploading report:", error);
       }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -100,6 +114,7 @@ export default function ReportForm() {
     if (!files) return;
     if (files.length > 0) {
       const file = files[0];
+      setIsLoading(true);
       processImage(file);
     }
   }
@@ -114,6 +129,7 @@ export default function ReportForm() {
     if (e.dataTransfer) {
       const filesList = e.dataTransfer.files;
       const file = Array.from(filesList)[0];
+      setIsLoading(true);
       processImage(file);
     }
   }
@@ -149,13 +165,25 @@ export default function ReportForm() {
               </button>
             </div>
           </div>
-          {file && imageUrl && coordinates && (
-            <ReportPreview url={imageUrl} coordinateData={coordinates} />
+          {isLoading ? (
+            <LoadingScreen category="image" />
+          ) : (
+            file &&
+            imageUrl &&
+            coordinates && (
+              <ReportPreview url={imageUrl} coordinateData={coordinates} />
+            )
           )}
-          <button className="submit-button">submit</button>
+          <button className="submit-button" disabled={!file || !coordinates}>
+            submit
+          </button>
         </form>
-        {errorMessage && (
-          <Notifications message={errorMessage} func={setErrorMessage} />
+        {isLoading ? (
+          <LoadingScreen category="notification" />
+        ) : (
+          errorMessage && (
+            <Notifications message={errorMessage} func={setErrorMessage} />
+          )
         )}
       </div>
     </>
