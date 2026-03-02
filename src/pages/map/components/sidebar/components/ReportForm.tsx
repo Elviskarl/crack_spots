@@ -1,20 +1,27 @@
-import { useState, useRef, useEffect, type ChangeEvent } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  type ChangeEvent,
+  useContext,
+} from "react";
 import ReportPreview from "./ReportPreview";
 import { readFile, validateFile } from "../../../utils/utils";
-import type { CoordinateData, ErrorMessage } from "../../../types";
+import type { CoordinateData } from "../../../types";
 import { uploadReports } from "../../../utils/uploadReports";
 import { CustomError } from "../../../../../components/error/CustomError";
 import { Notifications } from "./Notifications";
 import "../../../styles/report-form.css";
 import LoadingScreen from "../../../../../components/LoadingScreen";
+import { ReportContext } from "../../../../../context/createReportContext";
 
 export default function ReportForm() {
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [coordinates, setCoordinates] = useState<CoordinateData | null>(null);
-  const [errorMessage, setErrorMessage] = useState<ErrorMessage | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { errorMessage, setErrorMessage } = useContext(ReportContext)!;
 
   useEffect(() => {
     if (!imageUrl) return;
