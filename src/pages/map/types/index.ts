@@ -32,8 +32,9 @@ export interface CoordinateData {
   DateTimeOriginal: string;
 }
 
-export interface ErrorMessage {
-  type: string;
+export interface NotificationType {
+  type: "Error" | "Warning" | "Success" | "Info";
+  code?: string;
   message: string;
 }
 

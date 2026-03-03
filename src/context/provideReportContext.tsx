@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { ReportContext } from "./createReportContext";
 import { fetchReports } from "../pages/map/utils/fetchReports";
-import type { ErrorMessage, Report } from "../pages/map/types";
+import type { NotificationType, Report } from "../pages/map/types";
 
 export function ReportProvider({ children }: { children: React.ReactNode }) {
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<ErrorMessage | null>(null);
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null,
+  );
 
   useEffect(() => {
     // Fetch the report data from the API
@@ -28,7 +30,7 @@ export function ReportProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ReportContext.Provider
-      value={{ reports, isLoading, setErrorMessage, errorMessage }}
+      value={{ reports, isLoading, setNotification, notification }}
     >
       {children}
     </ReportContext.Provider>

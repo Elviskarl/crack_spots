@@ -1,11 +1,11 @@
 import { createContext, type Dispatch, type SetStateAction } from "react";
-import type { ErrorMessage, Report } from "../pages/map/types";
+import type { NotificationType, Report } from "../pages/map/types";
 
 interface ReportContextType {
   reports: Report[];
   isLoading: boolean;
-  errorMessage: ErrorMessage | null;
-  setErrorMessage: Dispatch<SetStateAction<ErrorMessage | null>>;
+  notification: NotificationType | null;
+  setNotification: Dispatch<SetStateAction<NotificationType | null>>;
 }
 
 export const ReportContext = createContext<ReportContextType | null>(null);
