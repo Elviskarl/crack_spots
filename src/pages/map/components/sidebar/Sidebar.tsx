@@ -2,10 +2,12 @@ import { ListItems } from "./components/ListItems";
 import "../../styles/sidebar.css";
 import uploadImageUrl from "../../../../assets/image-upload-icon.png";
 import searchImageUrl from "../../../../assets/search.png";
+import filterImageUrl from "../../../../assets/funnel-outline.svg";
 import ReportForm from "./components/ReportForm";
 import SearchListSection from "./components/SearchListSection";
 import menuImageUrl from "../../../../assets/menu-outline.svg";
 import { type Dispatch, type SetStateAction } from "react";
+import FilterReports from "./components/FilterReports";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -30,6 +32,13 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
             imageUrl={searchImageUrl}
             Component={SearchListSection}
             textContent="Search"
+            requiresLoading={true}
+            collapsed={collapsed}
+          />
+          <ListItems
+            imageUrl={filterImageUrl}
+            textContent="Filter"
+            Component={FilterReports}
             requiresLoading={true}
             collapsed={collapsed}
           />

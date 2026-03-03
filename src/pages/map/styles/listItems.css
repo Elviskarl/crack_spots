@@ -7,6 +7,24 @@
   border: 1px solid var(--secondary-shade);
   height: auto;
 }
+.list-item:nth-child(2) {
+  position: relative;
+  z-index: 2;
+}
+.list-item:nth-child(3) .list-heading {
+  position: relative;
+}
+.list-item:nth-child(3) .list-heading::after {
+  content: "BETA";
+  position: absolute;
+  padding: 0.5rem;
+  background-color: var(--tertiary-base);
+  left: 105%;
+  top: -20%;
+  font-size: var(--text-sm);
+  border: none;
+  border-radius: 0.5rem;
+}
 .sidebar-heading,
 .sidebar-item {
   padding: 1rem 0.5rem;
@@ -15,12 +33,7 @@
 
 /* ===== Accordion behavior ===== */
 .sidebar-item {
-  transition:
-    max-height 0.35s ease,
-    opacity 0.25s ease,
-    transform 0.3s ease,
-    padding 0.25s ease,
-    border-width 0.25s ease;
+  transition: all 0.3s ease-in-out;
 }
 
 /* Closed state */
