@@ -72,15 +72,14 @@ export default function SearchListSection() {
             className="small-list-images"
           />
         </button>
-        {isOpen && debouncedSearchTerm && (
-          <SearchSuggestions
-            setIsOpen={setIsOpen}
-            setSearchTerm={setSearchTerm}
-            suggestions={suggestions}
-            reports={reports}
-            debouncedSearchTerm={debouncedSearchTerm}
-          />
-        )}
+        <SearchSuggestions
+          setIsOpen={setIsOpen}
+          setSearchTerm={setSearchTerm}
+          suggestions={suggestions}
+          reports={reports}
+          debouncedSearchTerm={debouncedSearchTerm}
+          isOpen={isOpen}
+        />
       </form>
       {hasSearch ? (
         hasResults ? (

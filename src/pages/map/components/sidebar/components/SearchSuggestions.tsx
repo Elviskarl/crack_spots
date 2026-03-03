@@ -7,6 +7,7 @@ interface SearchSuggestionsProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   reports: Report[];
   debouncedSearchTerm: string;
+  isOpen: boolean;
 }
 
 export default function SearchSuggestions({
@@ -14,6 +15,8 @@ export default function SearchSuggestions({
   setSearchTerm,
   setIsOpen,
   reports,
+  isOpen,
+  debouncedSearchTerm,
 }: SearchSuggestionsProps) {
   function FindMatchingReport(param: string) {
     if (!reports) return [];
@@ -23,7 +26,9 @@ export default function SearchSuggestions({
     return;
   }
   return (
-    <ul className="search-options active">
+    <ul
+      className={`search-options ${isOpen && debouncedSearchTerm ? "active" : ""}`}
+    >
       {suggestions.length > 0 ? (
         suggestions.map((suggestion, index) => {
           return (
