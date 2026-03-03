@@ -21,7 +21,7 @@ export default function ReportForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [coordinates, setCoordinates] = useState<CoordinateData | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { errorMessage, setErrorMessage } = useContext(ReportContext)!;
+  const { notification, setNotification } = useContext(ReportContext)!;
 
   useEffect(() => {
     if (!imageUrl) return;
@@ -46,12 +46,17 @@ export default function ReportForm() {
       setImageUrl(url);
     } catch (err) {
       if (err instanceof CustomError) {
-        setErrorMessage({ type: err.code, message: err.message });
+        setNotification({
+          code: err.code,
+          message: err.message,
+          type: "Error",
+        });
         return;
       } else {
-        setErrorMessage({
-          type: "UNKNOWN_ERROR",
+        setNotification({
+          code: "UNKNOWN_ERROR",
           message: "An unknown error occurred while processing the image.",
+          type: "Error",
         });
         console.error(err);
       }
@@ -70,9 +75,10 @@ export default function ReportForm() {
     setIsLoading(true);
 
     if (!file || !coordinates) {
-      setErrorMessage({
-        type: "MISSING_DATA",
+      setNotification({
+        code: "MISSING_DATA",
         message: "File or exif metadata is missing.",
+        type: "Error",
       });
       return;
     }
@@ -93,9 +99,10 @@ export default function ReportForm() {
 
       const results = await uploadReports("/api/v1/reports", formData);
       if (!results.success) {
-        setErrorMessage({
-          type: "SERVER_ERROR",
+        setNotification({
+          code: "SERVER_ERROR",
           message: results.message || "Failed to upload report.",
+          type: "Error",
         });
         throw new CustomError("SERVER_ERROR", results.message);
       }
@@ -103,10 +110,17 @@ export default function ReportForm() {
       setFile(null);
       setImageUrl(null);
       setCoordinates(null);
-      console.log("Upload successful:", results);
+      setNotification({
+        type: "Success",
+        message: `Upload successful: ${results}`,
+      });
     } catch (error) {
       if (error instanceof CustomError) {
-        setErrorMessage({ type: error.code, message: error.message });
+        setNotification({
+          code: error.code,
+          message: error.message,
+          type: "Error",
+        });
         return;
       } else {
         console.error("Error uploading report:", error);
@@ -188,8 +202,12 @@ export default function ReportForm() {
         {isLoading ? (
           <LoadingScreen category="notification" />
         ) : (
-          errorMessage && (
-            <Notifications message={errorMessage} func={setErrorMessage} />
+          notification && (
+            <Notifications
+              message={notification.message}
+              func={setNotification}
+              type={notification.type}
+            />
           )
         )}
       </div>

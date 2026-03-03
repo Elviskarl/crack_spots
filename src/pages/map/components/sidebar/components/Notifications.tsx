@@ -1,22 +1,33 @@
 import { useEffect, type Dispatch } from "react";
-import type { ErrorMessage } from "../../../types";
+import type { NotificationType } from "../../../types";
+import closeBtn from "../../../../../assets/close.svg";
+import "../../../styles/notification.css";
 interface Params {
-  message: ErrorMessage;
-  func: Dispatch<React.SetStateAction<ErrorMessage | null>>;
+  message: string;
+  func: Dispatch<React.SetStateAction<NotificationType | null>>;
+  type: "Error" | "Warning" | "Success" | "Info";
 }
 
-export function Notifications({ message, func }: Params) {
+export function Notifications({ message, func, type }: Params) {
   useEffect(() => {
     const timer = setTimeout(() => {
       func(null);
-    }, 3000);
+    }, 4000);
 
     return () => clearTimeout(timer);
   }, [func]);
   return (
-    <div className="notifications">
-      <p className="notification-type">{message.type}</p>
-      <span className="notification-message">{message.message}</span>
+    <div className={`notification notification-${type}`}>
+      <div className={`notification-color notification-color-${type}`}></div>
+      <div className="notifiation-content">
+        <span className={`notification-type notification-type-${type}`}>
+          {type}
+        </span>
+        <span className="notification-message">{message}</span>
+      </div>
+      <div className="close-button-container">
+        <img src={closeBtn} alt="close-button" className="close-btn-icon" />
+      </div>
     </div>
   );
 }
