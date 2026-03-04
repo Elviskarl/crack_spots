@@ -15,23 +15,22 @@ import { MapContext } from "../../../../context/createMapContext";
 
 function LeafletMap() {
   const { reports } = useContext(ReportContext)!;
-  const { map, markerRefs, selectedReport } = useContext(MapContext)!;
 
-  useEffect(() => {
-    if (!map) {
-      console.error("Map instance is not available");
-      return;
-    }
-    if (!selectedReport) {
-      console.warn("No report selected");
-      return;
-    }
+  function FlyToReport() {
+    const map = useMap();
+    const { selectedReport, markerRefs } = useContext(MapContext)!;
 
-    const marker = markerRefs.current[selectedReport._id];
-    map.closePopup();
+    useEffect(() => {
+      if (!selectedReport) {
+        console.warn("No report selected");
+        return;
+      }
 
-    // This is to fix a bug where Leaflet is trying to access an internal DOM element that does not exist anymore.
-    map.whenReady(() => {
+      const marker = markerRefs.current[selectedReport._id];
+
+      map.closePopup();
+      // This is to fix a bug where Leaflet is trying to access an internal DOM element that does not exist anymore.
+
       map.flyTo(
         [
           selectedReport.location.coordinates[1],
@@ -40,26 +39,32 @@ function LeafletMap() {
         19,
         { duration: 3 },
       );
-    }, [map, selectedReport]);
 
-    map.once("moveend", () => {
-      if (marker) {
-        marker.openPopup();
-      } else {
-        console.warn(`Marker for report ID ${selectedReport._id} not found.`);
-      }
-    });
-  }, [selectedReport, map, markerRefs]);
+      map.once("moveend", () => {
+        if (marker) {
+          marker.openPopup();
+        } else {
+          console.warn(`Marker for report ID ${selectedReport._id} not found.`);
+        }
+      });
+    }, [selectedReport, map, markerRefs]);
 
-  function MapInitializer() {
+    return null;
+  }
+
+  function ResizeMap() {
     const map = useMap();
-    const { setMap } = useContext(MapContext)!;
-    // This function will be implemented to fly to the report location on the map when a report is selected from the sidebar.
 
     useEffect(() => {
-      setMap(map);
-    }, [map, setMap]);
-
+      const container = map.getContainer();
+      const observer = new ResizeObserver(() => {
+        map.invalidateSize();
+      });
+      observer.observe(container);
+      return () => {
+        observer.disconnect();
+      };
+    }, [map]);
     return null;
   }
 
@@ -86,7 +91,8 @@ function LeafletMap() {
           />
         </LayersControl.BaseLayer>
       </LayersControl>
-      <MapInitializer />
+      <FlyToReport />
+      <ResizeMap />
       {reports && reports.length > 0 && <ReportsContainer reports={reports} />}
     </MapContainer>
   );

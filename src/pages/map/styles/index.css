@@ -8,3 +8,6 @@
   flex-grow: 1;
   height: 100%;
 }
+.leaflet-container a.leaflet-popup-close-button:hover {
+  color: red;
+}
