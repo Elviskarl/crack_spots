@@ -1,64 +1,86 @@
-import imageUrl from "../../assets/home_img.jpg";
+import imageUrl from "../../assets/about-page.jpg";
+import githubLogo from "../../assets/logo-github.svg";
 import "./styles/index.css";
+import "./styles/aboutPageMediaQuerry.css";
 
 function About() {
   return (
-    <>
-      <section className="about-section-page">
+    <section className="about-section-page">
+      <h2 className="about-section-app-title">crackspots</h2>
+      <div className="about-section-intro">
         <div className="about-section-card">
-          <h5>Welcome to Crack-spots</h5>
+          <h3>A brief introduction</h3>
           <p className="intro-paragraph">
             Road infrastructure issues often go unnoticed or take time to reach
-            the right attention. Small problems like potholes, cracks, or
-            damaged signage can grow into safety risks if they aren’t documented
-            early.
+            the appropriate authorities. Small problems like potholes, cracks,
+            or damaged signage can grow into safety risks if they aren’t
+            documented early.
+          </p>
+          <p className="content">
+            This application allows anyone to report road infrastructure issues
+            as they encounter them. By uploading a photo and confirming its
+            location, users can create a visible, map-based record of reported
+            problems. Each report appears on an interactive map, helping build a
+            clearer picture of where issues exist and how widespread they are.
           </p>
         </div>
-        <div className="about-section-card">
-          <div className="card-image-container">
-            <img src={imageUrl} alt="Damage Preview" />
-          </div>
-          <div className="card-content">
-            <p className="content">
-              This application makes it easy for anyone to report road
-              infrastructure issues as they encounter them. By uploading a photo
-              and confirming its location, users can create a visible, map-based
-              record of reported problems. Each report appears on an interactive
-              map, helping build a clearer picture of where issues exist and how
-              widespread they are.
-            </p>
-          </div>
+        <div className="about-section-image-container">
+          <img
+            src={imageUrl}
+            alt="About section image"
+            className="about-section-image"
+          />
         </div>
+      </div>
+      <div className="about-section-main">
         <div className="about-section-card">
-          <div className="card-content">
-            <p className="content">
-              The app is designed for everyday road users — pedestrians,
-              cyclists, drivers, and residents — as well as anyone interested in
-              understanding infrastructure conditions in a more visual and
-              accessible way.
-            </p>
-          </div>
+          <h3>How it works</h3>
+          <p className="content">
+            Reports are submitted by users and reflect on-the-ground
+            observations. Locations are based on image metadata or user input,
+            and reports are displayed for informational purposes.
+          </p>
+          <p className="content">
+            This project explores how web mapping and user-generated data can be
+            used to improve awareness around road infrastructure and the spaces
+            we move through every day.
+          </p>
         </div>
-        <div className="about-section-card">
-          <div className="card-content">
-            <p className="content">
-              Reports are submitted by users and reflect on-the-ground
-              observations. Locations are based on image metadata or user input,
-              and reports are displayed for informational purposes.
-            </p>
-          </div>
+        <div className="github-space">
+          <h3>Contributions</h3>
+          <p className="content">
+            CrackSpots is developed as an open-source project.
+          </p>
+          <p className="content">
+            The GitHub repository contains the complete source code,
+            documentation, and development history of the platform.
+          </p>
+          <p className="content">
+            Developers and contributors can explore the implementation, follow
+            updates, report issues, and submit improvements through pull
+            requests.
+          </p>
+          <p className="content">
+            If you are interested in improving or adding to the project, your
+            participation is welcomed.{" "}
+          </p>
+          <span className="link-to-repo">
+            <a
+              target="_blank"
+              href="https://github.com/Elviskarl/crack_spots"
+              className="github-btn"
+            >
+              <img
+                src={githubLogo}
+                alt="github-logo"
+                className="github-logo "
+              />
+              view on GitHub
+            </a>
+          </span>
         </div>
-        <div className="about-section-card">
-          <div className="card-content">
-            <p className="content">
-              This project explores how web mapping and user-generated data can
-              be used to improve awareness around road infrastructure and the
-              spaces we move through every day.
-            </p>
-          </div>
-        </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }
 
