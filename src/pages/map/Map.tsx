@@ -10,14 +10,14 @@ function Map() {
   const [collapsed, setCollapsed] = useState(false);
   return (
     <ReportProvider>
-      <section className="map-section-container">
-        <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-        <div className="map-container">
-          <MapContextProvider>
+      <MapContextProvider>
+        <section className="map-section-container">
+          <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+          <div className="map-container">
             <LeafletMap />
-          </MapContextProvider>
-        </div>
-      </section>
+          </div>
+        </section>
+      </MapContextProvider>
     </ReportProvider>
   );
 }
