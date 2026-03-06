@@ -8,10 +8,9 @@ function Navbar() {
       <nav>
         <div className="left-nav-section">
           <div className="image-container">
-            <NavLink to="/">
-              <img src={imgSrc} alt="App logo" className="app-image-logo" />
-            </NavLink>
+            <img src={imgSrc} alt="App logo" className="app-image-logo" />
           </div>
+          <span className="app-title">crackspots</span>
         </div>
         <ul className="main-nav-section">
           <li>
