@@ -57,7 +57,6 @@ div.notification-Success::after {
 }
 .close-button-container {
   width: 2rem;
-  object-fit: cover;
   position: absolute;
   top: 0;
   right: 0;
@@ -67,6 +66,7 @@ div.notification-Success::after {
   height: auto;
   filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg)
     brightness(104%) contrast(97%);
+  object-fit: cover;
 }
 .notification-type-Error {
   color: red;
