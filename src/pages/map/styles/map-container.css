@@ -68,3 +68,19 @@
 .tag-values small {
   font-size: var(--text-base);
 }
+.pulse-animation {
+  animation: pulse 2s ease-in-out infinite alternate;
+}
+@keyframes pulse {
+  from {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

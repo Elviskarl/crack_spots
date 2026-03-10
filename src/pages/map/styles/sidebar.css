@@ -8,6 +8,7 @@ aside.sidebar {
   background-color: hsla(28, 78%, 68%, 0.6);
   position: relative;
   transition: all 0.5s ease-in-out;
+  z-index: 666;
 }
 
 /* component styles */
@@ -43,4 +44,7 @@ aside.sidebar {
 aside.sidebar.closed {
   width: 15rem;
   gap: 1rem;
+}
+aside.sidebar.closed .sidebar-wrapper {
+  overflow: visible;
 }

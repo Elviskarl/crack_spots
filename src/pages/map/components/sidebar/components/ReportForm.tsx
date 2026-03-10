@@ -62,7 +62,7 @@ export default function ReportForm() {
       }
     } finally {
       const elapsed = Date.now() - start;
-      const remaining = Math.max(0, 3000 - elapsed);
+      const remaining = Math.max(0, 500 - elapsed);
 
       setTimeout(() => {
         setIsLoading(false);
@@ -105,15 +105,12 @@ export default function ReportForm() {
           type: "Error",
         });
         throw new CustomError("SERVER_ERROR", results.message);
+      } else {
+        setNotification({
+          type: "Success",
+          message: `Upload successful: ${results}`,
+        });
       }
-      // Only clear on success
-      setFile(null);
-      setImageUrl(null);
-      setCoordinates(null);
-      setNotification({
-        type: "Success",
-        message: `Upload successful: ${results}`,
-      });
     } catch (error) {
       if (error instanceof CustomError) {
         setNotification({
@@ -123,9 +120,16 @@ export default function ReportForm() {
         });
         return;
       } else {
-        console.error("Error uploading report:", error);
+        setNotification({
+          type: "Error",
+          message: `Error uploading report: ${error}`,
+        });
       }
     } finally {
+      // Only clear on success
+      setFile(null);
+      setImageUrl(null);
+      setCoordinates(null);
       setIsLoading(false);
     }
   }

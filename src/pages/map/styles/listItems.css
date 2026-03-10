@@ -6,6 +6,7 @@
 .list-item {
   border: 1px solid var(--secondary-shade);
   height: auto;
+  position: relative;
 }
 .list-item:nth-child(2) {
   position: relative;

@@ -18,7 +18,7 @@ export function ListItems(props: ListItemsProps) {
     setIsOpen((prevVal) => !prevVal);
   }
   return (
-    <li className="list-item">
+    <li className="list-item" data-tooltip={textContent}>
       <div className="sidebar-heading">
         <div className="list-heading-container">
           <img
