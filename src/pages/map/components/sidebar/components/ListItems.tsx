@@ -6,8 +6,14 @@ import LoadingScreen from "../../../../../components/LoadingScreen";
 
 export function ListItems(props: ListItemsProps) {
   const [isOpen, setIsOpen] = useState(true);
-  const { Component, imageUrl, textContent, requiresLoading, collapsed } =
-    props;
+  const {
+    Component,
+    imageUrl,
+    textContent,
+    requiresLoading,
+    collapsed,
+    setCollapsed,
+  } = props;
   function toggleList(/*e: MouseEvent<HTMLButtonElement>*/) {
     setIsOpen((prevVal) => !prevVal);
   }
@@ -41,7 +47,7 @@ export function ListItems(props: ListItemsProps) {
         </button>
       </div>
       <div className={`sidebar-item ${isOpen ? "open" : "closed"}`}>
-        <Component />
+        <Component setCollapsed={setCollapsed} />
       </div>
     </li>
   );

@@ -5,12 +5,14 @@ import SearchSuggestions from "./SearchSuggestions";
 import MatchingReports from "./MatchingReports";
 import "../../../styles/searchListSection.css";
 import useDebounce from "../../../hooks/Debouncer";
+import type { ListItemOptional } from "../../../types";
 
-export default function SearchListSection() {
+export default function SearchListSection(props: ListItemOptional) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const { reports } = useContext(ReportContext)!;
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
+  const { setCollapsed } = props;
 
   // Find matching Report
   const matchingReport = useMemo(() => {
@@ -83,7 +85,10 @@ export default function SearchListSection() {
       </form>
       {hasSearch ? (
         hasResults ? (
-          <MatchingReports matchingReport={matchingReport} />
+          <MatchingReports
+            matchingReport={matchingReport}
+            setCollapsed={setCollapsed}
+          />
         ) : (
           <p className="no-results-found">No results found.</p>
         )

@@ -34,6 +34,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
             textContent="Search"
             requiresLoading={true}
             collapsed={collapsed}
+            setCollapsed={setCollapsed}
           />
           <ListItems
             imageUrl={filterImageUrl}

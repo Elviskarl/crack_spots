@@ -1,3 +1,5 @@
+import type { Dispatch, SetStateAction } from "react";
+
 export interface Report {
   _id: string;
   user: string;
@@ -46,7 +48,11 @@ export interface serverResponse {
 export interface ListItemsProps {
   imageUrl: string;
   textContent: string;
-  Component: React.ComponentType;
+  Component: React.ComponentType<ListItemOptional>;
   requiresLoading?: boolean;
   collapsed?: boolean;
+  setCollapsed?: Dispatch<SetStateAction<boolean>>;
+}
+export interface ListItemOptional {
+  setCollapsed?: Dispatch<SetStateAction<boolean>>;
 }

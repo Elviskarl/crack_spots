@@ -5,14 +5,16 @@ import locationImgUrl from "../../../../../assets/map-outline.svg";
 import imageCategoryUrl from "../../../../../assets/analytics-outline.svg";
 import calenderUrl from "../../../../../assets/calendar-outline.svg";
 import leafUrl from "../../../../../assets/leaf-outline.svg";
-import { useContext } from "react";
+import { useContext, type Dispatch, type SetStateAction } from "react";
 import { MapContext } from "../../../../../context/createMapContext";
 interface MatchingReportprops {
   matchingReport: Report[];
+  setCollapsed?: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function MatchingReports({
   matchingReport,
+  setCollapsed,
 }: MatchingReportprops) {
   const { setSelectedReport } = useContext(MapContext)!;
 
@@ -86,7 +88,12 @@ export default function MatchingReports({
           </div>
           <span
             className="result-detail-link"
-            onClick={() => flyToReport(report)}
+            onClick={() => {
+              if (setCollapsed) {
+                setCollapsed(true);
+                flyToReport(report);
+              }
+            }}
           >
             View on Map
           </span>
