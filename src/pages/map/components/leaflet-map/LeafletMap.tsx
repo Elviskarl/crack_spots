@@ -31,6 +31,24 @@ function LeafletMap() {
       map.closePopup();
       // This is to fix a bug where Leaflet is trying to access an internal DOM element that does not exist anymore.
 
+      setTimeout(() => {
+        // Force Leaflet to recompute layout before flying
+        map.invalidateSize();
+
+        map.flyTo(
+          [
+            selectedReport.location.coordinates[1],
+            selectedReport.location.coordinates[0],
+          ],
+          19,
+          { duration: 3 },
+        );
+
+        map.once("moveend", () => {
+          marker?.openPopup();
+        });
+      }, 500); // match sidebar transition
+
       map.flyTo(
         [
           selectedReport.location.coordinates[1],
