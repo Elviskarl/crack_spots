@@ -41,6 +41,15 @@
   }
 }
 /*phone potrait to phone landscape - <620 px */
-/* @media (max-width: 32rem) */
+@media (max-width: 38.75rem) {
+  aside.sidebar {
+    width: 100%;
+    padding: 5px 0;
+    max-width: unset;
+  }
+  .map-container {
+    width: 0;
+  }
+}
   /* 512 / 16 = 32 */
 

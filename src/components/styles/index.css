@@ -79,3 +79,20 @@ a.active::after {
     width: 100%;
   }
 }
+
+/* phone landscape to tablets - 690 to 780 px */
+@media (max-width: 48.75rem) {
+  .app-title {
+    display: none;
+  }
+  .image-container {
+    margin-left: 6rem;
+  }
+  .main-nav-section {
+    justify-content: flex-start;
+    flex-grow: unset;
+  }
+  .left-nav-section {
+    flex-grow: unset;
+  }
+}

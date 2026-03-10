@@ -34,13 +34,13 @@
   }
 }
 /* phone landscape to tablets - 690 to 780 px */
-@media (max-width: 48.75rem) {
+/* @media (max-width: 48.75rem) {
   /* 690 / 16 = 43.125 */
-  html {
-    /* 7 / 16 = 37.5% */
-    font-size: 43.75%;
-  }
-}
+/* html { */
+/* 7 / 16 = 37.5% */
+/* font-size: 43.75%; */
+/* } */
+/* } */
 /*phone potrait to phone landscape - <620 px */
 /* @media (max-width: 32rem) */
 /* 512 / 16 = 32 */
