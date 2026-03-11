@@ -6,8 +6,10 @@ import filterImageUrl from "../../../../assets/funnel-outline.svg";
 import ReportForm from "./components/ReportForm";
 import SearchListSection from "./components/SearchListSection";
 import menuImageUrl from "../../../../assets/menu-outline.svg";
-import { type Dispatch, type SetStateAction } from "react";
+import { useContext, type Dispatch, type SetStateAction } from "react";
 import FilterReports from "./components/FilterReports";
+import { ReportContext } from "../../../../context/createReportContext";
+import { Notifications } from "./components/Notifications";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -15,6 +17,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
+  const { isLoading, setNotification } = useContext(ReportContext)!;
   function toggleSidebar() {
     setCollapsed((prevVal) => !prevVal);
   }
@@ -44,6 +47,13 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
             collapsed={collapsed}
           />
         </ul>
+        {isLoading && (
+          <Notifications
+            message="Fetching Reports from the database, please wait"
+            func={setNotification}
+            type="Info"
+          />
+        )}
       </section>
       <div className="sidebar-toggle-image-container" onClick={toggleSidebar}>
         <img src={menuImageUrl} alt="menu" />

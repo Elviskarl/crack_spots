@@ -7,9 +7,10 @@ div.notification {
   width: 100%;
   max-width: 400px;
   background-color: aliceblue;
-  padding: 5px;
+  padding: 0.5rem;
   transform: translateX(100%);
   animation: moveLeft 0.7s ease-in-out forwards;
+  font-size: var(--text-paragraph);
 }
 div.notification::after {
   content: "";
@@ -38,22 +39,21 @@ div.notification-Success::after {
   left: 0;
   height: 100%;
   width: 2%;
-  background-color: red;
 }
 .notification-color-Error {
-  color: red;
+  background-color: red;
 }
 .notification-color-Warning {
-  color: orange;
+  background-color: orange;
 }
 .notification-color-Info {
-  color: cornflowerblue;
+  background-color: cornflowerblue;
 }
 .notification-color-Success {
-  color: rgb(0, 255, 0);
+  background-color: rgb(0, 255, 0);
 }
-.notifiation-content {
-  margin-left: 1rem;
+.notification-content {
+  margin-left: 2rem;
 }
 .close-button-container {
   width: 2rem;

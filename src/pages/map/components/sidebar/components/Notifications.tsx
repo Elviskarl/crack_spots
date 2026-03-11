@@ -18,7 +18,10 @@ export function Notifications({ message, func, type }: Params) {
   }, [func]);
   return (
     <div className={`notification notification-${type}`}>
-      <div className={`notification-color notification-color-${type}`}></div>
+      <div
+        className={`notification-color notification-color-${type}`}
+        data-color={type}
+      ></div>
       <div className="notification-content">
         <span className={`notification-type notification-type-${type}`}>
           {type}
