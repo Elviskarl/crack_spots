@@ -18,13 +18,13 @@ function LeafletMap() {
 
   function FlyToReport() {
     const map = useMap();
-    const { selectedReport, markerRefs } = useContext(MapContext)!;
+    const { selectedReport, markerRefs, setSelectedReport } =
+      useContext(MapContext)!;
 
     useEffect(() => {
-      if (!selectedReport) {
-        // console.warn("No report selected");
-        return;
-      }
+      if (!selectedReport) return;
+      // Only fly if lastFlownReport report is different from the last selectedReport
+      // if (lastFlownReport.current === selectedReport._id) return;
 
       const marker = markerRefs.current[selectedReport._id];
 
@@ -46,26 +46,12 @@ function LeafletMap() {
 
         map.once("moveend", () => {
           marker?.openPopup();
+          // Mark as flown
+          // lastFlownReport.current = selectedReport._id;
+          setSelectedReport(null);
         });
       }, 500); // match sidebar transition
-
-      map.flyTo(
-        [
-          selectedReport.location.coordinates[1],
-          selectedReport.location.coordinates[0],
-        ],
-        19,
-        { duration: 3 },
-      );
-
-      map.once("moveend", () => {
-        if (marker) {
-          marker.openPopup();
-        } else {
-          console.warn(`Marker for report ID ${selectedReport._id} not found.`);
-        }
-      });
-    }, [selectedReport, map, markerRefs]);
+    }, [selectedReport, map, markerRefs, setSelectedReport]);
 
     return null;
   }

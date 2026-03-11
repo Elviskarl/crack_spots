@@ -9,7 +9,7 @@ import type { Report } from "../pages/map/types";
 interface MapContextType {
   selectedReport: Report | null;
   setSelectedReport: Dispatch<SetStateAction<Report | null>>;
-
+  lastFlownReport: RefObject<string | null>;
   markerRefs: RefObject<Record<string, L.Marker>>;
 }
 

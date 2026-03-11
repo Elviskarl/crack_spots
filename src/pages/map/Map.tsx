@@ -13,9 +13,9 @@ function Map() {
       <MapContextProvider>
         <section className="map-section-container">
           <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-          <div className="map-container">
+          <>
             <LeafletMap />
-          </div>
+          </>
         </section>
       </MapContextProvider>
     </ReportProvider>

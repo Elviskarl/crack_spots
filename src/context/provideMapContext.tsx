@@ -9,12 +9,14 @@ export function MapContextProvider({
 }) {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const markerRefs = useRef<Record<string, L.Marker>>({});
+  const lastFlownReport = useRef<string>(null);
   return (
     <MapContext.Provider
       value={{
         selectedReport,
         setSelectedReport,
         markerRefs,
+        lastFlownReport,
       }}
     >
       {children}
