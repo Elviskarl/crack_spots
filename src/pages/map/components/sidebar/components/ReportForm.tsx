@@ -207,11 +207,11 @@ export default function ReportForm() {
           <LoadingScreen category="notification" />
         ) : (
           notification && (
-            <Notifications
-              message={notification.message}
-              func={setNotification}
-              type={notification.type}
-            />
+          <Notifications
+            message={notification.message}
+            func={setNotification}
+            type={notification.type}
+          />
           )
         )}
       </div>

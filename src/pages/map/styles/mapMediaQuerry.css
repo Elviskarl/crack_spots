@@ -20,7 +20,7 @@
     font-size: 50%;
   }
   aside.sidebar.closed {
-    width: max-content;
+    width: 10rem;
   }
   .map-container {
     width: 60%;
@@ -85,7 +85,7 @@
     width: 45%;
   }
   aside.sidebar.closed {
-    width: 10rem;
+    /* width: 10rem; */
     gap: 1rem;
   }
   .map-container {
