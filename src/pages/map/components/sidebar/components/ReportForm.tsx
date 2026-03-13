@@ -53,6 +53,12 @@ export default function ReportForm() {
     loadShapefile();
   }, []);
 
+  function resetPreview() {
+    setFile(null);
+    setImageUrl(null);
+    setCoordinates(null);
+  }
+
   async function processImage(param: File) {
     setIsLoading(true);
     const start = Date.now();
@@ -175,9 +181,7 @@ export default function ReportForm() {
       }
     } finally {
       // Only clear on success
-      setFile(null);
-      setImageUrl(null);
-      setCoordinates(null);
+      resetPreview();
       setIsLoading(false);
     }
   }
@@ -255,11 +259,11 @@ export default function ReportForm() {
           <LoadingScreen category="notification" />
         ) : (
           notification && (
-          <Notifications
-            message={notification.message}
-            func={setNotification}
-            type={notification.type}
-          />
+            <Notifications
+              message={notification.message}
+              func={setNotification}
+              type={notification.type}
+            />
           )
         )}
       </div>
