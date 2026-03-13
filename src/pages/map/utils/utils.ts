@@ -37,7 +37,7 @@ export async function readFile(
     if (err instanceof CustomError) {
       throw err;
     }
-    console.error(err);
+    throw new CustomError("NO_EXIF_DATA", "Failed to read image metadata");
   }
 }
 
@@ -49,10 +49,7 @@ const ALLOWED_MIME_TYPES = [
 ];
 
 export function validateFile(file: File) {
-  if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-    throw new CustomError(
-      "INVALID_FILE_TYPE",
-      `Please upload a JPG, PNG, or WEBP image. Received: ${file.type}`,
-    );
-  }
+  const fileType = file.type;
+  const isValid = ALLOWED_MIME_TYPES.includes(file.type);
+  return { isValid, fileType };
 }

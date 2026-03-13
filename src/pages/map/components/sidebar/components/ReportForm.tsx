@@ -35,8 +35,14 @@ export default function ReportForm() {
     setIsLoading(true);
     const start = Date.now();
     try {
-      validateFile(param);
-      setFile(param);
+      const { fileType, isValid } = validateFile(param);
+      if (!isValid) {
+        resetPreview();
+        throw new CustomError(
+          "INVALID_FILE_TYPE",
+          `Please upload a JPG, PNG, or WEBP image. Received: ${fileType}`,
+        );
+      }
       const data = await readFile(param);
       if (!data) return;
       const url = URL.createObjectURL(param);
@@ -45,6 +51,7 @@ export default function ReportForm() {
       });
       setImageUrl(url);
     } catch (err) {
+      resetPreview();
       if (err instanceof CustomError) {
         setNotification({
           code: err.code,
@@ -52,6 +59,11 @@ export default function ReportForm() {
           type: "Error",
         });
         return;
+      } else if (notification) {
+        setNotification({
+          message: notification.message,
+          type: notification.type,
+        });
       } else {
         setNotification({
           code: "UNKNOWN_ERROR",
