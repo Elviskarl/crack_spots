@@ -32,6 +32,32 @@ function About() {
           />
         </div>
       </div>
+      <div className="about-section-design-considerations">
+        <div className="about-section-card">
+          <h3>Design & Considerations</h3>
+          <p className="content">
+            Crackspots is currently implemented as a pilot project operating
+            within Nairobi County. Limiting the platform to a single geographic
+            region allows the application to focus on improving its core
+            functionality, that is- reporting, mapping, and visualization of
+            road infrastructure issues.
+          </p>
+          <p className="content">
+            As the project grows and more data is collected, the platform is
+            intended to scale beyond its initial scope. The underlying structure
+            of the application is designed with expansion in mind, allowing
+            additional regions to be incorporated as the reporting system
+            matures and the dataset becomes more representative.
+          </p>
+          <p className="content">
+            In this sense, the current limitation to Nairobi should be
+            understood not as a restriction of the system’s capability, but as a
+            deliberate starting point, providing an opportunity to observe how
+            the platform performs gradually building a reliable body of data
+            that can support future expansion.
+          </p>
+        </div>
+      </div>
       <div className="about-section-main">
         <div className="about-section-card">
           <h3>How it works</h3>

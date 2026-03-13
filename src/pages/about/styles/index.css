@@ -39,6 +39,16 @@ section.about-section-page {
   justify-content: center;
   width: 45%;
 }
+.about-section-design-considerations {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 85%;
+  margin-inline: auto;
+}
+.about-section-design-considerations h3 {
+  background-color: var(--tertiary-base);
+}
 .about-section-main {
   display: flex;
   align-items: center;
