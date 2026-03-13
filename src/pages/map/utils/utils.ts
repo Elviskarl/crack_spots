@@ -1,10 +1,10 @@
 import * as ExifReader from "exifreader";
+import * as turf from "@turf/turf";
 import type { CoordinateData } from "../types";
 import { CustomError } from "../../../components/error/CustomError";
+import type { FeatureCollection, MultiPolygon, Polygon } from "geojson";
 
-export async function readFile(
-  param: File,
-): Promise<CoordinateData | undefined> {
+export async function readFile(param: File): Promise<CoordinateData> {
   try {
     const data = await ExifReader.load(param);
     if (
@@ -52,4 +52,29 @@ export function validateFile(file: File) {
   const fileType = file.type;
   const isValid = ALLOWED_MIME_TYPES.includes(file.type);
   return { isValid, fileType };
+}
+
+export async function loadBoundary(): Promise<
+  FeatureCollection<Polygon | MultiPolygon>
+> {
+  // const res = await fetch("crack_spots/data/Nairobi_subCounty.json");
+  const res = await fetch(
+    `${import.meta.env.BASE_URL}data/Nairobi_subCounty.json`,
+  );
+
+  if (!res.ok) throw new Error(`Failed to load boundary: ${res.statusText}`);
+  const data = (await res.json()) as FeatureCollection<Polygon | MultiPolygon>;
+  return data;
+}
+
+export function isInNairobi(
+  lat: number,
+  lon: number,
+  shapefile: FeatureCollection<Polygon | MultiPolygon>,
+) {
+  const point = turf.point([lon, lat]);
+
+  return shapefile.features.some((feature) =>
+    turf.booleanPointInPolygon(point, feature),
+  );
 }

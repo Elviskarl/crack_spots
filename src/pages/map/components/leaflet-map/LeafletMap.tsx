@@ -77,11 +77,11 @@ function LeafletMap() {
       <MapContainer
         center={[-1.216013888888889, 36.90145277777778]}
         zoom={14}
-        scrollWheelZoom={false}
+        scrollWheelZoom={true}
         zoomControl={false}
       >
+        <ZoomControl position="topright" />
         <LayersControl position="topright">
-          <ZoomControl position="topright" />
           <LayersControl.BaseLayer name="OpenStreetMap">
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

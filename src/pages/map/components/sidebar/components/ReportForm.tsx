@@ -6,7 +6,12 @@ import {
   useContext,
 } from "react";
 import ReportPreview from "./ReportPreview";
-import { readFile, validateFile } from "../../../utils/utils";
+import {
+  isInNairobi,
+  loadBoundary,
+  readFile,
+  validateFile,
+} from "../../../utils/utils";
 import type { CoordinateData } from "../../../types";
 import { uploadReports } from "../../../utils/uploadReports";
 import { CustomError } from "../../../../../components/error/CustomError";
@@ -14,6 +19,7 @@ import { Notifications } from "./Notifications";
 import "../../../styles/report-form.css";
 import LoadingScreen from "../../../../../components/LoadingScreen";
 import { ReportContext } from "../../../../../context/createReportContext";
+import type { Polygon, MultiPolygon, FeatureCollection } from "geojson";
 
 export default function ReportForm() {
   const [file, setFile] = useState<File | null>(null);
@@ -22,6 +28,8 @@ export default function ReportForm() {
   const [coordinates, setCoordinates] = useState<CoordinateData | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { notification, setNotification } = useContext(ReportContext)!;
+  const nairobiSubCountyShapefile =
+    useRef<FeatureCollection<Polygon | MultiPolygon>>(null);
 
   useEffect(() => {
     if (!imageUrl) return;
@@ -30,6 +38,20 @@ export default function ReportForm() {
       URL.revokeObjectURL(imageUrl);
     };
   }, [imageUrl]);
+
+  useEffect(() => {
+    async function loadShapefile() {
+      try {
+        if (!nairobiSubCountyShapefile.current) {
+          const data = await loadBoundary();
+          nairobiSubCountyShapefile.current = data;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    loadShapefile();
+  }, []);
 
   async function processImage(param: File) {
     setIsLoading(true);
@@ -44,7 +66,21 @@ export default function ReportForm() {
         );
       }
       const data = await readFile(param);
-      if (!data) return;
+      const within = isInNairobi(
+        data.GPSLatitude,
+        data.GPSLongitude,
+        nairobiSubCountyShapefile.current!,
+      );
+      if (!within) {
+        resetPreview();
+        setNotification({
+          type: "Error",
+          message: "Reports must be located within Nairobi County.",
+        });
+        return;
+      }
+      setFile(param);
+
       const url = URL.createObjectURL(param);
       setCoordinates({
         ...data,
