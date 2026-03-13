@@ -67,13 +67,26 @@ export async function loadBoundary(): Promise<
   return data;
 }
 
+function isInBoundingBox(
+  param: FeatureCollection<Polygon | MultiPolygon>,
+  lat: number,
+  lon: number,
+) {
+  const bBox = turf.bbox(param);
+  const [minLon, minLat, maxLon, maxLat] = bBox;
+  return lon >= minLon && lon <= maxLon && lat >= minLat && lat <= maxLat;
+}
+
 export function isInNairobi(
   lat: number,
   lon: number,
   shapefile: FeatureCollection<Polygon | MultiPolygon>,
 ) {
+  const isInBbox = isInBoundingBox(shapefile, lat, lon);
+  if (!isInBbox) {
+    return false;
+  }
   const point = turf.point([lon, lat]);
-
   return shapefile.features.some((feature) =>
     turf.booleanPointInPolygon(point, feature),
   );
