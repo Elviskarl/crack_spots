@@ -12,14 +12,15 @@ import "../../styles/map-container.css";
 import { ReportContext } from "../../../../context/createReportContext";
 import { ReportsContainer } from "./ReportsContainer";
 import { MapContext } from "../../../../context/createMapContext";
+import DisplayShapefile from "../sidebar/components/DisplayShapefile";
 
 function LeafletMap() {
   const { reports, isLoading } = useContext(ReportContext)!;
+  const { selectedReport, markerRefs, setSelectedReport, isNotInNairobi } =
+    useContext(MapContext)!;
 
   function FlyToReport() {
     const map = useMap();
-    const { selectedReport, markerRefs, setSelectedReport } =
-      useContext(MapContext)!;
 
     useEffect(() => {
       if (!selectedReport) return;
@@ -51,7 +52,7 @@ function LeafletMap() {
           setSelectedReport(null);
         });
       }, 500); // match sidebar transition
-    }, [selectedReport, map, markerRefs, setSelectedReport]);
+    }, []);
 
     return null;
   }
@@ -98,6 +99,7 @@ function LeafletMap() {
         </LayersControl>
         <FlyToReport />
         <ResizeMap />
+        {isNotInNairobi && <DisplayShapefile />}
         {reports && reports.length > 0 && (
           <ReportsContainer reports={reports} />
         )}

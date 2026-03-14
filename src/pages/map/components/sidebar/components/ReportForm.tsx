@@ -6,12 +6,7 @@ import {
   useContext,
 } from "react";
 import ReportPreview from "./ReportPreview";
-import {
-  isInNairobi,
-  loadBoundary,
-  readFile,
-  validateFile,
-} from "../../../utils/utils";
+import { isInNairobi, readFile, validateFile } from "../../../utils/utils";
 import type { CoordinateData } from "../../../types";
 import { uploadReports } from "../../../utils/uploadReports";
 import { CustomError } from "../../../../../components/error/CustomError";
@@ -19,7 +14,7 @@ import { Notifications } from "./Notifications";
 import "../../../styles/report-form.css";
 import LoadingScreen from "../../../../../components/LoadingScreen";
 import { ReportContext } from "../../../../../context/createReportContext";
-import type { Polygon, MultiPolygon, FeatureCollection } from "geojson";
+import { MapContext } from "../../../../../context/createMapContext";
 
 export default function ReportForm() {
   const [file, setFile] = useState<File | null>(null);
@@ -28,8 +23,8 @@ export default function ReportForm() {
   const [coordinates, setCoordinates] = useState<CoordinateData | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { notification, setNotification } = useContext(ReportContext)!;
-  const nairobiSubCountyShapefile =
-    useRef<FeatureCollection<Polygon | MultiPolygon>>(null);
+  const { nairobiSubCountyShapefile, setIsNotInNairobi } =
+    useContext(MapContext)!;
 
   useEffect(() => {
     if (!imageUrl) return;
@@ -38,20 +33,6 @@ export default function ReportForm() {
       URL.revokeObjectURL(imageUrl);
     };
   }, [imageUrl]);
-
-  useEffect(() => {
-    async function loadShapefile() {
-      try {
-        if (!nairobiSubCountyShapefile.current) {
-          const data = await loadBoundary();
-          nairobiSubCountyShapefile.current = data;
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    loadShapefile();
-  }, []);
 
   function resetPreview() {
     setFile(null);
@@ -78,6 +59,7 @@ export default function ReportForm() {
         nairobiSubCountyShapefile.current!,
       );
       if (!within) {
+        setIsNotInNairobi(true);
         resetPreview();
         setNotification({
           type: "Error",
