@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import "../styles/index.css";
-import "../styles/heroMediaQuerry.css";
 
 function Hero() {
   return (
