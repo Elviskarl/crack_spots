@@ -12,7 +12,7 @@ export function Notifications({ message, func, type }: Params) {
   useEffect(() => {
     const timer = setTimeout(() => {
       func(null);
-    }, 7000);
+    }, 6000);
 
     return () => clearTimeout(timer);
   }, [func]);
