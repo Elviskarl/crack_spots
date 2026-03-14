@@ -1,0 +1,23 @@
+/* typography.css */
+
+/* small to large Laptops - 1000 to 1248 px */
+@media (max-width: 78rem) {
+  html {
+    font-size: 56.25%;
+  } /* 9px */
+}
+
+/* tablets to small Laptops - 780 to 1000 px */
+@media (max-width: 62.5rem) {
+  html {
+    font-size: 50%;
+  } /* 8px */
+}
+
+/* phone landscape to tablets - 672 to 780 px */
+@media (max-width: 42rem) {
+  html {
+    font-size: 43.75%;
+  } /* 7px */
+}
+

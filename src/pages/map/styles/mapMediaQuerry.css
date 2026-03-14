@@ -1,10 +1,6 @@
 /* small to large Laptops - 1000 to 1248 px */
 @media (max-width: 78rem) {
   /* 1248 / 16 = 78 */
-  html {
-    /* 9 /16 = 56.25% */
-    font-size: 56.25%;
-  }
   aside.sidebar {
     width: 38%;
   }
@@ -15,10 +11,6 @@
 /* tablets to small Laptops - 780 to 1000 px */
 @media (max-width: 62.5rem) {
   /* 900 / 16 = 53 */
-  html {
-    /* 8 /16 = 50% */
-    font-size: 50%;
-  }
   aside.sidebar.closed {
     width: 10rem;
   }
