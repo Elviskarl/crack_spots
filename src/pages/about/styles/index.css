@@ -80,7 +80,8 @@ section.about-section-page {
   width: 100%;
   height: auto;
 }
-.link-to-repo {
+.link-to-repo,
+.link-to-docs {
   color: dodgerblue;
 }
 .github-btn {
@@ -90,4 +91,7 @@ section.about-section-page {
 }
 .github-logo {
   width: 3rem;
+}
+.link-to-docs{
+  margin-left: 1rem;
 }

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import imageUrl from "../../assets/about-page.jpg";
 import githubLogo from "../../assets/logo-github.svg";
 import "./styles/index.css";
@@ -76,6 +77,14 @@ function About() {
           <h3>Contributions</h3>
           <p className="content">
             CrackSpots is developed as an open-source project.
+            <span className="link-to-docs">
+              <Link
+                to="/api"
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              >
+                see documentation
+              </Link>
+            </span>
           </p>
           <p className="content">
             The GitHub repository contains the complete source code,
