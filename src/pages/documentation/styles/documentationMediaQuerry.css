@@ -1,0 +1,31 @@
+/* small to large Laptops - 1000 to 1248 px */
+@media (max-width: 78rem) {
+  /* 1248 / 16 = 78 */
+}
+/* tablets to small Laptops - 780 to 1000 px */
+@media (max-width: 62.5rem) {
+  /* 900 / 16 = 53 */
+}
+/* phone landscape to tablets - 672 to 780 px */
+@media (max-width: 42rem) {
+  /* 670 / 16 = 43.125 */
+  /* html { */
+  /* 10 /16 = 62.75% */
+  /* font-size: 62.5%; */
+  /* font-size: 43.75%; */
+  /* } */
+  /* Remove column layout */
+  pre {
+    font-size: var(--text-paragraph);
+  }
+  .api-table {
+    grid-template-columns: 1fr 1fr 3fr;
+  }
+  /* Hide the column content */
+  .api-table > :nth-child(4n + 3) {
+    display: none;
+  }
+}
+/*phone potrait to phone landscape - <620 px */
+@media (max-width: 38.75rem) {
+}
