@@ -22,6 +22,9 @@ function Navbar() {
           <li>
             <NavLink to="/about">About</NavLink>
           </li>
+          <li>
+            <NavLink to="/api">Docs</NavLink>
+          </li>
         </ul>
       </nav>
       <Outlet />
