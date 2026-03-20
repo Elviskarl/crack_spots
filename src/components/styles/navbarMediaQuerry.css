@@ -39,8 +39,9 @@
     padding: 1rem 0.5rem;
 
     /* hidden state */
-    opacity: 0;
-    transform: translateY(-10px);
+    /* opacity: 0; */
+    /* display: none; */
+    transform: translateY(-500px);
     transition: all 0.3s ease-in-out;
   }
   .main-nav-section a {
@@ -49,7 +50,8 @@
     font-size: var(--text-paragraph);
   }
   .main-nav-section.open {
-    opacity: 1;
+    /* opacity: 1; */
+    display: flex;
     transform: translateY(0);
     pointer-events: auto;
   }
