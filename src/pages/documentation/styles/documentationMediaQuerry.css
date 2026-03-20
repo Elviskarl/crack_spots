@@ -28,4 +28,7 @@
 }
 /*phone potrait to phone landscape - <620 px */
 @media (max-width: 38.75rem) {
+  .getting-started-content > .base-url {
+    max-width: fit-content;
+  }
 }
