@@ -37,16 +37,18 @@ nav {
 nav a {
   padding: 0.5rem 1rem;
   text-decoration: none;
-  font-weight: var(--font-weight-bold);
+  /* font-weight: var(--font-weight-bold); */
 }
-.image-container {
+.image-container,
+.menu-img-container {
   height: 5rem;
   width: 5rem;
   border: none;
   border-radius: 50%;
   overflow: hidden;
 }
-.image-container img {
+.image-container img,
+.menu-img-container svg {
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -73,6 +75,12 @@ a.active::after {
 .main-nav-section a.active {
   transform: scale(1.2, 1.2);
 }
+.nav-menu {
+  display: none;
+}
+.menu-img-container svg {
+  color: var(--tertiary-base);
+}
 
 @keyframes slideLeft {
   from {
@@ -80,22 +88,5 @@ a.active::after {
   }
   to {
     width: 100%;
-  }
-}
-
-/* phone landscape to tablets - 690 to 780 px */
-@media (max-width: 48.75rem) {
-  .app-title {
-    display: none;
-  }
-  .image-container {
-    margin-left: 6rem;
-  }
-  .main-nav-section {
-    justify-content: flex-start;
-    flex-grow: unset;
-  }
-  .left-nav-section {
-    flex-grow: unset;
   }
 }

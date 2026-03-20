@@ -1,14 +1,16 @@
 /* Element styles */
 aside.sidebar {
-  max-width: 400px;
+  /* max-width: 400px; */
   width: 32%;
   display: flex;
   justify-content: center;
   height: 100%;
-  background-color: hsla(28, 78%, 68%, 0.6);
-  position: relative;
+  background-color: rgb(248, 202, 163);
+  position: absolute;
+  /* top: calc(5px + var(--navbar-height));
+  left: 5px; */
   transition: all 0.5s ease-in-out;
-  z-index: 666;
+  z-index: 1300;
 }
 
 /* component styles */
@@ -50,6 +52,8 @@ aside.sidebar.closed .sidebar-wrapper .notification {
 aside.sidebar.closed {
   width: 15rem;
   gap: 1rem;
+  height: fit-content;
+  /* max-height: 31.5rem; */
 }
 aside.sidebar.closed .sidebar-wrapper {
   overflow: visible;

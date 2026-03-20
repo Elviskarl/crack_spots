@@ -4,8 +4,8 @@
   height: calc(100vh - var(--navbar-height));
 }
 .map-container {
-  width: 68%;
-  flex-grow: 1;
+  width: 100%;
+  /* flex-grow: 1; */
   height: 100%;
 }
 .leaflet-container a.leaflet-popup-close-button:hover {
