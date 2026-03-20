@@ -30,13 +30,13 @@
   .main-nav-section {
     display: flex;
     flex-direction: column;
-    /* width: max-content; */
     position: absolute;
     top: 100%;
-    right: 5%;
+    right: 0;
     background-color: gainsboro;
     z-index: 1500;
     padding: 1rem 0.5rem;
+    width: 21rem;
 
     /* hidden state */
     /* opacity: 0; */
