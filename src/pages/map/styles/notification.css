@@ -54,6 +54,9 @@ div.notification-Success::after {
 }
 .notification-content {
   margin-left: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 .close-button-container {
   width: 2rem;
