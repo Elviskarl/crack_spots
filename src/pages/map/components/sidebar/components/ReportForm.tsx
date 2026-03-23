@@ -147,7 +147,7 @@ export default function ReportForm() {
       } else {
         setNotification({
           type: "Success",
-          message: `Upload successful: ${results}`,
+          message: `Upload successful: ${results.message}.`,
         });
       }
     } catch (error) {
