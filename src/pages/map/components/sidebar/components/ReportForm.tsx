@@ -133,7 +133,10 @@ export default function ReportForm() {
         formData.append("severity", severityInput.value);
       }
 
-      const results = await uploadReports("/api/v1/reports", formData);
+      const results = await uploadReports(
+        "https://crackspots-server.onrender.com/api/v1/reports",
+        formData,
+      );
       if (!results.success) {
         setNotification({
           code: "SERVER_ERROR",
