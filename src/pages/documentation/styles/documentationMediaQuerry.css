@@ -5,6 +5,9 @@
 /* tablets to small Laptops - 780 to 1000 px */
 @media (max-width: 62.5rem) {
   /* 900 / 16 = 53 */
+  .note {
+    max-width: 75%;
+  }
 }
 /* phone landscape to tablets - 672 to 780 px */
 @media (max-width: 42rem) {
@@ -30,5 +33,8 @@
 @media (max-width: 38.75rem) {
   .getting-started-content > .base-url {
     max-width: fit-content;
+  }
+  .note {
+    max-width: unset;
   }
 }

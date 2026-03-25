@@ -1,6 +1,7 @@
 import { CodeBlock } from "./component/CodeBlock";
 import { EndpointContainer } from "./component/EndpointContainer";
 import {
+  errorSample,
   formDataInterface,
   postSampleCode,
   reportInterface,
@@ -8,6 +9,7 @@ import {
 } from "./data";
 import "./styles/index.css";
 import "./styles/documentationMediaQuerry.css";
+import { Link } from "react-router-dom";
 
 export default function Documentation() {
   return (
@@ -117,6 +119,29 @@ export default function Documentation() {
                 heading="formData interface"
               />
               <CodeBlock content={postSampleCode} heading="sample code" />
+              <div className="note">
+                <h5>Note:</h5>
+                <p>Reports submitted should be within Nairobi county.</p>
+                <p>
+                  <span>
+                    <Link to="/about#about-section-design-considerations">
+                      See reason.
+                    </Link>
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div className="descriptions error-descriptions">
+              <h5>Errors</h5>
+              <p>
+                Whenever a request to the back-end is unsuccessful, the server
+                returns a JSON error response describing what failed.
+              </p>
+              <p>
+                This simplifiies understanding what went wrong and resolve the
+                issue.
+              </p>
+              <CodeBlock heading="Server response" content={errorSample} />
             </div>
           </div>
         </div>

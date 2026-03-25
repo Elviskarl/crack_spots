@@ -58,3 +58,8 @@ await fetch("/api/reports", {
   body: formData,
 });
 `;
+
+export const errorSample = `res.status(400).json({
+ success: false, message: error.message 
+ });
+`;

@@ -1,10 +1,28 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import imageUrl from "../../assets/about-page.jpg";
 import githubLogo from "../../assets/logo-github.svg";
 import "./styles/index.css";
 import "./styles/aboutPageMediaQuerry.css";
+import { useEffect } from "react";
 
 function About() {
+  const location = useLocation();
+  useEffect(() => {
+    if (location.hash) {
+      // Remove the '#'
+      const elementId = location.hash.substring(1);
+
+      // Find the element by ID
+      const element = document.getElementById(elementId);
+
+      if (element) {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }
+  }, [location]);
   return (
     <section className="about-section-page">
       <h2 className="about-section-app-title">crackspots</h2>
@@ -33,7 +51,10 @@ function About() {
           />
         </div>
       </div>
-      <div className="about-section-design-considerations">
+      <div
+        className="about-section-design-considerations"
+        id="about-section-design-considerations"
+      >
         <div className="about-section-card">
           <h3>Design & Considerations</h3>
           <p className="content">

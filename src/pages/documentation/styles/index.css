@@ -143,3 +143,19 @@ span.important {
 .api-table-header {
   font-weight: bold;
 }
+.note {
+  max-width: 50%;
+  border: 2px solid dodgerblue;
+  border-radius: 5px;
+  padding: 1rem;
+}
+.note span {
+  color: dodgerblue;
+}
+.error-descriptions > h5 {
+  background-color: crimson;
+  color: var(--white-color);
+  padding: 1rem;
+  border: none;
+  border-radius: 5px;
+}
