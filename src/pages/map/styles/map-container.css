@@ -1,6 +1,7 @@
 .leaflet-container {
   height: 100%;
   width: 100%;
+  font-family: inherit;
 }
 .leaflet-control-layers label span {
   font-size: var(--text-base);
@@ -66,6 +67,48 @@
   justify-content: flex-start;
 }
 .tag-values small {
+  font-size: var(--text-base);
+}
+.image-report-preview-container {
+  position: relative;
+}
+.preview-image {
+  object-fit: cover;
+}
+.change-report-container-single {
+  display: none;
+}
+.change-report-btn {
+  height: 5rem;
+  width: 5rem;
+  padding: 1rem;
+  border: 1px solid var(--primary-shade);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  background-color: unset;
+}
+.change-report-btn:hover {
+  background-color: unset;
+}
+.change-report-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.change-report-btn.next-report {
+  right: 0;
+  transform: translateY(-50%) rotate(90deg);
+}
+.change-report-btn.previous-report {
+  left: 0;
+  transform: translateY(-50%) rotate(-90deg);
+}
+.change-report-btn img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+span.issue-id {
   font-size: var(--text-base);
 }
 .pulse-animation {

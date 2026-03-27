@@ -27,7 +27,7 @@ function LeafletMap() {
       // Only fly if lastFlownReport report is different from the last selectedReport
       // if (lastFlownReport.current === selectedReport._id) return;
 
-      const marker = markerRefs.current[selectedReport._id];
+      const marker = markerRefs.current[selectedReport.issueId];
 
       map.closePopup();
       // This is to fix a bug where Leaflet is trying to access an internal DOM element that does not exist anymore.

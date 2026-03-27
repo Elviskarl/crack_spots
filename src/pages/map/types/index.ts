@@ -3,17 +3,11 @@ import type { Dispatch, SetStateAction } from "react";
 export interface Report {
   _id: string;
   user: string;
-  severity: "low" | "medium" | "high"; // extend if needed
+  severity: "high" | "medium" | "low";
   location: GeoPoint;
-
-  cloudinary_public_id: string;
   cloudinary_url: string;
-
-  dateTaken: string; // human-readable date
-  createdAt: string; // ISO string
-  updatedAt: string; // ISO string
-
-  __v: number;
+  dateTaken: string;
+  issueId: string;
 }
 export interface GeoPoint {
   type: "Point";
