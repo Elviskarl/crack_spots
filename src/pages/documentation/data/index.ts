@@ -3,13 +3,13 @@ export const serverResponseInterface = `interface ApiResponse {
     data: Report[];
 }`;
 export const reportInterface = `interface Report {
-    _id: string;
-    user: string;
-    severity: "low" | "medium" | "high";
-    location: GeoPoint;
-    cloudinary_url: string;
-    dateTaken: string; 
-    }
+  _id: string;
+  user: string;
+  severity: "high" | "medium" | "low";
+  location: GeoPoint;
+  cloudinary_url: string;
+  dateTaken: string;
+  issueId: string;
 }
 
 interface GeoPoint {
