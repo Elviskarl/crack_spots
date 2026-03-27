@@ -99,9 +99,7 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                     className={`${reports.length > 1 ? `change-report-btn previous-report` : `change-report-container-single`}`}
                     aria-label="previous report"
                     disabled={isFirst}
-                    onClick={() =>
-                      handlePreviousReports(issueId)
-                    }
+                    onClick={() => handlePreviousReports(issueId)}
                   >
                     <img
                       src={changeReportIcon}
@@ -123,7 +121,10 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                   </button>
                 </div>
                 <div className="report-info-container">
-                  <h4>Report Details issue: {index + 1}</h4>
+                  <h4>
+                    Report Details <br />
+                    issue: {index + 1}
+                  </h4>
                   <ul>
                     <li className="report-details">
                       <div className="report-details-icon-container">
