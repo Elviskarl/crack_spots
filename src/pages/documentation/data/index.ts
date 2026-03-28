@@ -63,3 +63,10 @@ export const errorSample = `res.status(400).json({
  success: false, message: error.message 
  });
 `;
+export const issueSampleCode = `const grouped = Object.
+    groupBy(reports, (report) => report.issueId);
+
+  const groupedArray = Object.entries(grouped).map(([issueId, reports]) => ({
+    issueId,
+    reports: reports ?? [],
+  }));`;
