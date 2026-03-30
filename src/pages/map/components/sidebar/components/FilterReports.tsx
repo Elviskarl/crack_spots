@@ -1,10 +1,34 @@
+import { booleanPointInPolygon, point } from "@turf/turf";
 import { useContext } from "react";
 import { ReportContext } from "../../../../../context/createReportContext";
+import { MapContext } from "../../../../../context/createMapContext";
 import "../../../styles/filterReports.css";
 
 export default function FilterReports() {
-  const { reports } = useContext(ReportContext)!;
-  const category = new Set(reports.map((report) => report.severity));
+  const { reports, setReports, originalReports } = useContext(ReportContext)!;
+  const { nairobiSubCountyShapefile } = useContext(MapContext)!;
+  const category = new Set(
+    originalReports.current.map((report) => report.severity),
+  );
+  const yearTaken = new Set(
+    originalReports.current.map((report) =>
+      new Date(report.dateTaken).getFullYear(),
+    ),
+  );
+  function getSubCounty(subcounty: string) {
+    const feature = nairobiSubCountyShapefile.current?.features.find(
+      (feature) => feature.properties?.subcounty === subcounty,
+    );
+    if (!feature) return;
+    const filteredReports = reports.filter((report) => {
+      const reportPoint = point([
+        report.location.coordinates[0],
+        report.location.coordinates[1],
+      ]);
+      return booleanPointInPolygon(reportPoint, feature);
+    });
+    setReports(filteredReports);
+  }
   return (
     <div className="filter-report-section">
       <p>This filters reports being displayed on the Map.</p>
@@ -22,7 +46,22 @@ export default function FilterReports() {
             <option value="" disabled>
               --Please choose an option--
             </option>
-            <option value="2024">2024</option>
+            {Array.from(yearTaken).map((year, index) => (
+              <option
+                key={index}
+                value={year}
+                onClick={() =>
+                  setReports(
+                    reports.filter(
+                      (report) =>
+                        new Date(report.dateTaken).getFullYear() === year,
+                    ),
+                  )
+                }
+              >
+                {year}
+              </option>
+            ))}
           </select>
         </fieldset>
         <fieldset>
@@ -38,12 +77,59 @@ export default function FilterReports() {
               --Please choose an option--
             </option>
             {Array.from(category).map((item, index) => (
-              <option key={index} value={item}>
+              <option
+                key={index}
+                value={item}
+                onClick={() =>
+                  setReports(
+                    reports.filter((report) => report.severity === item),
+                  )
+                }
+              >
                 {item}
               </option>
             ))}
           </select>
         </fieldset>
+        <fieldset>
+          <legend>Filter by location</legend>
+          <label htmlFor="location-input"></label>
+          <select
+            name="location-category"
+            id="location-input"
+            defaultValue={""}
+            required
+          >
+            <option value="" disabled>
+              --Please choose an option--
+            </option>
+            {nairobiSubCountyShapefile.current?.features.map(
+              (feature, index) => (
+                <option
+                  key={index}
+                  value={feature.properties?.subcounty}
+                  onClick={() => getSubCounty(feature.properties?.subcounty)}
+                >
+                  {feature.properties?.subcounty.replace(
+                    /\s*Sub\s+County\s*/i,
+                    "",
+                  )}
+                </option>
+              ),
+            )}
+          </select>
+        </fieldset>
+        <button
+          type="reset"
+          title="Reset filters"
+          className="reset-btn"
+          onClick={(e) => {
+            e.preventDefault();
+            setReports(originalReports.current);
+          }}
+        >
+          Reset
+        </button>
       </form>
     </div>
   );

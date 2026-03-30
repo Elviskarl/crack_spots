@@ -4,10 +4,10 @@ fieldset {
   align-items: center;
   font-size: var(--text-base);
 }
-select{
-    font-size: var(--text-base);
-    padding: 0.5rem;
-    flex-grow: 1;
+select {
+  font-size: var(--text-base);
+  padding: 0.5rem;
+  flex-grow: 1;
 }
 .filter-report-section {
   display: flex;
@@ -21,7 +21,19 @@ select{
   justify-content: center;
   gap: 1rem;
 }
-.date-input{
-    flex-grow: 1;
-    padding: 1rem;
+.date-input {
+  flex-grow: 1;
+  padding: 1rem;
+}
+.filter-report-form .reset-btn {
+  padding: 1rem;
+  background-color: crimson;
+  border-radius: unset;
+  color: var(--white-color);
+  border: none;
+  align-self: center;
+}
+.filter-report-form .reset-btn:hover {
+  background-color: var(--white-color);
+  color: crimson;
 }
