@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ReportContext } from "./createReportContext";
 import { fetchReports } from "../pages/map/utils/fetchReports";
 import type { NotificationType, Report } from "../pages/map/types";
@@ -9,7 +9,7 @@ export function ReportProvider({ children }: { children: React.ReactNode }) {
   const [notification, setNotification] = useState<NotificationType | null>(
     null,
   );
-
+  const originalReports = useRef<Report[]>([]);
   useEffect(() => {
     // Fetch the report data from the API
     const url = "https://crackspots-server.onrender.com/api/v1/reports";
@@ -17,6 +17,7 @@ export function ReportProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(true);
       try {
         const data = await fetchReports(url);
+        originalReports.current = data;
         setReports(data);
       } catch (err) {
         console.error("Error fetching reports:", err);
@@ -30,7 +31,7 @@ export function ReportProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ReportContext.Provider
-      value={{ reports, isLoading, setNotification, notification }}
+      value={{ reports, isLoading, setNotification, notification, setReports, originalReports }}
     >
       {children}
     </ReportContext.Provider>
