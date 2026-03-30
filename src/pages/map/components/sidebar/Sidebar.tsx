@@ -6,7 +6,13 @@ import filterImageUrl from "../../../../assets/funnel-outline.svg";
 import ReportForm from "./components/ReportForm";
 import SearchListSection from "./components/SearchListSection";
 import menuImageUrl from "../../../../assets/menu-outline.svg";
-import { useContext, type Dispatch, type SetStateAction } from "react";
+import {
+  useContext,
+  useEffect,
+  useRef,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import FilterReports from "./components/FilterReports";
 import { ReportContext } from "../../../../context/createReportContext";
 import { Notifications } from "./components/Notifications";
@@ -18,12 +24,21 @@ interface SidebarProps {
 
 export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
   const { isLoading, setNotification } = useContext(ReportContext)!;
+  const sidebarWrapper = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (sidebarWrapper.current) {
+      sidebarWrapper.current.scrollTo({
+        behavior: "smooth",
+        top: sidebarWrapper.current.scrollHeight,
+      });
+    }
+  });
   function toggleSidebar() {
     setCollapsed((prevVal) => !prevVal);
   }
   return (
     <aside className={`sidebar ${collapsed ? "closed" : ""}`}>
-      <section className="sidebar-wrapper">
+      <section className="sidebar-wrapper" ref={sidebarWrapper}>
         <ul className={`sidebar-list ${collapsed ? "closed" : ""}`}>
           <ListItems
             imageUrl={uploadImageUrl}
