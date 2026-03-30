@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useState } from "react";
 import { Icon } from "leaflet";
 import { Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
@@ -13,6 +13,7 @@ import changeReportIcon from "../../../../assets/up_arrow.png";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
 import { MapContext } from "../../../../context/createMapContext";
+import useCreateIssues from "../../utils/CreateIssues";
 
 export function ReportsContainer({ reports }: { reports: Report[] }) {
   const { markerRefs } = useContext(MapContext)!;
@@ -26,15 +27,7 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
     iconAnchor: [15, 30],
     popupAnchor: [0, -30],
   });
-
-  const issues = useMemo(() => {
-    const grouped = Object.groupBy(reports, (report) => report.issueId);
-
-    return Object.entries(grouped).map(([issueId, reports]) => ({
-      issueId,
-      reports: reports ?? [],
-    }));
-  }, [reports]);
+  const issues = useCreateIssues(reports);
 
   return (
     <MarkerClusterGroup>
