@@ -42,23 +42,21 @@ export default function FilterReports() {
             id="date-input-input"
             defaultValue={""}
             required
+            onChange={(e) => {
+              const selectedYear = parseInt(e.target.value);
+              setReports(
+                reports.filter(
+                  (report) =>
+                    new Date(report.dateTaken).getFullYear() === selectedYear,
+                ),
+              );
+            }}
           >
             <option value="" disabled>
               --Please choose an option--
             </option>
             {Array.from(yearTaken).map((year, index) => (
-              <option
-                key={index}
-                value={year}
-                onClick={() =>
-                  setReports(
-                    reports.filter(
-                      (report) =>
-                        new Date(report.dateTaken).getFullYear() === year,
-                    ),
-                  )
-                }
-              >
+              <option key={index} value={year}>
                 {year}
               </option>
             ))}
@@ -72,20 +70,20 @@ export default function FilterReports() {
             id="select-input"
             defaultValue={""}
             required
+            onChange={(e) => {
+              const selectedCategory = e.target.value;
+              setReports(
+                reports.filter(
+                  (report) => report.severity === selectedCategory,
+                ),
+              );
+            }}
           >
             <option value="" disabled>
               --Please choose an option--
             </option>
             {Array.from(category).map((item, index) => (
-              <option
-                key={index}
-                value={item}
-                onClick={() =>
-                  setReports(
-                    reports.filter((report) => report.severity === item),
-                  )
-                }
-              >
+              <option key={index} value={item}>
                 {item}
               </option>
             ))}
@@ -99,17 +97,17 @@ export default function FilterReports() {
             id="location-input"
             defaultValue={""}
             required
+            onChange={(e) => {
+              const selectedSubCounty = e.target.value;
+              getSubCounty(selectedSubCounty);
+            }}
           >
             <option value="" disabled>
               --Please choose an option--
             </option>
             {nairobiSubCountyShapefile.current?.features.map(
               (feature, index) => (
-                <option
-                  key={index}
-                  value={feature.properties?.subcounty}
-                  onClick={() => getSubCounty(feature.properties?.subcounty)}
-                >
+                <option key={index} value={feature.properties?.subcounty}>
                   {feature.properties?.subcounty.replace(
                     /\s*Sub\s+County\s*/i,
                     "",
@@ -123,8 +121,7 @@ export default function FilterReports() {
           type="reset"
           title="Reset filters"
           className="reset-btn"
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={() => {
             setReports(originalReports.current);
           }}
         >
