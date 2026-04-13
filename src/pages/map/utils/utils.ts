@@ -91,3 +91,55 @@ export function isInNairobi(
     turf.booleanPointInPolygon(point, feature),
   );
 }
+
+export function resolveData(
+  reportCoordinates: {
+    GPSLatitude: number;
+    GPSLongitude: number;
+    DateTimeOriginal: string;
+  },
+  resolutionCoordinates: CoordinateData,
+) {
+  try {
+    const maxDistance = 30;
+    const {
+      GPSLatitude: reportLat,
+      GPSLongitude: reportLon,
+      DateTimeOriginal: reportDateTime,
+    } = reportCoordinates;
+    const {
+      GPSLatitude: resolutionLat,
+      GPSLongitude: resolutionLon,
+      DateTimeOriginal: resolutionDateTime,
+    } = resolutionCoordinates;
+
+    const reportPoint = turf.point([reportLon, reportLat]);
+    const resolutionPoint = turf.point([resolutionLon, resolutionLat]);
+    const distance = turf.distance(reportPoint, resolutionPoint, {
+      units: "meters",
+    });
+    console.log(distance);
+
+    if (distance > maxDistance) {
+      throw new CustomError(
+        "LOCATION_MISMATCH",
+        `The image coordinates are too far from the report coordinates. Distance: ${distance.toFixed(2)} meters.`,
+      );
+    }
+    const reportDate = new Date(reportDateTime);
+    const resolutionDate = new Date(resolutionDateTime);
+    if (resolutionDate <= reportDate) {
+      throw new CustomError(
+        "TIME_MISMATCH",
+        "The resolution image must be taken after the report was created.",
+      );
+    }
+  } catch (err) {
+    if (err instanceof CustomError) {
+      throw err;
+    }
+    throw new Error(
+      "Invalid Data: Unable to resolve report due to invalid coordinate data.",
+    );
+  }
+}
