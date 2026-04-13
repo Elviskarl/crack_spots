@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { Icon } from "leaflet";
 import { Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
@@ -28,17 +28,27 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
     popupAnchor: [0, -30],
   });
   const issues = useCreateIssues(reports);
+  const sortedIssues = useMemo(() => {
+    return issues.map((issue) => ({
+      ...issue,
+      reports: [...issue.reports].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      ),
+    }));
+  }, [issues]);
 
   return (
     <MarkerClusterGroup>
-      {issues.map((issue, index) => {
+      {sortedIssues.map((issue, index) => {
         const { issueId, reports } = issue;
 
         const currentIndex = activeIndexes[issueId] ?? 0;
         const currentReport = reports[currentIndex];
         const isFirst = currentIndex === 0;
         const isLast = currentIndex === reports.length - 1;
-        const { cloudinary_url, severity, location, dateTaken } = currentReport;
+        const { cloudinary_url, severity, location, dateTaken, status } =
+          currentReport;
 
         function handleNextReports(issueId: string, length: number) {
           setActiveIndexes((prev) => {
@@ -117,6 +127,11 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                   <h4>
                     Report Details <br />
                     issue: {index + 1}
+                    <br />
+                    <span className={`report-status ${status}`}></span>
+                    <span className={`report-status-value ${status}`}>
+                      [{status}]
+                    </span>
                   </h4>
                   <ul>
                     <li className="report-details">
@@ -167,7 +182,18 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                         />
                       </div>
                       Date Taken:
-                      <span className="calender-name">{dateTaken}</span>
+                      <span className="calender-name">
+                        {new Date(dateTaken)
+                          .toLocaleString("en-KE", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })
+                          .split(",")
+                          .slice(0, 2)
+                          .join(", ")}
+                      </span>
                     </li>
                     <li className="report-details">
                       <div className="tag-container">
