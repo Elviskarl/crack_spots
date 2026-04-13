@@ -40,8 +40,6 @@ export default function MatchingReports({
 
   const matchingIssuesEl = sortedIssues.map((issue) => {
     const report = issue.reports[0];
-    console.log(report.dateTaken);
-
     return (
       <div className="search-result-card" key={issue.issueId}>
         <div className="search-result-image-container">
