@@ -8,6 +8,9 @@
 /* tablets to small Laptops - 780 to 1000 px */
 @media (max-width: 62.5rem) {
   /* 900 / 16 = 53 */
+  aside.sidebar{
+    width: 46%;
+  }
   aside.sidebar.closed {
     width: 10rem;
   }

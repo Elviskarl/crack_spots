@@ -8,6 +8,8 @@ export interface Report {
   cloudinary_url: string;
   dateTaken: string;
   issueId: string;
+  createdAt: Date;
+  status: "open" | "resolved";
 }
 export interface GeoPoint {
   type: "Point";
@@ -49,4 +51,7 @@ export interface ListItemsProps {
 }
 export interface ListItemOptional {
   setCollapsed?: Dispatch<SetStateAction<boolean>>;
+  isResolving?: boolean;
+  interestedReport?: Report | null;
+  setInterestedReport?: Dispatch<SetStateAction<Report | null>>;
 }
