@@ -10,8 +10,11 @@ export async function fetchReports(param: string): Promise<Report[]> {
     if (!response.ok) {
       throw new FetchError(`Error fetching reports: ${response.statusText}`);
     }
-    const { data }: { success: boolean; data: Report[] } =
+    const { data, success }: { success: boolean; data: Report[] } =
       await response.json();
+    if (!success) {
+      throw new FetchError("Failed to fetch reports");
+    }
     return data;
   } catch (err) {
     console.error(err);
