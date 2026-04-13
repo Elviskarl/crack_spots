@@ -5,120 +5,159 @@ import locationImgUrl from "../../../../../assets/map-outline.svg";
 import imageCategoryUrl from "../../../../../assets/analytics-outline.svg";
 import calenderUrl from "../../../../../assets/calendar-outline.svg";
 import leafUrl from "../../../../../assets/leaf-outline.svg";
-import { useContext, type Dispatch, type SetStateAction } from "react";
+import { useContext, useMemo, type Dispatch, type SetStateAction } from "react";
 import { MapContext } from "../../../../../context/createMapContext";
+import CreateIssues from "../../../utils/CreateIssues";
 interface MatchingReportprops {
   matchingReport: Report[];
   setCollapsed?: Dispatch<SetStateAction<boolean>>;
+  isResolving?: boolean;
+  setInterestedReport?: Dispatch<SetStateAction<Report | null>>;
 }
 
 export default function MatchingReports({
   matchingReport,
   setCollapsed,
+  isResolving,
+  setInterestedReport,
 }: MatchingReportprops) {
   const { setSelectedReport } = useContext(MapContext)!;
+
+  const issues = CreateIssues(matchingReport);
+  const sortedIssues = useMemo(() => {
+    return issues.map((issue) => ({
+      issueId: issue.issueId,
+      reports: [...issue.reports].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      ),
+    }));
+  }, [issues]);
 
   function flyToReport(param: Report) {
     setSelectedReport(param);
   }
 
-  const matchingReportEl = matchingReport.map((report) => (
-    <div className="search-result-card" key={report._id}>
-      <div className="search-result-image-container">
-        <img
-          src={report.cloudinary_url}
-          alt="Report image"
-          className="search-result-image"
-        />
-      </div>
-      <ul className="result-details-list">
-        <li className="result-detail-item">
-          <div className="result-detail-img-container">
-            <img
-              src={mapImgUrl}
-              alt="Location image"
-              className="result-detail-img"
-            />
-          </div>
-          <span>{report.location.address?.road}</span>
-        </li>
-        <li className="result-detail-item">
-          <div className="result-detail-img-container">
-            <img
-              src={locationImgUrl}
-              alt="Location image"
-              className="result-detail-img"
-            />
-          </div>
-          <span>{report.location.address?.city}</span>
-        </li>
-        <li className="result-detail-item">
-          <div className="result-detail-img-container">
-            <img
-              src={imageCategoryUrl}
-              alt="Location image"
-              className="result-detail-img"
-            />
-          </div>
-          <span className="result-detail-category">
-            {report.location.category || "District road"}
-          </span>
-        </li>
-        <li className="result-detail-item">
-          <div className="result-detail-img-container">
-            <img
-              src={calenderUrl}
-              alt="Location image"
-              className="result-detail-img"
-            />
-          </div>
-          <span className="result-detail-date">
-            {new Intl.DateTimeFormat("en-GB").format(
-              new Date(report.dateTaken),
-            )}
-          </span>
-        </li>
-        <li className="result-detail-item">
-          <div className="result-detail-img-container">
-            <img
-              src={leafUrl}
-              alt="Location image"
-              className="result-detail-img"
-            />
-          </div>
-          <span
-            className="result-detail-link"
-            onClick={() => {
-              if (setCollapsed) {
-                setCollapsed(true);
-                flyToReport(report);
+  const matchingIssuesEl = sortedIssues.map((issue) => {
+    const report = issue.reports[0];
+    console.log(report.dateTaken);
+
+    return (
+      <div className="search-result-card" key={issue.issueId}>
+        <div className="search-result-image-container">
+          <img
+            src={report.cloudinary_url}
+            alt="Report image"
+            className="search-result-image"
+          />
+        </div>
+        <ul className="result-details-list">
+          <li className="result-detail-item">
+            <div className="result-detail-img-container">
+              <img
+                src={mapImgUrl}
+                alt="Location image"
+                className="result-detail-img"
+              />
+            </div>
+            <span>{report.location.address?.road}</span>
+          </li>
+          <li className="result-detail-item">
+            <div className="result-detail-img-container">
+              <img
+                src={locationImgUrl}
+                alt="Location image"
+                className="result-detail-img"
+              />
+            </div>
+            <span>{report.location.address?.city}</span>
+          </li>
+          <li className="result-detail-item">
+            <div className="result-detail-img-container">
+              <img
+                src={imageCategoryUrl}
+                alt="Location image"
+                className="result-detail-img"
+              />
+            </div>
+            <span className="result-detail-category">
+              {report.location.category || "District road"}
+            </span>
+          </li>
+          <li className="result-detail-item">
+            <div className="result-detail-img-container">
+              <img
+                src={calenderUrl}
+                alt="Location image"
+                className="result-detail-img"
+              />
+            </div>
+            <span className="result-detail-date">
+              {
+                new Date(report.dateTaken)
+                  .toLocaleString("en-KE", {
+                    timeZone: "Africa/Nairobi",
+                  })
+                  .split(",")[0]
               }
-            }}
-          >
-            View on Map
-          </span>
-        </li>
-      </ul>
-    </div>
-  ));
+            </span>
+          </li>
+          <li className="result-detail-item">
+            <div className="result-detail-img-container">
+              <img
+                src={leafUrl}
+                alt="Location image"
+                className="result-detail-img"
+              />
+            </div>
+            <span
+              className="result-detail-link"
+              onClick={() => {
+                if (setCollapsed) {
+                  setCollapsed(true);
+                  flyToReport(report);
+                }
+              }}
+            >
+              View on Map
+            </span>
+          </li>
+        </ul>
+        {isResolving ? (
+          <div className="select-report-container">
+            <button
+              className="select-report-btn"
+              onClick={() => {
+                if (setInterestedReport) {
+                  setInterestedReport(report);
+                }
+              }}
+            >
+              Select Issue
+            </button>
+          </div>
+        ) : null}
+      </div>
+    );
+  });
   return (
     <div className="search-results">
       <div className="report-count-container">
-        {matchingReport.length === 1 ? (
+        {sortedIssues.length === 1 ? (
           <p className="report-count-paragraph">
             Found{" "}
-            <span className="report-count-span">{matchingReport.length} </span>{" "}
-            report.
+            <span className="report-count-span">{sortedIssues.length} </span>{" "}
+            issue.
           </p>
         ) : (
           <p className="report-count-paragraph">
             Found{" "}
-            <span className="report-count-span">{matchingReport.length} </span>{" "}
-            reports matching your search criteria.
+            <span className="report-count-span">{sortedIssues.length} </span>{" "}
+            issues matching your search criteria.
           </p>
         )}
       </div>
-      {matchingReportEl}
+      {matchingIssuesEl}
     </div>
   );
 }
