@@ -6,6 +6,7 @@ import filterImageUrl from "../../../../assets/funnel-outline.svg";
 import ReportForm from "./components/ReportForm";
 import SearchListSection from "./components/SearchListSection";
 import menuImageUrl from "../../../../assets/menu-outline.svg";
+import checkmarkResolve from "../../../../assets/checkmark-resolve.png";
 import {
   useContext,
   useEffect,
@@ -16,6 +17,7 @@ import {
 import FilterReports from "./components/FilterReports";
 import { ReportContext } from "../../../../context/createReportContext";
 import { Notifications } from "./components/Notifications";
+import ResolveReport from "./ResolveReport";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -60,6 +62,14 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
             Component={FilterReports}
             requiresLoading={true}
             collapsed={collapsed}
+          />
+          <ListItems
+            imageUrl={checkmarkResolve}
+            Component={ResolveReport}
+            textContent="Resolve"
+            requiresLoading={true}
+            collapsed={collapsed}
+            setCollapsed={setCollapsed}
           />
         </ul>
         {isLoading && (
