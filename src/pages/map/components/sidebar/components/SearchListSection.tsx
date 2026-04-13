@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState, type FormEvent } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { ReportContext } from "../../../../../context/createReportContext";
 import searchIconUrl from "../../../../../assets/searchIcon.png";
 import SearchSuggestions from "./SearchSuggestions";
@@ -12,7 +12,8 @@ export default function SearchListSection(props: ListItemOptional) {
   const [isOpen, setIsOpen] = useState(false);
   const { reports } = useContext(ReportContext)!;
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const { setCollapsed } = props;
+  const { setCollapsed, isResolving, setInterestedReport, interestedReport } =
+    props;
 
   // Find matching Report
   const matchingReport = useMemo(() => {
@@ -45,17 +46,26 @@ export default function SearchListSection(props: ListItemOptional) {
   }, [streetNames, debouncedSearchTerm]);
 
   // Handle form submission
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  function handleSubmit() {
     setIsOpen(false);
   }
 
+  useEffect(() => {
+    if (interestedReport && setInterestedReport) {
+      const isValid = matchingReport.some(
+        (report) => report._id === interestedReport._id,
+      );
+      if (!isValid) {
+        setInterestedReport(null);
+      }
+    }
+  }, [interestedReport, setInterestedReport, matchingReport]);
   return (
     <div className="search-input-section">
-      <form className="search-input-container" onSubmit={handleSubmit}>
+      <form className="search-input-container" action={handleSubmit}>
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Search by street name..."
           className="search-input"
           value={searchTerm}
           onChange={(e) => {
@@ -85,10 +95,21 @@ export default function SearchListSection(props: ListItemOptional) {
       </form>
       {hasSearch ? (
         hasResults ? (
-          <MatchingReports
-            matchingReport={matchingReport}
-            setCollapsed={setCollapsed}
-          />
+          interestedReport ? (
+            <MatchingReports
+              matchingReport={[interestedReport]}
+              setCollapsed={setCollapsed}
+              isResolving={isResolving}
+              setInterestedReport={setInterestedReport}
+            />
+          ) : (
+            <MatchingReports
+              matchingReport={matchingReport}
+              setCollapsed={setCollapsed}
+              isResolving={isResolving}
+              setInterestedReport={setInterestedReport}
+            />
+          )
         ) : (
           <p className="no-results-found">No results found.</p>
         )
