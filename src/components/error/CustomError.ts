@@ -7,7 +7,8 @@ export type ErrorCode =
   | "SERVER_ERROR"
   | "LOCATION_MISMATCH"
   | "TIME_MISMATCH"
-  | "MISSING_REPORT";
+  | "MISSING_REPORT"
+  | "MISSING_FILE";
 
 export class CustomError extends Error {
   code: ErrorCode;
