@@ -1,0 +1,76 @@
+textarea {
+  resize: none;
+  width: 100%;
+}
+.resolve-reports-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.resolve-reports-container .result-details-list {
+  flex-grow: 1;
+}
+.resolve-reports-container .search-result-image-container {
+  flex-grow: 1;
+}
+.select-report-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+.interested-report-checkmark {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background-color: var(--white-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-end;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+.interested-report-checkmark img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+.interested-report-details {
+  padding-top: 2rem;
+}
+.interested-report-details fieldset {
+  flex-direction: column;
+  max-width: 100%;
+}
+.interested-report-details form fieldset {
+  justify-content: center;
+}
+.select-report-btn {
+  background-color: dodgerblue;
+}
+.select-report-btn:hover {
+  color: dodgerblue;
+  background-color: var(--white-color);
+}
+.resolve-reports-container .draggable-container {
+  width: 100%;
+}
+.resolve-reports-container .image-details-container {
+  width: 100%;
+}
+.resolve-reports-container .severity-fieldset {
+  display: none;
+}
+.submit-report-resolution-btn {
+  align-self: center;
+  background-color: green;
+}
+.submit-report-resolution-btn:hover {
+  color: green;
+  background-color: var(--white-color);
+}
+.search-result-card {
+  position: relative;
+}

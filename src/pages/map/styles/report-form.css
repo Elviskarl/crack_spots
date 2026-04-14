@@ -1,5 +1,6 @@
 /* form element styles */
-button {
+button,
+.upload-file-label {
   font-size: var(--text-base);
   padding: 1rem;
   font-family: inherit;
@@ -44,6 +45,10 @@ button:hover {
   background-color: var(--white-color);
 }
 .browse-btn:hover,
+.uplaod-file-label:hover {
+  color: var(--accent-tint);
+  background-color: var(--white-color);
+}
 .submit-button:hover {
   box-shadow: 0px 1px 2px 2px var(--accent-tint);
 }
