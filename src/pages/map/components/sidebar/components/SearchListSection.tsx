@@ -95,21 +95,13 @@ export default function SearchListSection(props: ListItemOptional) {
       </form>
       {hasSearch ? (
         hasResults ? (
-          interestedReport ? (
-            <MatchingReports
-              matchingReport={[interestedReport]}
-              setCollapsed={setCollapsed}
-              isResolving={isResolving}
-              setInterestedReport={setInterestedReport}
-            />
-          ) : (
-            <MatchingReports
-              matchingReport={matchingReport}
-              setCollapsed={setCollapsed}
-              isResolving={isResolving}
-              setInterestedReport={setInterestedReport}
-            />
-          )
+          <MatchingReports
+            matchingReport={matchingReport}
+            setCollapsed={setCollapsed}
+            isResolving={isResolving}
+            setInterestedReport={setInterestedReport}
+            interestedReport={interestedReport}
+          />
         ) : (
           <p className="no-results-found">No results found.</p>
         )

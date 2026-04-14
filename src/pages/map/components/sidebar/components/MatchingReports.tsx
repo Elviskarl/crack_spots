@@ -1,18 +1,20 @@
+import { useContext, useMemo, type Dispatch, type SetStateAction } from "react";
+import { MapContext } from "../../../../../context/createMapContext";
 import type { Report } from "../../../types";
-import "../../../styles/matching-report.css";
+import CreateIssues from "../../../utils/CreateIssues";
 import mapImgUrl from "../../../../../assets/location-outline.svg";
 import locationImgUrl from "../../../../../assets/map-outline.svg";
 import imageCategoryUrl from "../../../../../assets/analytics-outline.svg";
 import calenderUrl from "../../../../../assets/calendar-outline.svg";
 import leafUrl from "../../../../../assets/leaf-outline.svg";
-import { useContext, useMemo, type Dispatch, type SetStateAction } from "react";
-import { MapContext } from "../../../../../context/createMapContext";
-import CreateIssues from "../../../utils/CreateIssues";
+import checkUrl from "../../../../../assets/check.png";
+import "../../../styles/matching-report.css";
 interface MatchingReportprops {
   matchingReport: Report[];
   setCollapsed?: Dispatch<SetStateAction<boolean>>;
   isResolving?: boolean;
   setInterestedReport?: Dispatch<SetStateAction<Report | null>>;
+  interestedReport?: Report | null;
 }
 
 export default function MatchingReports({
@@ -20,11 +22,13 @@ export default function MatchingReports({
   setCollapsed,
   isResolving,
   setInterestedReport,
+  interestedReport,
 }: MatchingReportprops) {
   const { setSelectedReport } = useContext(MapContext)!;
 
-  const issues = CreateIssues(matchingReport);
   const sortedIssues = useMemo(() => {
+    const sourceReport = interestedReport ? [interestedReport] : matchingReport;
+    const issues = CreateIssues(sourceReport);
     return issues.map((issue) => ({
       issueId: issue.issueId,
       reports: [...issue.reports].sort(
@@ -32,7 +36,7 @@ export default function MatchingReports({
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       ),
     }));
-  }, [issues]);
+  }, [interestedReport, matchingReport]);
 
   function flyToReport(param: Report) {
     setSelectedReport(param);
@@ -122,18 +126,25 @@ export default function MatchingReports({
           </li>
         </ul>
         {isResolving ? (
-          <div className="select-report-container">
-            <button
-              className="select-report-btn"
-              onClick={() => {
-                if (setInterestedReport) {
-                  setInterestedReport(report);
-                }
-              }}
-            >
-              Select Issue
-            </button>
-          </div>
+          <>
+            <div className="select-report-container">
+              <button
+                className="select-report-btn"
+                onClick={() => {
+                  if (setInterestedReport) {
+                    setInterestedReport(report);
+                  }
+                }}
+              >
+                Select Issue
+              </button>
+            </div>
+            {interestedReport?._id === report._id && (
+              <div className="interested-report-checkmark">
+                <img src={checkUrl} alt="checkMark" />
+              </div>
+            )}
+          </>
         ) : null}
       </div>
     );
