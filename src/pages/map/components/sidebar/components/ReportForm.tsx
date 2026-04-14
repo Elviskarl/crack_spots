@@ -180,9 +180,6 @@ export default function ReportForm() {
       processImage(file);
     }
   }
-  function handleClick() {
-    fileInputRef.current?.click();
-  }
   function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
   }
@@ -218,13 +215,9 @@ export default function ReportForm() {
             />
             <div className="drop-area-container">
               <span> Drag & Drop or </span>
-              <button
-                onClick={handleClick}
-                className="browse-btn"
-                type="button"
-              >
+              <label htmlFor="upload-file" className="upload-file-label">
                 Browse for a file
-              </button>
+              </label>
             </div>
           </div>
           {isLoading ? (
