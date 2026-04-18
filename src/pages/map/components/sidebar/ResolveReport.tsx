@@ -186,7 +186,7 @@ export default function ResolveReport(props: ListItemOptional) {
       formData.append("file", fileCopy);
       formData.append("coordinates", JSON.stringify(coordsCopy));
       if (textAreaEl) {
-      formData.append("note", textAreaEl.value);
+        formData.append("note", textAreaEl.value);
       }
       formData.append("_id", _id);
 
@@ -279,7 +279,7 @@ export default function ResolveReport(props: ListItemOptional) {
                     htmlFor="resolve-upload-file"
                     className="upload-file-label"
                   >
-                    Browse for a file
+                    Take or upload a photo
                   </label>
                 </div>
               </div>

@@ -216,7 +216,7 @@ export default function ReportForm() {
             <div className="drop-area-container">
               <span> Drag & Drop or </span>
               <label htmlFor="upload-file" className="upload-file-label">
-                Browse for a file
+                Take or upload a photo
               </label>
             </div>
           </div>
