@@ -137,6 +137,27 @@ span.issue-id {
 .pulse-animation {
   animation: pulse 2s ease-in-out infinite alternate;
 }
+.resolved-report-badge {
+  position: absolute;
+  bottom: 2%;
+  right: 2%;
+  color: var(--white-color);
+  background-color: rgba(255, 166, 0, 0.5);
+  padding: 0 0.5rem;
+  font-size: var(--text-base);
+  border: none;
+}
+.resolved-report-badge p {
+  padding: unset;
+  margin: unset;
+}
+.progress-indicator {
+  font-size: var(--text-base);
+  color: var(--primary-shade);
+  position: absolute;
+  bottom: -12%;
+  right: 2%;
+}
 @keyframes pulse {
   from {
     opacity: 1;

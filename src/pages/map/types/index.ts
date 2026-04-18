@@ -10,6 +10,14 @@ export interface Report {
   issueId: string;
   createdAt: Date;
   status: "open" | "resolved";
+  resolution?: {
+    resolvedBy: string; // community
+    resolvedAt: Date;
+    dateTaken: string;
+    imageUrl: string;
+    coordinates: number[]; // [longitude, latitude]
+    note: string;
+  };
 }
 export interface GeoPoint {
   type: "Point";

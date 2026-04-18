@@ -40,15 +40,48 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
 
   return (
     <MarkerClusterGroup>
-      {sortedIssues.map((issue, index) => {
+      {sortedIssues.map((issue) => {
         const { issueId, reports } = issue;
 
+        const latestReport = reports[0];
+        const resolution = latestReport.resolution;
+
+        const isResolved = latestReport.status === "resolved" && !!resolution;
+
+        const structuredReports = isResolved
+          ? [
+              {
+                imageUrl: resolution.imageUrl,
+                dateTaken: resolution.dateTaken,
+                location: latestReport.location,
+                status: latestReport.status,
+                severity: latestReport.severity,
+                type: "After",
+              },
+              ...reports.map((report) => ({
+                imageUrl: report.cloudinary_url,
+                dateTaken: report.dateTaken,
+                location: report.location,
+                status: report.status,
+                severity: report.severity,
+                type: "Before",
+              })),
+            ]
+          : reports.map((report) => ({
+              imageUrl: report.cloudinary_url,
+              dateTaken: report.dateTaken,
+              severity: report.severity,
+              location: report.location,
+              status: report.status,
+              type: "Before",
+            }));
+
         const currentIndex = activeIndexes[issueId] ?? 0;
-        const currentReport = reports[currentIndex];
+
         const isFirst = currentIndex === 0;
-        const isLast = currentIndex === reports.length - 1;
-        const { cloudinary_url, severity, location, dateTaken, status } =
-          currentReport;
+        const isLast = currentIndex === structuredReports.length - 1;
+        const currentItem = structuredReports[currentIndex];
+        const { location, dateTaken, status, severity } = currentItem;
 
         function handleNextReports(issueId: string, length: number) {
           setActiveIndexes((prev) => {
@@ -94,12 +127,12 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
               <div className="report-details-container">
                 <div className="image-report-preview-container">
                   <img
-                    src={cloudinary_url}
+                    src={currentItem.imageUrl}
                     alt="Road Damage"
                     className="preview-image"
                   />
                   <button
-                    className={`${reports.length > 1 ? `change-report-btn previous-report` : `change-report-container-single`}`}
+                    className={`${structuredReports.length > 1 ? `change-report-btn previous-report` : `change-report-container-single`}`}
                     aria-label="previous report"
                     disabled={isFirst}
                     onClick={() => handlePreviousReports(issueId)}
@@ -111,10 +144,12 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                     />
                   </button>
                   <button
-                    className={`${reports.length > 1 ? `change-report-btn next-report` : `change-report-container-single`}`}
+                    className={`${structuredReports.length > 1 ? `change-report-btn next-report` : `change-report-container-single`}`}
                     aria-label="next report"
                     disabled={isLast}
-                    onClick={() => handleNextReports(issueId, reports.length)}
+                    onClick={() =>
+                      handleNextReports(issueId, structuredReports.length)
+                    }
                   >
                     <img
                       src={changeReportIcon}
@@ -122,11 +157,20 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                       className="preview-image"
                     />
                   </button>
+                  {latestReport.status === "resolved" && (
+                    <div className="resolved-report-badge">
+                      <p className="issue-status">
+                        {currentItem.type === "After" ? "After" : "Before"}
+                      </p>
+                    </div>
+                  )}
+                  <p className="progress-indicator">
+                    {currentIndex + 1} of {structuredReports.length}
+                  </p>
                 </div>
                 <div className="report-info-container">
                   <h4>
-                    Report Details <br />
-                    issue: {index + 1}
+                    Report Details
                     <br />
                     <span className={`report-status ${status}`}></span>
                     <span className={`report-status-value ${status}`}>
@@ -144,7 +188,7 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                       </div>
                       Road Name:
                       <span className="road-name">
-                        {currentReport.location.address?.road}
+                        {latestReport.location.address?.road}
                       </span>
                     </li>
                     <li className="report-details">
@@ -157,7 +201,7 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                       </div>
                       Location:
                       <span className="neighbourhood-name">
-                        {currentReport.location.address?.neighbourhood || "N/A"}
+                        {latestReport.location.address?.neighbourhood || "N/A"}
                       </span>
                     </li>
                     <li className="report-details">
@@ -170,7 +214,7 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                       </div>
                       County:
                       <span className="location-name">
-                        {currentReport.location.address?.state || "N/A"}
+                        {latestReport.location.address?.state || "N/A"}
                       </span>
                     </li>
                     <li className="report-details">
