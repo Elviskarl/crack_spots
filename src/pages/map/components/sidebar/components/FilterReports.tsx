@@ -15,6 +15,10 @@ export default function FilterReports() {
       new Date(report.dateTaken).getFullYear(),
     ),
   );
+  const resolutionStatus = new Set(
+    originalReports.current.map((report) => report.status),
+  );
+
   function getSubCounty(subcounty: string) {
     const feature = nairobiSubCountyShapefile.current?.features.find(
       (feature) => feature.properties?.subcounty === subcounty,
@@ -115,6 +119,31 @@ export default function FilterReports() {
                 </option>
               ),
             )}
+          </select>
+        </fieldset>
+        <fieldset>
+          <legend>Filter by resolution status</legend>
+          <label htmlFor="select-input"></label>
+          <select
+            name="resolution-category"
+            id="resolution-input"
+            defaultValue={""}
+            required
+            onChange={(e) => {
+              const selectedCategory = e.target.value;
+              setReports(
+                reports.filter((report) => report.status === selectedCategory),
+              );
+            }}
+          >
+            <option value="" disabled>
+              --Please choose an option--
+            </option>
+            {Array.from(resolutionStatus).map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
           </select>
         </fieldset>
         <button
