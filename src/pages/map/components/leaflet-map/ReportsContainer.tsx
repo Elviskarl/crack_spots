@@ -174,64 +174,65 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                     <br />
                     <span className={`report-status ${status}`}></span>
                     <span className={`report-status-value ${status}`}>
-                      [{status}]
+                      {status}
                     </span>
                   </h4>
                   <ul>
                     <li className="report-details">
-                      <div className="report-details-icon-container">
+                      <div className="report-details-icon-container"
+                       title="Road Name">
                         <img
                           src={roadNameIcon}
                           alt="road Name"
                           className="report-details-icon road-name-icon"
                         />
-                      </div>
-                      Road Name:
+                      </div>:
                       <span className="road-name">
                         {latestReport.location.address?.road}
                       </span>
                     </li>
                     <li className="report-details">
-                      <div className="report-details-icon-container">
+                      <div className="report-details-icon-container"
+                       title="Location">
                         <img
                           src={neighbourhoodNameIcon}
                           alt="neighbourhood Name"
                           className="report-details-icon neighbourhood-name-icon"
                         />
-                      </div>
-                      Location:
+                      </div>:
                       <span className="neighbourhood-name">
                         {latestReport.location.address?.neighbourhood || "N/A"}
                       </span>
                     </li>
                     <li className="report-details">
-                      <div className="report-details-icon-container">
+                      <div className="report-details-icon-container"
+                       title="County">
                         <img
                           src={locationNameIcon}
                           alt="location Name"
                           className="report-details-icon location-name-icon"
                         />
-                      </div>
-                      County:
+                      </div>:
                       <span className="location-name">
                         {latestReport.location.address?.state || "N/A"}
                       </span>
                     </li>
                     <li className="report-details">
-                      <div className="report-details-icon-container">
+                      <div className="report-details-icon-container"
+                       title="Date Taken"
+                      >
                         <img
                           src={calenderIcon}
                           alt="Date Taken"
                           className="report-details-icon calender-name-icon"
                         />
-                      </div>
-                      Date Taken:
+                      </div>:
                       <span className="calender-name">
                         {new Date(dateTaken)
                           .toLocaleString("en-KE", {
                             weekday: "long",
                             year: "numeric",
-                            month: "short",
+                            month: "long",
                             day: "numeric",
                           })
                           .split(",")
