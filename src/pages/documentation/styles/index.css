@@ -6,6 +6,14 @@ pre {
   /* overflow-x: auto; */
   white-space: pre-wrap;
 }
+h6 {
+  font-size: 2.2rem;
+  color: var(--primary-tint);
+  border: none;
+  border-bottom: 2px solid var(--primary-tint);
+  background-color: rgba(237, 169, 110, 0.1);
+  align-self: flex-start;
+}
 
 .documentation-section {
   background-color: gainsboro;
@@ -103,7 +111,8 @@ span.important {
 .highlight,
 .get-highlight,
 .response-highlight,
-.post-highlight {
+.post-highlight,
+.danger-highlight {
   padding: 0.5rem;
   line-height: 1;
 }
@@ -113,6 +122,10 @@ span.important {
 }
 .post-highlight {
   background-color: var(--tertiary-base);
+  color: var(--white-color);
+}
+.danger-highlight {
+  background-color: crimson;
   color: var(--white-color);
 }
 .endPoint {
@@ -149,8 +162,13 @@ span.important {
   border-radius: 5px;
   padding: 1rem;
 }
-.note span {
+.note span,
+.link-highlight {
   color: dodgerblue;
+}
+.link-highlight {
+  font-size: var(--text-paragraph);
+  padding: 0 0.3rem;
 }
 .error-descriptions > h5 {
   background-color: crimson;
@@ -158,4 +176,18 @@ span.important {
   padding: 1rem;
   border: none;
   border-radius: 5px;
+}
+.report-properties-explained {
+  margin-left: 2%;
+}
+.report-properties-explained h6::after {
+  content: ":";
+  font-size: var(--text-paragraph);
+}
+.report-properties-fields {
+  display: flex;
+  flex-direction: row;
+}
+.report-properties-fields p {
+  max-width: 80%;
 }

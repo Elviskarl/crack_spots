@@ -4,13 +4,22 @@ export const serverResponseInterface = `interface ApiResponse {
 }`;
 export const reportInterface = `interface Report {
   _id: string;
-  user: string;
-  severity: "high" | "medium" | "low";
-  location: GeoPoint;
-  cloudinary_url: string;
-  dateTaken: string;
-  issueId: string;
-}
+    user: string; // "community"
+    severity: "high" | "medium" | "low";
+    location: GeoPoint;
+    cloudinary_url: string;
+    dateTaken: string;
+    issueId: string;
+    createdAt: Date;
+    status: "open" | "resolved";
+    resolution?: {
+      resolvedBy: string; // community
+      resolvedAt: Date;
+      dateTaken: string;
+      imageUrl: string;
+      coordinates: number[]; // [longitude, latitude]
+      note: string;
+    };
 
 interface GeoPoint {
     type: "Point";

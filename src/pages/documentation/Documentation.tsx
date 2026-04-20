@@ -59,6 +59,145 @@ export default function Documentation() {
                 containing:{" "}
               </p>
               <CodeBlock content={reportInterface} heading="Report Interface" />
+              <div className="report-properties-explained descriptions">
+                <div className="report-properties-intro">
+                  <h5>Properties</h5>
+                  <p>
+                    Below is a definition of each property and its significance:
+                  </p>
+                </div>
+                <div className="report-properties-fields">
+                  <h6>_id</h6>
+                  <p>
+                    This is the unique identifier for the report, generated
+                    automatically when the report is created in the database. It
+                    is used to reference and manage individual reports within
+                    the system.
+                  </p>
+                </div>
+                <div className="report-properties-fields">
+                  <h6>user</h6>
+                  <p>
+                    This field identifies the user who submitted the report. It
+                    defaults to <span className="highlight">community</span>{" "}
+                    since no authentication is required.
+                  </p>
+                </div>
+                <div className="report-properties-fields">
+                  <h6>severity</h6>
+                  <div className="severity-fields">
+                    <p>
+                      This field indicates the estimated condition of the road
+                      damage described in the report.
+                    </p>
+                    <p>
+                      It is an enum that can take one of three values:{" "}
+                      <span className="highlight">high</span>,{" "}
+                      <span className="highlight">medium</span>, or{" "}
+                      <span className="highlight">low</span>. This information
+                      can be used to prioritize issues and allocate resources
+                      for repairs.
+                    </p>
+                  </div>
+                </div>
+                <div className="report-properties-fields">
+                  <h6>location</h6>
+                  <div className="location-fields">
+                    <p>
+                      The location object contains all the geographic data
+                      associated with a report.
+                    </p>
+                    <p>
+                      It follows the GeoJSON format by defining a{" "}
+                      <span className="highlight">Point</span> with coordinates,
+                      which represent the exact position of the report on the
+                      map. These coordinates are used for spatial operations
+                      such as distance calculations, proximity searches, and map
+                      rendering.
+                    </p>
+                    <p>
+                      The <span className="highlight">address</span> contains
+                      location details obtained through reverse geocoding using
+                      the{" "}
+                      <span className="link-highlight">
+                        <a href="https://nominatim.org/" target="_blank">
+                          Nominatim API
+                        </a>
+                      </span>{" "}
+                      from OpenStreetMap. This process converts the raw
+                      coordinates into a physical address. While this data is
+                      not required for geographic calculations, it provides
+                      meaningful context that makes the location easier to
+                      understand.
+                    </p>
+                    <p>
+                      The <span className="highlight">category</span> represents
+                      how Nominatim api service classifies the location.
+                    </p>
+                  </div>
+                </div>
+                <div className="report-properties-fields">
+                  <h6>cloudinary_url</h6>
+                  <p>
+                    This is the URL of the image associated with the report as
+                    stored on{" "}
+                    <span className="link-highlight">
+                      <a href="https://cloudinary.com/" target="_blank">
+                        Cloudinary
+                      </a>
+                    </span>
+                  </p>
+                </div>
+                <div className="report-properties-fields">
+                  <h6>dateTaken</h6>
+                  <p>
+                    This field records the date and time when the image
+                    associated with the report was taken. It is extracted from
+                    the image's EXIF metadata. Specifically, the
+                    <span className="highlight">DateTimeOriginal</span> tag.
+                  </p>
+                </div>
+                <div className="report-properties-fields">
+                  <h6>createdAt</h6>
+                  <p>
+                    This timestamp indicates when the report was created in the
+                    database. It is automatically generated by the server and is
+                    used for tracking and sorting reports based on their
+                    creation time.
+                  </p>
+                </div>
+
+                <div className="report-properties-fields">
+                  <h6>status</h6>
+                  <p>
+                    This field describes whether the issue indicated in the
+                    report is still open or has been resolved. It can take one
+                    of two values: <span className="highlight">open</span> or{" "}
+                    <span className="highlight">resolved</span>.
+                  </p>
+                </div>
+                <div className="report-properties-fields">
+                  <h6>resolution</h6>
+                  <p>
+                    This optional field contains details about how an issue was
+                    resolved. It is only present if the status of the report is
+                    <span className="highlight">resolved</span>. The resolution
+                    object includes information about who resolved the issue,
+                    when it was resolved, the date the resolution image was
+                    taken, the URL of the resolution image, the coordinates of
+                    the resolution, and any notes about the resolution process.
+                  </p>
+                </div>
+                <div className="report-properties-fields">
+                  <h6>issueId</h6>
+                  <p>
+                    This field is used to group reports that describe the same
+                    underlying road defect at the same location. It is assigned
+                    by the server when reports are sufficiently close in
+                    distance and occur on the same street.
+                  </p>
+                </div>
+              </div>
               <h5>Issues</h5>
               <p>
                 An issue is a <span className="highlight">system-defined </span>{" "}
@@ -68,7 +207,7 @@ export default function Documentation() {
               </p>
               <p>
                 They are not created by users; they are generated by the server
-                when reports are sufficiently close in distance, 5 meters, and
+                when reports are sufficiently close in distance, 20 meters, and
                 occur on the <span className="highlight">same street.</span>
               </p>
               <p>
