@@ -23,6 +23,12 @@
   }
   .attributions-and-contacts {
     flex-direction: column;
+    width: 100%;
+  }
+  .attributions-and-contacts .about-section-card,
+  .contact-details {
+    width: 85%;
+    margin: 0 auto;
   }
 }
 /* phone landscape to tablets - 690 to 780 px */
