@@ -92,6 +92,33 @@ section.about-section-page {
 .github-logo {
   width: 3rem;
 }
-.link-to-docs{
+.link-to-docs {
   margin-left: 1rem;
+}
+.link-to-resources {
+  font-size: var(--text-base);
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.link-to-resources a.link-tags {
+  color: dodgerblue;
+}
+.attributions-and-contacts {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+.attributions-and-contacts .about-section-card {
+  width: 50%;
+}
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 50%;
+}
+.contact-icon {
+  width: 3rem;
 }

@@ -21,6 +21,9 @@
   .github-space {
     width: 80%;
   }
+  .attributions-and-contacts {
+    flex-direction: column;
+  }
 }
 /* phone landscape to tablets - 690 to 780 px */
 /* @media (max-width: 48.75rem) {

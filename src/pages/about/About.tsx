@@ -4,6 +4,8 @@ import githubLogo from "../../assets/logo-github.svg";
 import "./styles/index.css";
 import "./styles/aboutPageMediaQuerry.css";
 import { useEffect } from "react";
+import mailIcon from "../../assets/mail-open-outline.svg";
+import phoneIcon from "../../assets/call-outline.svg";
 
 function About() {
   const location = useLocation();
@@ -132,6 +134,100 @@ function About() {
                 className="github-logo "
               />
               view on GitHub
+            </a>
+          </span>
+        </div>
+      </div>
+      <div className="attributions-and-contacts">
+        <div className="about-section-card">
+          <h3>Credits</h3>
+          <p>
+            Resources used in this project were sourced from various platforms,
+            including:
+          </p>
+          <span className="link-to-resources">
+            Images -{" "}
+            <a
+              href="https://www.flaticon.com/free-icons/next"
+              title="next icons"
+              target="_blank"
+              className="link-tags"
+            >
+              Next icons created by the studio - Flaticon
+            </a>
+          </span>
+          <span className="link-to-resources">
+            Icons -{" "}
+            <a
+              href="https://ionic.io/ionicons"
+              title="nominatim"
+              className="link-tags"
+              target="_blank"
+            >
+              Ionicons - Ionic Team
+            </a>
+          </span>
+          <span className="link-to-resources">
+            Map tiles -{" "}
+            <a
+              href="https://welcome.openstreetmap.org/what-is-openstreetmap/"
+              title="openstreetmap"
+              target="_blank"
+              className="link-tags"
+            >
+              OpenStreetMap - OpenStreetMap contributors
+            </a>
+          </span>
+          <span className="link-to-resources">
+            Spatial Querrying -{" "}
+            <a
+              href="https://turfjs.org/"
+              title="turfjs"
+              className="link-tags"
+              target="_blank"
+            >
+              Turf.js - Turf.js Contributors
+            </a>
+          </span>
+          <span className="link-to-resources">
+            Nairobi sub-counties -{" "}
+            <a
+              href="https://data.humdata.org/dataset/kenya-sub-counties"
+              target="_blank"
+              title="kenya-sub-counties"
+              className="link-tags"
+            >
+              Kenya Sub-counties - Humanitarian Data Exchange
+            </a>
+          </span>
+          <span className="link-to-resources">
+            Geocoding -{" "}
+            <a
+              href="https://nominatim.org/"
+              title="nominatim"
+              className="link-tags"
+              target="_blank"
+            >
+              Nominatim - OpenStreetMap Contributors
+            </a>
+          </span>
+        </div>
+        <div className="contact-details">
+          <h3>Contact</h3>
+          <p>
+            For inquiries, feedback, or collaboration opportunities, please
+            reach out via:
+          </p>
+          <span className="link-to-resources">
+            <img src={mailIcon} alt="mail-icon" className="contact-icon" />-{" "}
+            <a href="#" title="Send email" className="link-tags">
+              kenjaku24@yahoo.com
+            </a>
+          </span>
+          <span className="link-to-resources">
+            <img src={phoneIcon} alt="phone-icon" className="contact-icon" />-{" "}
+            <a href="#" title="Number" className="link-tags">
+              +254 799 947 682
             </a>
           </span>
         </div>
