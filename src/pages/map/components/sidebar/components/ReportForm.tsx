@@ -7,13 +7,12 @@ import {
 } from "react";
 import ReportPreview from "./ReportPreview";
 import { isInNairobi, readFile, validateFile } from "../../../utils/utils";
-import type { CoordinateData } from "../../../types";
+import type { CoordinateData, NotificationType } from "../../../types";
 import { uploadReports } from "../../../utils/uploadReports";
 import { CustomError } from "../../../../../components/error/CustomError";
 import { Notifications } from "./Notifications";
 import "../../../styles/report-form.css";
 import LoadingScreen from "../../../../../components/LoadingScreen";
-import { ReportContext } from "../../../../../context/createReportContext";
 import { MapContext } from "../../../../../context/createMapContext";
 
 export default function ReportForm() {
@@ -21,8 +20,10 @@ export default function ReportForm() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [coordinates, setCoordinates] = useState<CoordinateData | null>(null);
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null,
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { notification, setNotification } = useContext(ReportContext)!;
   const { nairobiSubCountyShapefile, setIsNotInNairobi } =
     useContext(MapContext)!;
 

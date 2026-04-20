@@ -1,6 +1,11 @@
 import SearchListSection from "./components/SearchListSection";
 import "../../styles/resloveReport.css";
-import type { CoordinateData, ListItemOptional, Report } from "../../types";
+import type {
+  CoordinateData,
+  ListItemOptional,
+  NotificationType,
+  Report,
+} from "../../types";
 import {
   useContext,
   useEffect,
@@ -17,7 +22,6 @@ import {
 } from "../../utils/utils";
 import { CustomError } from "../../../../components/error/CustomError";
 import { MapContext } from "../../../../context/createMapContext";
-import { ReportContext } from "../../../../context/createReportContext";
 import LoadingScreen from "../../../../components/LoadingScreen";
 import { Notifications } from "./components/Notifications";
 import resolveIssues from "../../utils/resolveIssues";
@@ -33,8 +37,9 @@ export default function ResolveReport(props: ListItemOptional) {
   const notificationRef = useRef<HTMLDivElement>(null);
   const { nairobiSubCountyShapefile, setIsNotInNairobi } =
     useContext(MapContext)!;
-  const { notification, setNotification } = useContext(ReportContext)!;
-
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null,
+  );
   useEffect(() => {
     if (!imageUrl) return;
 
@@ -338,6 +343,22 @@ export default function ResolveReport(props: ListItemOptional) {
                 )
               )}
             </fieldset>
+            {isLoading ? (
+              <LoadingScreen category="notification" />
+            ) : (
+              notification && (
+                <div
+                  className="notifications-scroll-container"
+                  ref={notificationRef}
+                >
+                  <Notifications
+                    message={notification.message}
+                    func={setNotification}
+                    type={notification.type}
+                  />
+                </div>
+              )
+            )}
             <fieldset>
               <legend>Description note [Required]</legend>
               <textarea
@@ -352,19 +373,6 @@ export default function ResolveReport(props: ListItemOptional) {
             <button className="submit-report-resolution-btn">Submit</button>
           </form>
         </div>
-      )}
-      {isLoading ? (
-        <LoadingScreen category="notification" />
-      ) : (
-        notification && (
-          <div className="notifications-scroll-container" ref={notificationRef}>
-            <Notifications
-              message={notification.message}
-              func={setNotification}
-              type={notification.type}
-            />
-          </div>
-        )
       )}
     </div>
   );
