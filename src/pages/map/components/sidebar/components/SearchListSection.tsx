@@ -1,31 +1,28 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type SubmitEvent,
+} from "react";
 import { ReportContext } from "../../../../../context/createReportContext";
 import searchIconUrl from "../../../../../assets/search-icon.svg";
 import SearchSuggestions from "./SearchSuggestions";
 import MatchingReports from "./MatchingReports";
 import "../../../styles/searchListSection.css";
 import useDebounce from "../../../hooks/Debouncer";
-import type { ListItemOptional } from "../../../types";
+import { type Report, type ListItemOptional } from "../../../types";
 
 export default function SearchListSection(props: ListItemOptional) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [matchingReports, setMatchingReports] = useState<Report[] | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const { reports } = useContext(ReportContext)!;
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const { setCollapsed, isResolving, setInterestedReport, interestedReport } =
     props;
 
-  // Find matching Report
-  const matchingReport = useMemo(() => {
-    return reports.filter(
-      (report) =>
-        report.location.address?.road?.toLowerCase().trim() ===
-        debouncedSearchTerm,
-    );
-  }, [reports, debouncedSearchTerm]);
-
   const hasSearch = debouncedSearchTerm.trim() !== "";
-  const hasResults = matchingReport.length > 0;
 
   // Extract unique street names from the report data
   const streetNames = useMemo(() => {
@@ -46,23 +43,39 @@ export default function SearchListSection(props: ListItemOptional) {
   }, [streetNames, debouncedSearchTerm]);
 
   // Handle form submission
-  function handleSubmit() {
+  function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
+    e.preventDefault();
+    try {
+      const filteredReports = filterReports();
+      setMatchingReports(filteredReports);
+    } catch (error) {
+      console.error(error);
+    }
     setIsOpen(false);
   }
 
+  function filterReports() {
+    return reports.filter((report) =>
+      report.location.address?.road
+        ?.toLowerCase()
+        .trim()
+        .includes(debouncedSearchTerm),
+    );
+  }
+
   useEffect(() => {
-    if (interestedReport && setInterestedReport) {
-      const isValid = matchingReport.some(
+    if (interestedReport && setInterestedReport && matchingReports) {
+      const isValid = matchingReports.some(
         (report) => report._id === interestedReport._id,
       );
       if (!isValid) {
         setInterestedReport(null);
       }
     }
-  }, [interestedReport, setInterestedReport, matchingReport]);
+  }, [interestedReport, setInterestedReport, matchingReports]);
   return (
     <div className="search-input-section">
-      <form className="search-input-container" action={handleSubmit}>
+      <form className="search-input-container" onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Search by street name..."
@@ -82,10 +95,12 @@ export default function SearchListSection(props: ListItemOptional) {
             className="clear-btn"
             onClick={() => {
               setSearchTerm("");
+              setIsOpen(false);
               setTimeout(() => {
-                setIsOpen(false);
-              }, 300);
+                setMatchingReports(null);
+              }, 350);
             }}
+            type="button"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -99,7 +114,7 @@ export default function SearchListSection(props: ListItemOptional) {
             </svg>
           </button>
         )}
-        <button className="search-button">
+        <button className="search-button" type="submit">
           <img
             src={searchIconUrl}
             alt="Search Icon"
@@ -114,16 +129,19 @@ export default function SearchListSection(props: ListItemOptional) {
           reports={reports}
           debouncedSearchTerm={debouncedSearchTerm}
           isOpen={isOpen}
+          setMatchingReport={setMatchingReports}
+          func={filterReports}
         />
       </form>
       {hasSearch ? (
-        hasResults ? (
+        matchingReports ? (
           <MatchingReports
-            matchingReport={matchingReport}
+            matchingReport={matchingReports}
             setCollapsed={setCollapsed}
             isResolving={isResolving}
             setInterestedReport={setInterestedReport}
             interestedReport={interestedReport}
+            term={debouncedSearchTerm}
           />
         ) : (
           <p className="no-results-found">No results found.</p>
