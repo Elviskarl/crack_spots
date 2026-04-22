@@ -1,6 +1,6 @@
 import {
   useContext,
-  // useEffect,
+  useEffect,
   useMemo,
   useState,
   type SubmitEvent,
@@ -62,16 +62,11 @@ export default function SearchListSection(props: ListItemOptional) {
     );
   }
 
-  // useEffect(() => {
-  //   if (interestedReport && setInterestedReport && matchingReports) {
-  //     const isValid = matchingReports.some(
-  //       (report) => report._id === interestedReport._id,
-  //     );
-  //     if (!isValid) {
-  //       setInterestedReport(null);
-  //     }
-  //   }
-  // }, [interestedReport, setInterestedReport, matchingReports]);
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setInterestedReport?.(null);
+    }
+  }, [searchTerm, setInterestedReport]);
   return (
     <div className="search-input-section">
       <form className="search-input-container" onSubmit={handleSubmit}>
