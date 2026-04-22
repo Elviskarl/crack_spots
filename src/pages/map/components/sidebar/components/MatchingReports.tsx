@@ -128,16 +128,18 @@ export default function MatchingReports({
         {isResolving ? (
           <>
             <div className="select-report-container">
-              <button
-                className="select-report-btn"
-                onClick={() => {
-                  if (setInterestedReport) {
-                    setInterestedReport(report);
-                  }
-                }}
-              >
-                Select Issue
-              </button>
+              {!interestedReport && (
+                <button
+                  className="select-report-btn"
+                  onClick={() => {
+                    if (setInterestedReport) {
+                      setInterestedReport(report);
+                    }
+                  }}
+                >
+                  Select Issue
+                </button>
+              )}
             </div>
             {interestedReport?._id === report._id && (
               <div className="interested-report-checkmark">
