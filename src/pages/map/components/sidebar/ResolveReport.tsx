@@ -34,6 +34,7 @@ export default function ResolveReport(props: ListItemOptional) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [coordinates, setCoordinates] = useState<CoordinateData | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const resolveReportsContainerRef = useRef<HTMLDivElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
   const { nairobiSubCountyShapefile, setIsNotInNairobi } =
     useContext(MapContext)!;
@@ -250,9 +251,17 @@ export default function ResolveReport(props: ListItemOptional) {
       processImage(file);
     }
   }
+  useEffect(() => {
+    if (resolveReportsContainerRef.current) {
+      resolveReportsContainerRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [notification]);
 
   return (
-    <div className="resolve-reports-container">
+    <div className="resolve-reports-container" ref={resolveReportsContainerRef}>
       <p>Select the issue to resolve</p>
       <SearchListSection
         setCollapsed={props.setCollapsed}
@@ -343,22 +352,6 @@ export default function ResolveReport(props: ListItemOptional) {
                 )
               )}
             </fieldset>
-            {isLoading ? (
-              <LoadingScreen category="notification" />
-            ) : (
-              notification && (
-                <div
-                  className="notifications-scroll-container"
-                  ref={notificationRef}
-                >
-                  <Notifications
-                    message={notification.message}
-                    func={setNotification}
-                    type={notification.type}
-                  />
-                </div>
-              )
-            )}
             <fieldset>
               <legend>Description note [Required]</legend>
               <textarea
@@ -373,6 +366,19 @@ export default function ResolveReport(props: ListItemOptional) {
             <button className="submit-report-resolution-btn">Submit</button>
           </form>
         </div>
+      )}
+      {isLoading ? (
+        <LoadingScreen category="notification" />
+      ) : (
+        notification && (
+          <div className="notifications-scroll-container" ref={notificationRef}>
+            <Notifications
+              message={notification.message}
+              func={setNotification}
+              type={notification.type}
+            />
+          </div>
+        )
       )}
     </div>
   );
