@@ -5,6 +5,7 @@ interface SearchSuggestionsProps {
   suggestions: string[];
   setSearchTerm: Dispatch<SetStateAction<string>>;
   setMatchingReport: Dispatch<SetStateAction<Report[] | null>>;
+  setInterestedReport: Dispatch<SetStateAction<Report | null>> | undefined;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   reports: Report[];
   debouncedSearchTerm: string;
@@ -19,6 +20,7 @@ export default function SearchSuggestions({
   isOpen,
   debouncedSearchTerm,
   setMatchingReport,
+  setInterestedReport,
   func,
 }: SearchSuggestionsProps) {
   return (
@@ -34,6 +36,9 @@ export default function SearchSuggestions({
               onMouseDown={() => {
                 setSearchTerm(suggestion);
                 setIsOpen(false);
+                if (setInterestedReport) {
+                  setInterestedReport(null);
+                }
                 setMatchingReport(func());
               }}
             >
