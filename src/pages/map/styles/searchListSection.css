@@ -12,6 +12,7 @@
   background-color: white;
   border: 1px solid var(--secondary-tint);
   border-radius: 8px;
+  z-index: 2;
 }
 .search-input {
   align-self: stretch;

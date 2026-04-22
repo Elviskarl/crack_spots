@@ -4,27 +4,23 @@ import type { Report } from "../../../types";
 interface SearchSuggestionsProps {
   suggestions: string[];
   setSearchTerm: Dispatch<SetStateAction<string>>;
+  setMatchingReport: Dispatch<SetStateAction<Report[] | null>>;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   reports: Report[];
   debouncedSearchTerm: string;
   isOpen: boolean;
+  func: () => Report[];
 }
 
 export default function SearchSuggestions({
   suggestions,
   setSearchTerm,
   setIsOpen,
-  reports,
   isOpen,
   debouncedSearchTerm,
+  setMatchingReport,
+  func,
 }: SearchSuggestionsProps) {
-  function FindMatchingReport(param: string) {
-    if (!reports) return [];
-    reports.filter(
-      (report) => report.location.address?.road?.toLowerCase() === param,
-    );
-    return;
-  }
   return (
     <ul
       className={`search-options ${isOpen && debouncedSearchTerm ? "active" : ""}`}
@@ -37,8 +33,8 @@ export default function SearchSuggestions({
               key={suggestion + index}
               onMouseDown={() => {
                 setSearchTerm(suggestion);
-                FindMatchingReport(suggestion);
                 setIsOpen(false);
+                setMatchingReport(func());
               }}
             >
               <span>{suggestion}</span>
