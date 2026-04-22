@@ -10,7 +10,7 @@ interface SearchSuggestionsProps {
   reports: Report[];
   debouncedSearchTerm: string;
   isOpen: boolean;
-  func: () => Report[];
+  func: (term: string) => Report[];
 }
 
 export default function SearchSuggestions({
@@ -39,7 +39,7 @@ export default function SearchSuggestions({
                 if (setInterestedReport) {
                   setInterestedReport(null);
                 }
-                setMatchingReport(func());
+                setMatchingReport(func(suggestion));
               }}
             >
               <span>{suggestion}</span>

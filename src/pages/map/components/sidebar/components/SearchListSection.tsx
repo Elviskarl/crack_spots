@@ -18,7 +18,7 @@ export default function SearchListSection(props: ListItemOptional) {
   const [matchingReports, setMatchingReports] = useState<Report[] | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const { reports } = useContext(ReportContext)!;
-  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+  const debouncedSearchTerm = useDebounce(searchTerm, 300).toLowerCase().trim();
   const { setCollapsed, isResolving, setInterestedReport, interestedReport } =
     props;
 
@@ -37,9 +37,7 @@ export default function SearchListSection(props: ListItemOptional) {
 
   // Filter street names based on the search term
   const suggestions = useMemo(() => {
-    return streetNames.filter((street) =>
-      street.includes(debouncedSearchTerm.toLowerCase().trim()),
-    );
+    return streetNames.filter((street) => street.includes(debouncedSearchTerm));
   }, [streetNames, debouncedSearchTerm]);
 
   // Handle form submission
@@ -49,7 +47,7 @@ export default function SearchListSection(props: ListItemOptional) {
       setInterestedReport(null);
     }
     try {
-      const filteredReports = filterReports();
+      const filteredReports = filterReports(searchTerm);
       setMatchingReports(filteredReports);
     } catch (error) {
       console.error(error);
@@ -57,12 +55,10 @@ export default function SearchListSection(props: ListItemOptional) {
     setIsOpen(false);
   }
 
-  function filterReports() {
+  function filterReports(term: string) {
+    const normalized = term.toLowerCase().trim();
     return reports.filter((report) =>
-      report.location.address?.road
-        ?.toLowerCase()
-        .trim()
-        .includes(debouncedSearchTerm),
+      report.location.address?.road?.toLowerCase().trim().includes(normalized),
     );
   }
 
