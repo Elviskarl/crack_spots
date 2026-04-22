@@ -166,18 +166,13 @@ export default function ResolveReport(props: ListItemOptional) {
       setIsLoading(true);
 
       if (!interestedReport) {
-        console.log("is not interested report");
         throw new CustomError(
           "MISSING_REPORT",
           "No report selected for resolution.",
         );
       }
       if (!file || !coordinates) {
-        console.log("is not file | coords");
-        throw new CustomError(
-          "MISSING_FILE",
-          "File or exif metadata is missing.",
-        );
+        throw new CustomError("MISSING_FILE", "Image file is missing.");
       }
       console.log("clicked");
       const fileCopy = file;

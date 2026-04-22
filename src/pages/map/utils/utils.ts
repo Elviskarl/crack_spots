@@ -118,7 +118,6 @@ export function resolveData(
     const distance = turf.distance(reportPoint, resolutionPoint, {
       units: "meters",
     });
-    console.log(distance);
 
     if (distance > maxDistance) {
       throw new CustomError(
