@@ -15,6 +15,7 @@ interface MatchingReportprops {
   isResolving?: boolean;
   setInterestedReport?: Dispatch<SetStateAction<Report | null>>;
   interestedReport?: Report | null;
+  term: string;
 }
 
 export default function MatchingReports({
@@ -23,6 +24,7 @@ export default function MatchingReports({
   isResolving,
   setInterestedReport,
   interestedReport,
+  term,
 }: MatchingReportprops) {
   const { setSelectedReport } = useContext(MapContext)!;
 
@@ -154,19 +156,13 @@ export default function MatchingReports({
   return (
     <div className="search-results">
       <div className="report-count-container">
-        {sortedIssues.length === 1 ? (
-          <p className="report-count-paragraph">
-            Found{" "}
-            <span className="report-count-span">{sortedIssues.length} </span>{" "}
-            issue.
-          </p>
-        ) : (
-          <p className="report-count-paragraph">
-            Found{" "}
-            <span className="report-count-span">{sortedIssues.length} </span>{" "}
-            issues matching your search criteria.
-          </p>
-        )}
+        <p className="report-count-paragraph">
+          {term}{" "}
+          <span className="report-count-span">
+            ({sortedIssues.length}{" "}
+            {sortedIssues.length === 1 ? "result" : "results"})
+          </span>{" "}
+        </p>
       </div>
       {matchingIssuesEl}
     </div>
