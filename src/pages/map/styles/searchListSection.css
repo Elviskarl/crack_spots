@@ -8,21 +8,39 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 5px;
-  background-color: var(--white-color);
   position: relative;
+  background-color: white;
+  border: 1px solid var(--secondary-tint);
+  border-radius: 8px;
 }
 .search-input {
-  width: 80%;
   align-self: stretch;
+  background-color: transparent;
   border: none;
-  font-size: var(--text-base);
+  padding: 0.5rem 1rem;
+  font-size: var(--text-sm);
+  flex-grow: 1;
+  outline: none;
 }
-.search-button {
-  width: 20%;
+.search-input::placeholder {
+  font-style: italic;
+}
+.clear-btn {
+  border-radius: 50%;
+  background-color: transparent;
+  width: 3rem;
+  height: 3rem;
+  padding: unset;
+  color: crimson;
+  cursor: pointer;
+}
+.clear-btn:hover {
+  color: crimson;
+  background-color: unset;
 }
 .search-input-container button.search-button {
-  background-color: var(--primary-color);
+  background-color: rgba(128, 128, 128, 0.2);
+  border-radius: unset;
   color: var(--white-color);
   border: none;
 }
