@@ -21,12 +21,20 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
     {},
   );
 
-  const customIcon = new Icon({
+  const resolvedIcon = new Icon({
+    iconUrl: "https://cdn-icons-png.flaticon.com/128/13984/13984191.png",
+    iconSize: [40, 40],
+    iconAnchor: [15, 30],
+    popupAnchor: [0, -30],
+  });
+
+  const unResolvedIcon = new Icon({
     iconUrl: "https://cdn-icons-png.flaticon.com/128/4904/4904150.png",
     iconSize: [40, 40],
     iconAnchor: [15, 30],
     popupAnchor: [0, -30],
   });
+
   const issues = useCreateIssues(reports);
   const sortedIssues = useMemo(() => {
     return issues.map((issue) => ({
@@ -116,7 +124,7 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
               location.coordinates[0], // longitude
             ]}
             title="Report Location"
-            icon={customIcon}
+            icon={status === "resolved" ? resolvedIcon : unResolvedIcon}
             ref={(ref) => {
               if (ref) {
                 markerRefs.current[issueId] = ref;
@@ -179,54 +187,65 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                   </h4>
                   <ul>
                     <li className="report-details">
-                      <div className="report-details-icon-container"
-                       title="Road Name">
+                      <div
+                        className="report-details-icon-container"
+                        title="Road Name"
+                      >
                         <img
                           src={roadNameIcon}
                           alt="road Name"
                           className="report-details-icon road-name-icon"
                         />
-                      </div>:
+                      </div>
+                      :
                       <span className="road-name">
                         {latestReport.location.address?.road}
                       </span>
                     </li>
                     <li className="report-details">
-                      <div className="report-details-icon-container"
-                       title="Location">
+                      <div
+                        className="report-details-icon-container"
+                        title="Location"
+                      >
                         <img
                           src={neighbourhoodNameIcon}
                           alt="neighbourhood Name"
                           className="report-details-icon neighbourhood-name-icon"
                         />
-                      </div>:
+                      </div>
+                      :
                       <span className="neighbourhood-name">
                         {latestReport.location.address?.neighbourhood || "N/A"}
                       </span>
                     </li>
                     <li className="report-details">
-                      <div className="report-details-icon-container"
-                       title="County">
+                      <div
+                        className="report-details-icon-container"
+                        title="County"
+                      >
                         <img
                           src={locationNameIcon}
                           alt="location Name"
                           className="report-details-icon location-name-icon"
                         />
-                      </div>:
+                      </div>
+                      :
                       <span className="location-name">
                         {latestReport.location.address?.state || "N/A"}
                       </span>
                     </li>
                     <li className="report-details">
-                      <div className="report-details-icon-container"
-                       title="Date Taken"
+                      <div
+                        className="report-details-icon-container"
+                        title="Date Taken"
                       >
                         <img
                           src={calenderIcon}
                           alt="Date Taken"
                           className="report-details-icon calender-name-icon"
                         />
-                      </div>:
+                      </div>
+                      :
                       <span className="calender-name">
                         {new Date(dateTaken)
                           .toLocaleString("en-KE", {
