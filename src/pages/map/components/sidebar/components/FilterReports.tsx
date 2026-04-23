@@ -5,16 +5,19 @@ import { MapContext } from "../../../../../context/createMapContext";
 import "../../../styles/filterReports.css";
 
 export default function FilterReports() {
-  const { reports, setReports, originalReports } = useContext(ReportContext)!;
+  const { setReports, originalReports } = useContext(ReportContext)!;
   const { nairobiSubCountyShapefile } = useContext(MapContext)!;
+
   const category = new Set(
     originalReports.current.map((report) => report.severity),
   );
+
   const yearTaken = new Set(
     originalReports.current.map((report) =>
-      new Date(report.dateTaken).getFullYear(),
+      new Date(report.dateTaken).getUTCFullYear(),
     ),
   );
+
   const resolutionStatus = new Set(
     originalReports.current.map((report) => report.status),
   );
@@ -24,7 +27,7 @@ export default function FilterReports() {
       (feature) => feature.properties?.subcounty === subcounty,
     );
     if (!feature) return;
-    const filteredReports = reports.filter((report) => {
+    const filteredReports = originalReports.current.filter((report) => {
       const reportPoint = point([
         report.location.coordinates[0],
         report.location.coordinates[1],
@@ -47,12 +50,13 @@ export default function FilterReports() {
             defaultValue={""}
             required
             onChange={(e) => {
-              const selectedYear = parseInt(e.target.value);
+              const selectedYear = Number(e.target.value);
               setReports(
-                reports.filter(
-                  (report) =>
-                    new Date(report.dateTaken).getFullYear() === selectedYear,
-                ),
+                originalReports.current.filter((report) => {
+                  const date = new Date(report.dateTaken);
+                  if (isNaN(date.getTime())) return false;
+                  return date.getUTCFullYear() === selectedYear;
+                }),
               );
             }}
           >
@@ -77,7 +81,7 @@ export default function FilterReports() {
             onChange={(e) => {
               const selectedCategory = e.target.value;
               setReports(
-                reports.filter(
+                originalReports.current.filter(
                   (report) => report.severity === selectedCategory,
                 ),
               );
@@ -132,7 +136,9 @@ export default function FilterReports() {
             onChange={(e) => {
               const selectedCategory = e.target.value;
               setReports(
-                reports.filter((report) => report.status === selectedCategory),
+                originalReports.current.filter(
+                  (report) => report.status === selectedCategory,
+                ),
               );
             }}
           >
