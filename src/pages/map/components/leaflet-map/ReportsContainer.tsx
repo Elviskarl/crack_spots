@@ -15,25 +15,25 @@ import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
 import { MapContext } from "../../../../context/createMapContext";
 import useCreateIssues from "../../utils/CreateIssues";
 
+const resolvedIcon = new Icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/128/13984/13984191.png",
+  iconSize: [40, 40],
+  iconAnchor: [15, 30],
+  popupAnchor: [0, -30],
+});
+
+const unResolvedIcon = new Icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/128/4904/4904150.png",
+  iconSize: [40, 40],
+  iconAnchor: [15, 30],
+  popupAnchor: [0, -30],
+});
+
 export function ReportsContainer({ reports }: { reports: Report[] }) {
   const { markerRefs } = useContext(MapContext)!;
   const [activeIndexes, setActiveIndexes] = useState<Record<string, number>>(
     {},
   );
-
-  const resolvedIcon = new Icon({
-    iconUrl: "https://cdn-icons-png.flaticon.com/128/13984/13984191.png",
-    iconSize: [40, 40],
-    iconAnchor: [15, 30],
-    popupAnchor: [0, -30],
-  });
-
-  const unResolvedIcon = new Icon({
-    iconUrl: "https://cdn-icons-png.flaticon.com/128/4904/4904150.png",
-    iconSize: [40, 40],
-    iconAnchor: [15, 30],
-    popupAnchor: [0, -30],
-  });
 
   const issues = useCreateIssues(reports);
   const sortedIssues = useMemo(() => {
@@ -47,7 +47,7 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
   }, [issues]);
 
   return (
-    <MarkerClusterGroup>
+    <MarkerClusterGroup key={reports.map((report) => report._id).join("-")}>
       {sortedIssues.map((issue) => {
         const { issueId, reports } = issue;
 
@@ -124,7 +124,9 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
               location.coordinates[0], // longitude
             ]}
             title="Report Location"
-            icon={status === "resolved" ? resolvedIcon : unResolvedIcon}
+            icon={
+              latestReport.status === "resolved" ? resolvedIcon : unResolvedIcon
+            }
             ref={(ref) => {
               if (ref) {
                 markerRefs.current[issueId] = ref;
