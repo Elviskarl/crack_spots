@@ -31,14 +31,23 @@ export default function MatchingReports({
   const sortedIssues = useMemo(() => {
     const sourceReport = interestedReport ? [interestedReport] : matchingReport;
     const issues = CreateIssues(sourceReport);
-    return issues.map((issue) => ({
-      issueId: issue.issueId,
-      reports: [...issue.reports].sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      ),
-    }));
-  }, [interestedReport, matchingReport]);
+    return issues
+      .map((issue) => {
+        const sortedIssues = [...issue.reports].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
+        return {
+          issueId: issue.issueId,
+          reports: sortedIssues,
+        };
+      })
+      .filter((issue) => {
+        if (!isResolving) return true;
+        const latestReport = issue.reports[0];
+        return latestReport.status !== "resolved";
+      });
+  }, [interestedReport, matchingReport, isResolving]);
 
   function flyToReport(param: Report) {
     setSelectedReport(param);

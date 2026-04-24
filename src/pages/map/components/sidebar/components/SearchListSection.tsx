@@ -43,12 +43,12 @@ export default function SearchListSection(props: ListItemOptional) {
   // Handle form submission
   function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (setInterestedReport) {
-      setInterestedReport(null);
-    }
     try {
       const filteredReports = filterReports(searchTerm);
       setMatchingReports(filteredReports);
+      if (setInterestedReport) {
+        setInterestedReport(null);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -57,9 +57,16 @@ export default function SearchListSection(props: ListItemOptional) {
 
   function filterReports(term: string) {
     const normalized = term.toLowerCase().trim();
-    return reports.filter((report) =>
-      report.location.address?.road?.toLowerCase().trim().includes(normalized),
-    );
+    return reports.filter((report) => {
+      const isOnSameRoad = report.location.address?.road
+        ?.toLowerCase()
+        .trim()
+        .includes(normalized);
+
+      if (!isOnSameRoad) return false;
+
+      return true;
+    });
   }
 
   useEffect(() => {
