@@ -8,6 +8,7 @@ import imageCategoryUrl from "../../../../../assets/analytics-outline.svg";
 import calenderUrl from "../../../../../assets/calendar-outline.svg";
 import leafUrl from "../../../../../assets/leaf-outline.svg";
 import checkUrl from "../../../../../assets/check.png";
+import approvedImageUrl from "../../../../../assets/approved.png";
 import "../../../styles/matching-report.css";
 interface MatchingReportprops {
   matchingReport: Report[];
@@ -30,16 +31,18 @@ export default function MatchingReports({
 
   const sortedIssues = useMemo(() => {
     const sourceReport = interestedReport ? [interestedReport] : matchingReport;
+    if (!sourceReport) return [];
+
     const issues = CreateIssues(sourceReport);
     return issues
       .map((issue) => {
-        const sortedIssues = [...issue.reports].sort(
+        const sortedReports = [...issue.reports].sort(
           (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         );
         return {
           issueId: issue.issueId,
-          reports: sortedIssues,
+          reports: sortedReports,
         };
       })
       .filter((issue) => {
@@ -59,7 +62,11 @@ export default function MatchingReports({
       <div className="search-result-card" key={issue.issueId}>
         <div className="search-result-image-container">
           <img
-            src={report.cloudinary_url}
+            src={
+              report.status === "resolved"
+                ? report.resolution?.imageUrl
+                : report.cloudinary_url
+            }
             alt="Report image"
             className="search-result-image"
           />
@@ -136,29 +143,27 @@ export default function MatchingReports({
             </span>
           </li>
         </ul>
-        {isResolving ? (
-          <>
-            <div className="select-report-container">
-              {!interestedReport && (
-                <button
-                  className="select-report-btn"
-                  onClick={() => {
-                    if (setInterestedReport) {
-                      setInterestedReport(report);
-                    }
-                  }}
-                >
-                  Select Issue
-                </button>
-              )}
-            </div>
-            {interestedReport?._id === report._id && (
-              <div className="interested-report-checkmark">
-                <img src={checkUrl} alt="checkMark" />
-              </div>
-            )}
-          </>
-        ) : null}
+        <div className="select-report-container">
+          {isResolving && !interestedReport && (
+            <button
+              className="select-report-btn"
+              onClick={() => {
+                if (setInterestedReport) {
+                  setInterestedReport(report);
+                }
+              }}
+            >
+              Select Issue
+            </button>
+          )}
+        </div>
+        <div className="interested-report-checkmark">
+          {interestedReport?._id === report._id ? (
+            <img src={checkUrl} alt="checkMark" title="interested Report" />
+          ) : report.status === "resolved" ? (
+            <img src={approvedImageUrl} alt="checkMark" title={report.status} />
+          ) : null}
+        </div>
       </div>
     );
   });
