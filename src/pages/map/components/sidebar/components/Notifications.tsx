@@ -15,7 +15,7 @@ export function Notifications({ message, func, type }: Params) {
     }, 6000);
 
     return () => clearTimeout(timer);
-  }, [func]);
+  }, [message, func]);
   return (
     <div className={`notification notification-${type}`}>
       <div

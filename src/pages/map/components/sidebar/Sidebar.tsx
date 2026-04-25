@@ -25,8 +25,9 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
-  const { isLoading, setNotification } = useContext(ReportContext)!;
+  const { setNotification, notification } = useContext(ReportContext)!;
   const sidebarWrapper = useRef<HTMLElement>(null);
+
   useEffect(() => {
     if (sidebarWrapper.current) {
       sidebarWrapper.current.scrollTo({
@@ -34,7 +35,8 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
         top: sidebarWrapper.current.scrollHeight,
       });
     }
-  });
+  }, [notification]);
+
   function toggleSidebar() {
     setCollapsed((prevVal) => !prevVal);
   }
@@ -72,11 +74,11 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
             setCollapsed={setCollapsed}
           />
         </ul>
-        {isLoading && (
+        {notification && (
           <Notifications
-            message="Fetching Reports from the database, please wait"
+            message={notification?.message}
             func={setNotification}
-            type="Info"
+            type={notification.type}
           />
         )}
       </section>

@@ -17,10 +17,18 @@ export function ReportProvider({ children }: { children: React.ReactNode }) {
       setIsLoading(true);
       try {
         const data = await fetchReports(url);
+        setNotification({
+          type: "Success",
+          message: "Reports fetched successfully.",
+        });
         originalReports.current = data;
         setReports(data);
       } catch (err) {
         console.error("Error fetching reports:", err);
+        setNotification({
+          type: "Error",
+          message: "Failed to fetch reports.",
+        });
         return null;
       } finally {
         setIsLoading(false);
@@ -31,7 +39,14 @@ export function ReportProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ReportContext.Provider
-      value={{ reports, isLoading, setNotification, notification, setReports, originalReports }}
+      value={{
+        reports,
+        isLoading,
+        setNotification,
+        notification,
+        setReports,
+        originalReports,
+      }}
     >
       {children}
     </ReportContext.Provider>
