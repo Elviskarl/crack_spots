@@ -182,12 +182,18 @@ export default function ResolveReport(props: ListItemOptional) {
       const textAreaEl = e.currentTarget.querySelector<HTMLTextAreaElement>(
         'textarea[name="resolve-report-description-note"]',
       );
+      const repairSelectEl = e.currentTarget.querySelector<HTMLSelectElement>(
+        'select[name="repair-quality"]',
+      );
 
       const formData = new FormData();
       formData.append("file", fileCopy);
       formData.append("coordinates", JSON.stringify(coordsCopy));
       if (textAreaEl) {
         formData.append("note", textAreaEl.value);
+      }
+      if (repairSelectEl) {
+        formData.append("quality", repairSelectEl.value);
       }
       formData.append("_id", _id);
 
@@ -266,7 +272,7 @@ export default function ResolveReport(props: ListItemOptional) {
         <div className="interested-report-details">
           <form onSubmit={handleSubmit} className="report-form">
             <fieldset>
-              <legend>Upload Image for Verification [Required]</legend>
+              <legend>Upload Image for Verification</legend>
               <div
                 className="draggable-container"
                 onDragOver={handleDragOver}
@@ -345,8 +351,24 @@ export default function ResolveReport(props: ListItemOptional) {
                 )
               )}
             </fieldset>
+            <fieldset className="repair-quality-fieldset">
+              <legend>Repair Quality</legend>
+              <select
+                name="repair-quality"
+                id="repair-quality-input"
+                defaultValue={""}
+                required
+                onChange={(e) => console.log(e.target.value)}
+              >
+                <option value="" disabled>
+                  --Please choose an option--
+                </option>
+                <option value="temporary">Temporary (Filled with dirt)</option>
+                <option value="permanent">Permanent</option>
+              </select>
+            </fieldset>
             <fieldset>
-              <legend>Description note [Required]</legend>
+              <legend>Description note</legend>
               <textarea
                 name="resolve-report-description-note"
                 id="resolve-report-description-note"
