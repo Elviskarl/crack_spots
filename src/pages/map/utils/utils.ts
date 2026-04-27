@@ -16,7 +16,7 @@ export async function readFile(param: File): Promise<CoordinateData> {
     )
       throw new CustomError(
         "EXIF_READ_FAILED",
-        "The selected file is not Geo-tagged. Please select another image.",
+        "No location data found in the selected image. Enable location services on your device and retake the photo, or choose a different image.",
       );
     const DateTimeOriginal = data.DateTimeOriginal.description;
     let GPSLatitude = Number(data.GPSLatitude.description);
