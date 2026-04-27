@@ -44,6 +44,20 @@ interface CoordinateData {
   
 severity: "low" | "medium" | "high";`;
 
+export const resolveFormDataInterface = `file:File
+
+interface CoordinateData {
+  GPSLatitude: number;
+  GPSLongitude: number;
+  GPSLatitudeRef: "N" | "S";
+  GPSLongitudeRef: "E" | "W";
+  DateTimeOriginal: string;
+}
+
+_id: string;
+  
+note: string;`;
+
 export const postSampleCode = `const formData = new FormData();
 
 const coordinates:CoordinateData = {
@@ -62,10 +76,13 @@ formData.append(
 
 formData.append("severity", severityInput.value);
 
-await fetch("/api/reports", {
-  method: "POST",
-  body: formData,
-});
+const results = await fetch(
+  "https://crackspots-server.onrender.com/api/v1/reports",
+  {
+    method: "POST",
+    body: formData,
+  },
+);
 `;
 
 export const errorSample = `res.status(400).json({
@@ -79,3 +96,23 @@ export const issueSampleCode = `const grouped = Object.
     issueId,
     reports: reports ?? [],
   }));`;
+
+export const resolveReportSample = `const formData = new FormData();
+
+formData.append("file", fileCopy);
+
+formData.append("coordinates", JSON.stringify(coordsCopy));
+
+if (textAreaEl) {
+  formData.append("note", textAreaEl.value);
+}
+
+formData.append("_id", _id);
+
+const results = await fetch(
+  "https://crackspots-server.onrender.com/api/v1/resolve",
+  {
+    method: "PATCH",
+    body: formData,
+  },
+);`;

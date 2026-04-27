@@ -191,3 +191,16 @@ span.important {
 .report-properties-fields p {
   max-width: 80%;
 }
+p.important-paragraph {
+  border: 2px solid var(--primary-base);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  width: max-content;
+  line-height: 2.5;
+}
+.important-note {
+  padding: 3px 6px;
+  background-color: var(--primary-tint);
+  color: var(--white-color);
+  border-radius: 8px;
+}

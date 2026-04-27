@@ -6,6 +6,8 @@ import {
   issueSampleCode,
   postSampleCode,
   reportInterface,
+  resolveFormDataInterface,
+  resolveReportSample,
   serverResponseInterface,
 } from "./data";
 import "./styles/index.css";
@@ -154,7 +156,8 @@ export default function Documentation() {
                     This field records the date and time when the image
                     associated with the report was taken. It is extracted from
                     the image's EXIF metadata. Specifically, the
-                    <span className="highlight">DateTimeOriginal</span> tag.
+                    <span className="highlight">DateTimeOriginal</span> tag, in
+                    <span className="highlight"> ISO 8601 format</span>
                   </p>
                 </div>
                 <div className="report-properties-fields">
@@ -240,14 +243,20 @@ export default function Documentation() {
               <CodeBlock content={serverResponseInterface} />
             </div>
             <div className="descriptions create-reports-description">
-              <h5>Create a Report</h5>
+              <h5>Creating Reports</h5>
               <p>
                 To create a report, a{" "}
                 <span className="post-highlight">POST</span> request is sent to
                 the <code className="endPoint">/reports</code> endpoint.
               </p>
               <p>
-                This request should have appended to the body, a{" "}
+                This endpoint returns a response object containing a{" "}
+                <span className="response-highlight">success</span> flag and an{" "}
+                <span className="response-highlight">message</span> confirming a
+                report has been created.
+              </p>
+              <p>
+                The request must use a{" "}
                 <span className="highlight">multipart/form-data</span> and
                 include the following fields:
               </p>
@@ -295,6 +304,76 @@ export default function Documentation() {
                   </span>
                 </p>
               </div>
+            </div>
+            <div className="descriptions resolve-report-description">
+              <h5>Resolving Reports</h5>
+              <p>
+                To resolve a report, a{" "}
+                <span className="post-highlight">PATCH</span> request is sent to
+                the <code className="endPoint">/resolve</code> endpoint.
+              </p>
+              <p>
+                This endpoint returns a response object containing a{" "}
+                <span className="response-highlight">success</span> flag and an{" "}
+                <span className="response-highlight">message</span> confirming
+                the report was resolved.
+              </p>
+              <p className="important-paragraph">
+                <span className="important-note">NOTE</span>
+                <br />
+                The <span className="highlight">issueId</span> is used to group
+                related reports and identify the target issue.
+                <br />
+                When multiple reports exist for the same issueId, only the
+                <span className="highlight"> latest report </span>
+                is considered and resolved.
+                <br />
+                This prevents duplicate resolutions and ensures a single source
+                of truth.
+              </p>
+              <p>
+                The request must use a{" "}
+                <span className="highlight">multipart/form-data</span> and
+                include the following fields:
+              </p>
+              <div className="api-table">
+                <div className="api-table-header">Field</div>
+                <div className="api-table-header">Type</div>
+                <div className="api-table-header">Required</div>
+                <div className="api-table-header">Description</div>
+
+                <div>_id</div>
+                <div>string</div>
+                <div>Yes</div>
+                <div>This is the id of the report you want to resolve.</div>
+
+                <div>file</div>
+                <div>File</div>
+                <div>Yes</div>
+                <div>
+                  The image file confirming the report was fixed. Max size:
+                  12MB.
+                </div>
+                <div>coordinates</div>
+                <div>String</div>
+                <div>Yes</div>
+                <div>
+                  A JSON string containing the geographic coordinates of the
+                  report location.
+                </div>
+                <div>note</div>
+                <div>string</div>
+                <div>Yes</div>
+                <div>
+                  A brief description of the resolution. Minimum length: 5
+                  characters, Maximum length: 100 characters.
+                </div>
+              </div>
+              <CodeBlock
+                content={resolveFormDataInterface}
+                heading="Resolve formData interface"
+              />
+              <CodeBlock heading="Sample Code" content={resolveReportSample} />
             </div>
             <div className="descriptions error-descriptions">
               <h5>Errors</h5>

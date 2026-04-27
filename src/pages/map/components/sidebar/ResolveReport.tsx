@@ -191,8 +191,6 @@ export default function ResolveReport(props: ListItemOptional) {
       }
       formData.append("_id", _id);
 
-      console.log(formData);
-
       const results = await resolveIssues(
         "https://crackspots-server.onrender.com/api/v1/resolve",
         formData,
@@ -356,6 +354,7 @@ export default function ResolveReport(props: ListItemOptional) {
                 placeholder="Enter a description of the resolution..."
                 required={true}
                 minLength={5}
+                maxLength={100}
               ></textarea>
             </fieldset>
             <button className="submit-report-resolution-btn">Submit</button>
