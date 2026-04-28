@@ -19,6 +19,10 @@ export default function FilterReports() {
   );
 
   const resolutionStatus = new Set(
+    originalReports.current.map((report) => report.status),
+  );
+
+  const resolutionQuality = new Set(
     originalReports.current.map((report) => report.resolution?.quality),
   );
 
@@ -126,7 +130,34 @@ export default function FilterReports() {
           </select>
         </fieldset>
         <fieldset>
-          <legend>Filter by resolution quality</legend>
+          <legend>Filter by resolution status</legend>
+          <label htmlFor="select-input"></label>
+          <select
+            name="resolution-category"
+            id="resolution-input"
+            defaultValue={""}
+            required
+            onChange={(e) => {
+              const selectedCategory = e.target.value;
+              setReports(
+                originalReports.current.filter(
+                  (report) => report.status === selectedCategory,
+                ),
+              );
+            }}
+          >
+            <option value="" disabled>
+              --Please choose an option--
+            </option>
+            {Array.from(resolutionStatus).map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </fieldset>
+        <fieldset>
+          <legend>Filter by resolution Quality</legend>
           <label htmlFor="select-input"></label>
           <select
             name="resolution-category"
@@ -145,7 +176,7 @@ export default function FilterReports() {
             <option value="" disabled>
               --Please choose an option--
             </option>
-            {Array.from(resolutionStatus).map((item, index) => (
+            {Array.from(resolutionQuality).map((item, index) => (
               <option key={index} value={item}>
                 {item}
               </option>
