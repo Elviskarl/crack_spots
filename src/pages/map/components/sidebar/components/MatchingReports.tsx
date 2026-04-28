@@ -9,6 +9,8 @@ import calenderUrl from "../../../../../assets/calendar-outline.svg";
 import leafUrl from "../../../../../assets/leaf-outline.svg";
 import checkUrl from "../../../../../assets/check.png";
 import approvedImageUrl from "../../../../../assets/approved.png";
+import tempApprovedImageUrl from "../../../../../assets/approved.png";
+
 import "../../../styles/matching-report.css";
 interface MatchingReportprops {
   matchingReport: Report[];
@@ -161,7 +163,15 @@ export default function MatchingReports({
           {interestedReport?._id === report._id ? (
             <img src={checkUrl} alt="checkMark" title="interested Report" />
           ) : report.status === "resolved" ? (
-            <img src={approvedImageUrl} alt="checkMark" title={report.status} />
+            <img
+              src={
+                report.resolution?.quality === "temporary"
+                  ? tempApprovedImageUrl
+                  : approvedImageUrl
+              }
+              alt="checkMark"
+              title={`${report.resolution?.quality}ly fixed`}
+            />
           ) : null}
         </div>
       </div>

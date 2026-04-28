@@ -17,6 +17,7 @@ export interface Report {
     imageUrl: string;
     coordinates: number[]; // [longitude, latitude]
     note: string;
+    quality: "temporary" | "permanent";
   };
 }
 export interface GeoPoint {
