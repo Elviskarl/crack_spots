@@ -19,7 +19,7 @@ export default function FilterReports() {
   );
 
   const resolutionStatus = new Set(
-    originalReports.current.map((report) => report.status),
+    originalReports.current.map((report) => report.resolution?.quality),
   );
 
   function getSubCounty(subcounty: string) {
@@ -126,7 +126,7 @@ export default function FilterReports() {
           </select>
         </fieldset>
         <fieldset>
-          <legend>Filter by resolution status</legend>
+          <legend>Filter by resolution quality</legend>
           <label htmlFor="select-input"></label>
           <select
             name="resolution-category"
@@ -137,7 +137,7 @@ export default function FilterReports() {
               const selectedCategory = e.target.value;
               setReports(
                 originalReports.current.filter(
-                  (report) => report.status === selectedCategory,
+                  (report) => report.resolution?.quality === selectedCategory,
                 ),
               );
             }}
