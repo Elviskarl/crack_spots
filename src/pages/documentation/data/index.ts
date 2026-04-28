@@ -56,6 +56,8 @@ interface CoordinateData {
 }
 
 _id: string;
+
+quality: "temporary" | "permanent";
   
 note: string;`;
 
