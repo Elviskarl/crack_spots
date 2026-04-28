@@ -23,7 +23,9 @@ export default function FilterReports() {
   );
 
   const resolutionQuality = new Set(
-    originalReports.current.map((report) => report.resolution?.quality),
+    originalReports.current
+      .filter((report) => report.status === "resolved")
+      .map((report) => report.resolution?.quality),
   );
 
   function getSubCounty(subcounty: string) {
