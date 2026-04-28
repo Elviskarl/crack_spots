@@ -99,6 +99,8 @@ interface CoordinateData {
 }
 
 _id: string;
+
+quality: "temporary" | "permanent";
   
 note: string;`,heading:`Resolve formData interface`}),(0,H.jsx)(Oh,{heading:`Sample Code`,content:`const formData = new FormData();
 
