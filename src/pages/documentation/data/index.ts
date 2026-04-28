@@ -19,6 +19,7 @@ export const reportInterface = `interface Report {
       imageUrl: string;
       coordinates: number[]; // [longitude, latitude]
       note: string;
+      quality: "temporary" | "permanent";
     };
 
 interface GeoPoint {
@@ -105,6 +106,10 @@ formData.append("coordinates", JSON.stringify(coordsCopy));
 
 if (textAreaEl) {
   formData.append("note", textAreaEl.value);
+}
+
+if (repairSelectEl) {
+  formData.append("quality", repairSelectEl.value);
 }
 
 formData.append("_id", _id);

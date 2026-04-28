@@ -188,7 +188,8 @@ export default function Documentation() {
                     object includes information about who resolved the issue,
                     when it was resolved, the date the resolution image was
                     taken, the URL of the resolution image, the coordinates of
-                    the resolution, and any notes about the resolution process.
+                    the resolution, the quality of the repair, and any notes
+                    about the resolution process.
                   </p>
                 </div>
                 <div className="report-properties-fields">
@@ -367,6 +368,13 @@ export default function Documentation() {
                 <div>
                   A brief description of the resolution. Minimum length: 5
                   characters, Maximum length: 100 characters.
+                </div>
+                <div>quality</div>
+                <div>Enum</div>
+                <div>Yes</div>
+                <div>
+                  Describes the quality of the repair, distinguishing between
+                  temporary mitigation and permanent resolution.
                 </div>
               </div>
               <CodeBlock
