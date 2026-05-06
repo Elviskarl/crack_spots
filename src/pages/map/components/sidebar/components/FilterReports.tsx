@@ -1,5 +1,5 @@
 import { booleanPointInPolygon, point } from "@turf/turf";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ReportContext } from "../../../../../context/createReportContext";
 import { MapContext } from "../../../../../context/createMapContext";
 import "../../../styles/filterReports.css";
@@ -7,6 +7,7 @@ import "../../../styles/filterReports.css";
 export default function FilterReports() {
   const { setReports, originalReports } = useContext(ReportContext)!;
   const { nairobiSubCountyShapefile } = useContext(MapContext)!;
+  const [selectedStatus, setSelectedStatus] = useState<string >("");
 
   const category = new Set(
     originalReports.current.map((report) => report.severity),
@@ -141,6 +142,7 @@ export default function FilterReports() {
             required
             onChange={(e) => {
               const selectedCategory = e.target.value;
+              setSelectedStatus(selectedCategory);
               setReports(
                 originalReports.current.filter(
                   (report) => report.status === selectedCategory,
@@ -163,7 +165,7 @@ export default function FilterReports() {
           <label htmlFor="select-input"></label>
           <select
             name="resolution-category"
-            id="resolution-input"
+            id="resolution-quality-input"
             defaultValue={""}
             required
             onChange={(e) => {
@@ -174,6 +176,7 @@ export default function FilterReports() {
                 ),
               );
             }}
+            disabled={selectedStatus === "open"}
           >
             <option value="" disabled>
               --Please choose an option--
@@ -191,6 +194,7 @@ export default function FilterReports() {
           className="reset-btn"
           onClick={() => {
             setReports(originalReports.current);
+            setSelectedStatus("");
           }}
         >
           Reset
