@@ -9,11 +9,11 @@ import neighbourhoodNameIcon from "../../../../assets/neighborhood.png";
 import calenderIcon from "../../../../assets/calendar.png";
 import tagIcon from "../../../../assets/bookmark.png";
 import changeReportIcon from "../../../../assets/up_arrow.png";
-// Import the required CSS for marker clustering
 import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
 import { MapContext } from "../../../../context/createMapContext";
 import useCreateIssues from "../../utils/CreateIssues";
+import useLocationCluster from "../../hooks/locationCluster";
 
 const resolvedIcon = new Icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/128/13984/13984191.png",
@@ -28,6 +28,16 @@ const unResolvedIcon = new Icon({
   iconAnchor: [15, 30],
   popupAnchor: [0, -30],
 });
+
+type StructuredReport = {
+  imageUrl: string;
+  dateTaken: string;
+  location: Report["location"];
+  status: Report["status"];
+  severity: Report["severity"];
+  type: "Before" | "After";
+  issueId: string;
+};
 
 export function ReportsContainer({ reports }: { reports: Report[] }) {
   const { markerRefs } = useContext(MapContext)!;
@@ -45,91 +55,108 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
       ),
     }));
   }, [issues]);
+  // Location based groups
+  const locationGroups = useLocationCluster(sortedIssues);
+
+  function handleNextReports(groupId: string, length: number) {
+    setActiveIndexes((prev) => {
+      const current = prev[groupId] ?? 0;
+
+      if (current >= length - 1) return prev;
+
+      return {
+        ...prev,
+        [groupId]: current + 1,
+      };
+    });
+  }
+
+  function handlePreviousReports(groupId: string) {
+    setActiveIndexes((prev) => {
+      const current = prev[groupId] ?? 0;
+
+      if (current <= 0) return prev;
+
+      return {
+        ...prev,
+        [groupId]: current - 1,
+      };
+    });
+  }
 
   return (
     <MarkerClusterGroup key={reports.map((report) => report._id).join("-")}>
-      {sortedIssues.map((issue) => {
-        const { issueId, reports } = issue;
+      {locationGroups.map((group) => {
+        // Use latest issue in group for marker position
 
-        const latestReport = reports[0];
-        const resolution = latestReport.resolution;
+        //Get issue Location status
+        const hasOpenIssue = group.issues.some(
+          (issue) => issue.reports[0].status === "open",
+        );
 
-        const isResolved = latestReport.status === "resolved" && !!resolution;
+        //Flatten all issues into one location history
+        const structuredReports: StructuredReport[] = group.issues.flatMap(
+          (issue) => {
+            const latestReport = issue.reports[0];
+            const resolution = latestReport.resolution;
 
-        const structuredReports = isResolved
-          ? [
-              {
-                imageUrl: resolution.imageUrl,
-                dateTaken: resolution.dateTaken,
-                location: latestReport.location,
-                status: latestReport.status,
-                severity: latestReport.severity,
-                type: "After",
-              },
-              ...reports.map((report) => ({
-                imageUrl: report.cloudinary_url,
-                dateTaken: report.dateTaken,
-                location: report.location,
-                status: report.status,
-                severity: report.severity,
-                type: "Before",
-              })),
-            ]
-          : reports.map((report) => ({
-              imageUrl: report.cloudinary_url,
-              dateTaken: report.dateTaken,
-              severity: report.severity,
-              location: report.location,
-              status: report.status,
-              type: "Before",
-            }));
+            const isResolved =
+              latestReport.status === "resolved" && !!resolution;
 
-        const currentIndex = activeIndexes[issueId] ?? 0;
+            return isResolved
+              ? [
+                  {
+                    imageUrl: resolution.imageUrl,
+                    dateTaken: resolution.dateTaken,
+                    location: latestReport.location,
+                    status: latestReport.status,
+                    severity: latestReport.severity,
+                    type: "After",
+                    issueId: issue.issueId,
+                  },
+                  ...issue.reports.map((report) => ({
+                    imageUrl: report.cloudinary_url,
+                    dateTaken: report.dateTaken,
+                    location: report.location,
+                    status: report.status,
+                    severity: report.severity,
+                    type: "Before" as const,
+                    issueId: issue.issueId,
+                  })),
+                ]
+              : issue.reports.map((report) => ({
+                  imageUrl: report.cloudinary_url,
+                  dateTaken: report.dateTaken,
+                  location: report.location,
+                  status: report.status,
+                  severity: report.severity,
+                  type: "Before" as const,
+                  issueId: issue.issueId,
+                }));
+          },
+        );
+
+        const currentIndex = activeIndexes[group.id] ?? 0;
+
+        const currentItem = structuredReports[currentIndex];
 
         const isFirst = currentIndex === 0;
         const isLast = currentIndex === structuredReports.length - 1;
-        const currentItem = structuredReports[currentIndex];
+
         const { location, dateTaken, status, severity } = currentItem;
 
-        function handleNextReports(issueId: string, length: number) {
-          setActiveIndexes((prev) => {
-            const current = prev[issueId] ?? 0;
-
-            if (current >= length - 1) return prev; // stop at end
-
-            return {
-              ...prev,
-              [issueId]: current + 1,
-            };
-          });
-        }
-
-        function handlePreviousReports(issueId: string) {
-          setActiveIndexes((prev) => {
-            const current = prev[issueId] ?? 0;
-
-            if (current <= 0) return prev; // stop at start
-
-            return {
-              ...prev,
-              [issueId]: current - 1,
-            };
-          });
-        }
         return (
           <Marker
-            key={issueId}
+            key={group.id}
             position={[
-              location.coordinates[1], // latitude
-              location.coordinates[0], // longitude
+              currentItem.location.coordinates[1],
+              currentItem.location.coordinates[0],
             ]}
             title="Report Location"
-            icon={
-              latestReport.status === "resolved" ? resolvedIcon : unResolvedIcon
-            }
+            icon={hasOpenIssue ? unResolvedIcon : resolvedIcon}
             ref={(ref) => {
               if (ref) {
-                markerRefs.current[issueId] = ref;
+                markerRefs.current[group.id] = ref;
               }
             }}
           >
@@ -142,36 +169,42 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                     className="preview-image"
                   />
                   <button
-                    className={`${structuredReports.length > 1 ? `change-report-btn previous-report` : `change-report-container-single`}`}
+                    className={`${
+                      structuredReports.length > 1
+                        ? "change-report-btn previous-report"
+                        : "change-report-container-single"
+                    }`}
                     aria-label="previous report"
                     disabled={isFirst}
-                    onClick={() => handlePreviousReports(issueId)}
+                    onClick={() => handlePreviousReports(group.id)}
                   >
                     <img
                       src={changeReportIcon}
-                      alt="Road Damage"
+                      alt="Previous"
                       className="preview-image"
                     />
                   </button>
                   <button
-                    className={`${structuredReports.length > 1 ? `change-report-btn next-report` : `change-report-container-single`}`}
+                    className={`${
+                      structuredReports.length > 1
+                        ? "change-report-btn next-report"
+                        : "change-report-container-single"
+                    }`}
                     aria-label="next report"
                     disabled={isLast}
                     onClick={() =>
-                      handleNextReports(issueId, structuredReports.length)
+                      handleNextReports(group.id, structuredReports.length)
                     }
                   >
                     <img
                       src={changeReportIcon}
-                      alt="Road Damage"
+                      alt="Next"
                       className="preview-image"
                     />
                   </button>
-                  {latestReport.status === "resolved" && (
+                  {currentItem.status === "resolved" && (
                     <div className="resolved-report-badge">
-                      <p className="issue-status">
-                        {currentItem.type === "After" ? "After" : "Before"}
-                      </p>
+                      <p className="issue-status">{currentItem.type}</p>
                     </div>
                   )}
                   <p className="progress-indicator">
@@ -180,7 +213,7 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                 </div>
                 <div className="report-info-container">
                   <h4>
-                    Report Details
+                    Location History
                     <br />
                     <span className={`report-status ${status}`}></span>
                     <span className={`report-status-value ${status}`}>
@@ -201,7 +234,7 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                       </div>
                       :
                       <span className="road-name">
-                        {latestReport.location.address?.road}
+                        {location.address?.road}
                       </span>
                     </li>
                     <li className="report-details">
@@ -211,13 +244,13 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                       >
                         <img
                           src={neighbourhoodNameIcon}
-                          alt="neighbourhood Name"
+                          alt="Neighbourhood"
                           className="report-details-icon neighbourhood-name-icon"
                         />
                       </div>
                       :
                       <span className="neighbourhood-name">
-                        {latestReport.location.address?.neighbourhood || "N/A"}
+                        {location.address?.neighbourhood || "N/A"}
                       </span>
                     </li>
                     <li className="report-details">
@@ -227,13 +260,13 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                       >
                         <img
                           src={locationNameIcon}
-                          alt="location Name"
+                          alt="County"
                           className="report-details-icon location-name-icon"
                         />
                       </div>
                       :
                       <span className="location-name">
-                        {latestReport.location.address?.state || "N/A"}
+                        {location.address?.state || "N/A"}
                       </span>
                     </li>
                     <li className="report-details">
