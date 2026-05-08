@@ -64,3 +64,13 @@ export interface ListItemOptional {
   interestedReport?: Report | null;
   setInterestedReport?: Dispatch<SetStateAction<Report | null>>;
 }
+
+export interface LocationGroup {
+  id: string;
+  issues: {
+    issueId: string;
+    reports: Report[];
+  }[];
+  issueCount: number;
+  allResolved: boolean;
+}
