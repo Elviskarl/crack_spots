@@ -14,7 +14,7 @@ import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
 import { MapContext } from "../../../../context/createMapContext";
 import useCreateIssues from "../../utils/CreateIssues";
-import useLocationCluster from "../../hooks/locationCluster";
+// import useLocationCluster from "../../hooks/locationCluster";
 
 const resolvedIcon = new Icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/128/13984/13984191.png",
@@ -37,8 +37,8 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
   );
 
   const issues = useCreateIssues(reports);
-  const locationCluster = useLocationCluster(issues);
-  console.log(locationCluster);
+  // const locationCluster = useLocationCluster(issues);
+  // console.log(locationCluster);
   const sortedIssues = useMemo(() => {
     return issues.map((issue) => ({
       ...issue,
