@@ -18,7 +18,6 @@ export default function useLocationGroups(issues: Issue[]) {
     const RADIUS = 10;
 
     for (const issue of issues) {
-      // ensure latest report
       const latest = issue.reports[0];
 
       if (!latest?.location?.coordinates) continue;
@@ -31,15 +30,15 @@ export default function useLocationGroups(issues: Issue[]) {
       let matchedGroup: LocationGroup | null = null;
 
       for (const group of groups) {
-        const latestGroup = group.issues[0].reports[0];
-        const [latestLng, latestLat] = latestGroup.location.coordinates;
-        const groupRoadName = latestGroup.location.address?.road
+        const latestIssueInGroup = group.issues[0].reports[0];
+        const [latestLng, latestLat] = latestIssueInGroup.location.coordinates;
+        const groupRoadName = latestIssueInGroup.location.address?.road
           ?.trim()
           .toLowerCase();
 
-        const latestGroupPoint = turf.point([latestLng, latestLat]);
+        const latestIssueInGroupPoint = turf.point([latestLng, latestLat]);
 
-        const distance = turf.distance(point, latestGroupPoint, {
+        const distance = turf.distance(point, latestIssueInGroupPoint, {
           units: "meters",
         });
 
