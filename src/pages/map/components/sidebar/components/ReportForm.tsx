@@ -120,19 +120,10 @@ export default function ReportForm() {
       return;
     }
     try {
-      const fileCopy = file;
       const coordsCopy = coordinates;
 
-      const formData = new FormData();
-      formData.append("file", fileCopy);
+      const formData = new FormData(e.currentTarget);
       formData.append("coordinates", JSON.stringify(coordsCopy));
-
-      const severityInput = e.currentTarget.querySelector<HTMLInputElement>(
-        'input[name="severity"]:checked',
-      );
-      if (severityInput) {
-        formData.append("severity", severityInput.value);
-      }
 
       const results = await uploadReports(
         "https://crackspots-server.onrender.com/api/v1/reports",

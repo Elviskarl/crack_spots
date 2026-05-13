@@ -174,27 +174,11 @@ export default function ResolveReport(props: ListItemOptional) {
       if (!file || !coordinates) {
         throw new CustomError("MISSING_FILE", "Image file is missing.");
       }
-      console.log("clicked");
-      const fileCopy = file;
       const coordsCopy = coordinates;
       const { _id } = interestedReport;
 
-      const textAreaEl = e.currentTarget.querySelector<HTMLTextAreaElement>(
-        'textarea[name="resolve-report-description-note"]',
-      );
-      const repairSelectEl = e.currentTarget.querySelector<HTMLSelectElement>(
-        'select[name="repair-quality"]',
-      );
-
-      const formData = new FormData();
-      formData.append("file", fileCopy);
+      const formData = new FormData(e.currentTarget);
       formData.append("coordinates", JSON.stringify(coordsCopy));
-      if (textAreaEl) {
-        formData.append("note", textAreaEl.value);
-      }
-      if (repairSelectEl) {
-        formData.append("quality", repairSelectEl.value);
-      }
       formData.append("_id", _id);
 
       const results = await resolveIssues(
