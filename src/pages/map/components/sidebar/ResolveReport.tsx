@@ -243,6 +243,10 @@ export default function ResolveReport(props: ListItemOptional) {
     }
   }, [notification]);
 
+  function clearForm() {
+    resetPreview();
+  }
+
   return (
     <div className="resolve-reports-container" ref={resolveReportsContainerRef}>
       <p>Select the issue to resolve</p>
@@ -257,29 +261,37 @@ export default function ResolveReport(props: ListItemOptional) {
           <form onSubmit={handleSubmit} className="report-form">
             <fieldset>
               <legend>Upload Image for Verification</legend>
-              <div
-                className="draggable-container"
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-              >
-                <input
-                  type="file"
-                  name="file"
-                  id="resolve-upload-file"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  accept="image/jpg, image/jpeg, image/webp, .png, .jpg, .jpeg"
-                />
-                <div className="drop-area-container">
-                  <span> Drag & Drop or </span>
-                  <label
-                    htmlFor="resolve-upload-file"
-                    className="upload-file-label"
-                  >
-                    Take or upload a photo
-                  </label>
+              {file ? (
+                <div className="clear-form-container">
+                  <button type="reset" title="Clear Form" onClick={clearForm}>
+                    clear Form
+                  </button>
                 </div>
-              </div>
+              ) : (
+                <div
+                  className="draggable-container"
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                >
+                  <input
+                    type="file"
+                    name="file"
+                    id="resolve-upload-file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept="image/jpg, image/jpeg, image/webp, .png, .jpg, .jpeg"
+                  />
+                  <div className="drop-area-container">
+                    <span> Drag & Drop or </span>
+                    <label
+                      htmlFor="resolve-upload-file"
+                      className="upload-file-label"
+                    >
+                      Take or upload a photo
+                    </label>
+                  </div>
+                </div>
+              )}
               {isLoading ? (
                 <LoadingScreen category="image" />
               ) : (
@@ -338,7 +350,7 @@ export default function ResolveReport(props: ListItemOptional) {
             <fieldset className="repair-quality-fieldset">
               <legend>Repair Quality</legend>
               <select
-                name="repair-quality"
+                name="quality"
                 id="repair-quality-input"
                 defaultValue={""}
                 required
@@ -354,7 +366,7 @@ export default function ResolveReport(props: ListItemOptional) {
             <fieldset>
               <legend>Description note</legend>
               <textarea
-                name="resolve-report-description-note"
+                name="note"
                 id="resolve-report-description-note"
                 rows={5}
                 placeholder="Enter a description of the resolution..."

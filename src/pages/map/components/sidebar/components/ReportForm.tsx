@@ -184,6 +184,9 @@ export default function ReportForm() {
       processImage(file);
     }
   }
+  function clearForm() {
+    resetPreview();
+  }
   return (
     <>
       <div className="form-container report-upload-form">
@@ -192,26 +195,34 @@ export default function ReportForm() {
           className="report-form"
           encType="multipart/form-data"
         >
-          <div
-            className="draggable-container"
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-          >
-            <input
-              type="file"
-              name="file"
-              id="upload-file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              accept="image/jpg, image/jpeg, image/webp, .png, .jpg, .jpeg"
-            />
-            <div className="drop-area-container">
-              <span> Drag & Drop or </span>
-              <label htmlFor="upload-file" className="upload-file-label">
-                Take or upload a photo
-              </label>
+          {file ? (
+            <div className="clear-form-container">
+              <button type="reset" title="Clear Form" onClick={clearForm}>
+                clear Form
+              </button>
             </div>
-          </div>
+          ) : (
+            <div
+              className="draggable-container"
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+            >
+              <input
+                type="file"
+                name="file"
+                id="upload-file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="image/jpg, image/jpeg, image/webp, .png, .jpg, .jpeg"
+              />
+              <div className="drop-area-container">
+                <span> Drag & Drop or </span>
+                <label htmlFor="upload-file" className="upload-file-label">
+                  Take or upload a photo
+                </label>
+              </div>
+            </div>
+          )}
           {isLoading ? (
             <LoadingScreen category="image" />
           ) : (
