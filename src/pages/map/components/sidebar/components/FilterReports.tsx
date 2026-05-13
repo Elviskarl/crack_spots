@@ -25,7 +25,7 @@ export default function FilterReports() {
   const { setReports, originalReports } = useContext(ReportContext)!;
   const { nairobiSubCountyShapefile } = useContext(MapContext)!;
 
-  // To resolvIe a react compiler warning when working with useRef
+  // To resolve a react compiler warning when working with useRef
   const cleanReports = originalReports.current;
   const cleanShapeFile = nairobiSubCountyShapefile.current;
 

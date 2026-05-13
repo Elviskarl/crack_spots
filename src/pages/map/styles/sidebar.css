@@ -58,3 +58,27 @@ aside.sidebar.closed {
 aside.sidebar.closed .sidebar-wrapper {
   overflow: visible;
 }
+/* Clear Form Container */
+.clear-form-container {
+  align-self: center;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: crimson;
+  color: var(--white-color);
+  overflow-x: auto;
+}
+.clear-form-container button {
+  color: unset;
+  background-color: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.1rem;
+  width: 100%;
+  text-transform: capitalize;
+}
+.clear-form-container button:hover {
+  color: unset;
+  background-color: unset;
+}
