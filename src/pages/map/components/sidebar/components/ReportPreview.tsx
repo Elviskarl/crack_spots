@@ -20,35 +20,51 @@ export default function ReportPreview(props: Params) {
         <img src={props.url} alt="Road Damage" className="preview-image" />
       </div>
       <div className="image-details-container">
-        <table>
-          <caption>Image Metadata</caption>
-          <thead>
-            <tr>
-              <th>Property</th>
-              <th>Value</th>
-              <th>Orientation</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>GPS Latitude</td>
-              <td>{GPSLatitude.toFixed(4)}</td>
-              <td>{GPSLatitudeRef}</td>
-            </tr>
-            <tr>
-              <td>GPS Longitude</td>
-              <td>{GPSLongitude.toFixed(4)}</td>
-              <td>{GPSLongitudeRef}</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td>Date Taken</td>
-              <td>{dateTaken[0].split(":").join("-")}</td>
-              <td>N/A</td>
-            </tr>
-          </tfoot>
-        </table>
+        <div className="table-container">
+          <table>
+            <caption>Image Metadata</caption>
+            <thead>
+              <tr>
+                <th scope="col">Property</th>
+                <th scope="col">Orientation</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>GPS Longitude</td>
+                <td className="table-gps-lng-ref">
+                  {GPSLongitudeRef === "E"
+                    ? "East"
+                    : GPSLongitudeRef === "W"
+                      ? "West"
+                      : null}
+                </td>
+                <td className="table-gps-lng">{GPSLongitude.toFixed(4)}</td>
+              </tr>
+              <tr>
+                <td>GPS Latitude</td>
+                <td className="table-gps-lat-ref">
+                  {GPSLatitudeRef === "N"
+                    ? "North"
+                    : GPSLatitudeRef === "S"
+                      ? "South"
+                      : null}
+                </td>
+                <td className="table-gps-lat">{GPSLatitude.toFixed(4)}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>Date Taken</td>
+                <td colSpan={2} className="table-date-taken">
+                  {dateTaken[0].split(":").join("-")}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
         <fieldset>
           <legend>Severity: </legend>
           <label>

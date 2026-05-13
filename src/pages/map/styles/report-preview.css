@@ -54,3 +54,13 @@ div.image-preview-container {
   width: 100%;
   height: auto;
 }
+.table-container {
+  width: 100%;
+}
+.table-gps-lat,
+.table-gps-lng {
+  text-align: right;
+}
+.table-date-taken {
+  text-align: right;
+}
