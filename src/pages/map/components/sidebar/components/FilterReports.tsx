@@ -5,11 +5,15 @@ import { MapContext } from "../../../../../context/createMapContext";
 import "../../../styles/filterReports.css";
 import type { Report } from "../../../types";
 
+type ResolutionQuality = Extract<
+  Report,
+  { status: "resolved" }
+>["resolution"]["quality"];
 interface FilterValues {
   yearTaken: number | "";
   severity: "" | Report["severity"];
-  resolutionStatus: "" | Report["status"];
-  resolutionQuality: "" | NonNullable<Report["resolution"]>["quality"];
+  reportStatus: "" | Report["status"];
+  resolutionQuality: "" | ResolutionQuality;
   location: string;
 }
 const defaultFilterValues: FilterValues = {
@@ -46,13 +50,7 @@ export default function FilterReports() {
   const resolutionQuality = useMemo(() => {
     return new Set(
       cleanReports
-        .filter(
-          (
-            report,
-          ): report is Report & {
-            resolution: NonNullable<Report["resolution"]>;
-          } => report.status === "resolved" && !!report.resolution,
-        )
+        .filter((report) => report.status === "resolved")
         .map((report) => report.resolution.quality),
     );
   }, [cleanReports]);
@@ -87,8 +85,9 @@ export default function FilterReports() {
       )
         return false;
       if (
+        report.status === "resolved" &&
         filters.resolutionQuality &&
-        report.resolution?.quality !== filters.resolutionQuality
+        report.resolution.quality !== filters.resolutionQuality
       )
         return false;
       if (filters.location) {
@@ -230,16 +229,13 @@ export default function FilterReports() {
             id="resolution-quality-input"
             value={filters.resolutionQuality}
             onChange={(e) => {
-              const selectedCategory = e.target.value as Exclude<
-                Report["resolution"],
-                undefined
-              >["quality"];
+              const selectedCategory = e.target.value as Extract<
+                Report,
+                { status: "resolved" }
+              >["resolution"]["quality"];
               updateFilter("resolutionQuality", selectedCategory);
             }}
-            disabled={
-              filters.resolutionStatus === "open" ||
-              filters.resolutionStatus === ""
-            }
+            disabled={filters.reportStatus !== "resolved"}
           >
             <option value="">--Please choose an option--</option>
             {Array.from(resolutionQuality).map((item, index) => (
