@@ -121,6 +121,15 @@ export default function FilterReports() {
   return (
     <div className="filter-report-section">
       <p>This filters reports being displayed on the Map.</p>
+      <button
+        className="download-container"
+        title="download"
+        onClick={() => {
+          setDownload(true);
+        }}
+      >
+        <img src={downloadIcon} alt="Download" />
+      </button>
       <form className="filter-report-form">
         <fieldset>
           <legend>Filter by Year</legend>
