@@ -82,3 +82,28 @@ export interface LocationGroup {
   issueCount: number;
   allResolved: boolean;
 }
+
+export interface downloadKeys {
+  _id: string;
+  user: string;
+  severity: Report["severity"];
+  type: string;
+  longitude: number;
+  latitude: number;
+  road: string | null;
+  neighbourhood: string | null;
+  state: string | null;
+  issueId: string;
+  report_image_URL: Report["cloudinary_url"];
+  dateTaken: string;
+  createdAt: Date;
+  status: Report["status"];
+  resolution_quality: NonNullable<
+    ResolvedReport["resolution"]["quality"]
+  > | null;
+  resolution_date: string | null;
+  resolution_longitude: number | null;
+  resolution_latitude: number | null;
+  resolution_image_URL: string | null;
+  resolution_note: string | null;
+}

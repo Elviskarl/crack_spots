@@ -27,6 +27,7 @@ const defaultFilterValues: FilterValues = {
 
 export default function FilterReports() {
   const [filters, setFilters] = useState<FilterValues>(defaultFilterValues);
+  const [download, setDownload] = useState(false);
   const { setReports, originalReports } = useContext(ReportContext)!;
   const { nairobiSubCountyShapefile } = useContext(MapContext)!;
 
@@ -114,6 +115,188 @@ export default function FilterReports() {
   useEffect(() => {
     setReports(filterTheReports);
   }, [setReports, filterTheReports]);
+
+  useEffect(() => {
+    if (!download) return;
+
+    const anchorElement = document.createElement("a");
+    function handleDownload() {
+      try {
+        const isFiltered = Object.values(filters).some(Boolean);
+        if (isFiltered) {
+          anchorElement.classList.add("download-link");
+          anchorElement.hidden = true;
+
+          const uniqueKeys = new Set<keyof downloadKeys>();
+
+          const resolvedReport = cleanReports.find(
+            (report) => report.status === "resolved",
+          );
+
+          if (!resolvedReport) {
+            console.error("Missing resolved report");
+            return;
+          }
+
+          const reportKeyMap: Partial<
+            Record<keyof Report, keyof downloadKeys>
+          > = {
+            _id: "_id",
+            user: "user",
+            severity: "severity",
+            issueId: "issueId",
+            dateTaken: "dateTaken",
+            createdAt: "createdAt",
+            status: "status",
+            cloudinary_url: "report_image_URL",
+          };
+
+          [resolvedReport].map((report) =>
+            Object.keys(report).forEach((key) => {
+              if (key === "location") {
+                uniqueKeys.add("type");
+                if (
+                  "coordinates" in report.location &&
+                  Array.isArray(report.location.coordinates)
+                ) {
+                  uniqueKeys.add("longitude");
+                  uniqueKeys.add("latitude");
+                }
+                if ("address" in report.location) {
+                  uniqueKeys.add("road");
+                  uniqueKeys.add("neighbourhood");
+                  uniqueKeys.add("state");
+                }
+              } else if (key === "cloudinary_url") {
+                uniqueKeys.add("report_image_URL");
+              } else if (key === "resolution") {
+                uniqueKeys.add("resolution_quality" as keyof downloadKeys);
+                uniqueKeys.add("resolution_date" as keyof downloadKeys);
+                if (
+                  "coordinates" in report.resolution &&
+                  Array.isArray(report.resolution.coordinates)
+                ) {
+                  uniqueKeys.add("resolution_longitude" as keyof downloadKeys);
+                  uniqueKeys.add("resolution_latitude" as keyof downloadKeys);
+                }
+                uniqueKeys.add("resolution_image_URL" as keyof downloadKeys);
+                uniqueKeys.add("resolution_note" as keyof downloadKeys);
+              } else {
+                const mappedKey = reportKeyMap[key as keyof Report];
+
+                if (mappedKey) {
+                  uniqueKeys.add(mappedKey);
+                }
+              }
+            }),
+          );
+          const values = [];
+          values.unshift(Array.from(uniqueKeys));
+
+          filterTheReports.map((report) => {
+            const row: Partial<downloadKeys> = {};
+
+            row._id = report._id;
+
+            row.user = report.user;
+
+            row.severity = report.severity;
+
+            if (report.location) {
+              row.type = report.location.type;
+              if (
+                "coordinates" in report.location &&
+                Array.isArray(report.location.coordinates)
+              ) {
+                row.longitude = Number(
+                  report.location.coordinates[0].toFixed(6),
+                );
+                row.latitude = Number(
+                  report.location.coordinates[1].toFixed(6),
+                );
+              }
+              if (report.location.address) {
+                row.road =
+                  report.location.address.road === "unknown"
+                    ? null
+                    : report.location.address.road
+                      ? report.location.address.road
+                      : null;
+
+                row.neighbourhood =
+                  report.location.address.neighbourhood || null;
+
+                row.state = report.location.address.state || null;
+              }
+            }
+
+            row.issueId = report.issueId;
+
+            row.report_image_URL = report.cloudinary_url;
+
+            row.dateTaken = report.dateTaken;
+
+            row.createdAt = report.createdAt;
+
+            row.status = report.status;
+
+            if (report.status === "resolved") {
+              row.resolution_quality = report.resolution.quality;
+
+              row.resolution_date = report.resolution.dateTaken;
+              if (
+                "coordinates" in report.resolution &&
+                Array.isArray(report.resolution.coordinates)
+              ) {
+                row.resolution_longitude = Number(
+                  report.resolution.coordinates[0].toFixed(6),
+                );
+                row.resolution_latitude = Number(
+                  report.resolution.coordinates[1].toFixed(6),
+                );
+              }
+              row.resolution_image_URL = report.resolution.imageUrl;
+
+              row.resolution_note = report.resolution.note;
+            } else {
+              row.resolution_quality = null;
+              row.resolution_date = null;
+              row.resolution_longitude = null;
+              row.resolution_latitude = null;
+              row.resolution_image_URL = null;
+              row.resolution_note = null;
+            }
+
+            values.push(Object.values(row));
+            return;
+          });
+          console.table(values);
+
+          let csvContent = "";
+          values.forEach((row) => {
+            csvContent += row
+              .map((val) => JSON.stringify(val))
+              .join(",")
+              .concat("\n");
+          });
+
+          const data = new File([csvContent], "filtered-reports.csv", {
+            type: "text/csv;charset=utf-8;",
+          });
+          anchorElement.href = URL.createObjectURL(data);
+          anchorElement.download = "filtered-reports.csv";
+          anchorElement.click();
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setDownload(false);
+        URL.revokeObjectURL(anchorElement.href);
+        anchorElement.remove();
+      }
+    }
+    handleDownload();
+  }, [download, filterTheReports, filters, cleanReports]);
 
   return (
     <div className="filter-report-section">
