@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
 
-export interface Report {
+interface BaseReport {
   _id: string;
   user: string;
   severity: "high" | "medium" | "low";
@@ -9,8 +9,14 @@ export interface Report {
   dateTaken: string;
   issueId: string;
   createdAt: Date;
-  status: "open" | "resolved";
-  resolution?: {
+}
+interface unResolvedReport extends BaseReport {
+  status: "open";
+}
+interface ResolvedReport extends BaseReport {
+  status: "resolved";
+
+  resolution: {
     resolvedBy: string; // community
     resolvedAt: Date;
     dateTaken: string;
@@ -20,6 +26,8 @@ export interface Report {
     quality: "temporary" | "permanent";
   };
 }
+
+export type Report = unResolvedReport | ResolvedReport;
 export interface GeoPoint {
   type: "Point";
   coordinates: [number, number]; // [longitude, latitude]

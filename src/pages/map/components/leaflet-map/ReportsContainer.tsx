@@ -54,15 +54,15 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
         const { issueId, reports } = issue;
 
         const latestReport = reports[0];
-        const resolution = latestReport.resolution;
 
-        const isResolved = latestReport.status === "resolved" && !!resolution;
+        const isResolved =
+          latestReport.status === "resolved";
 
         const structuredReports = isResolved
           ? [
               {
-                imageUrl: resolution.imageUrl,
-                dateTaken: resolution.dateTaken,
+                imageUrl: latestReport.resolution.imageUrl,
+                dateTaken: latestReport.resolution.dateTaken,
                 location: latestReport.location,
                 status: latestReport.status,
                 severity: latestReport.severity,

@@ -66,7 +66,7 @@ export default function MatchingReports({
           <img
             src={
               report.status === "resolved"
-                ? report.resolution?.imageUrl
+                ? report.resolution.imageUrl
                 : report.cloudinary_url
             }
             alt="Report image"
@@ -165,12 +165,12 @@ export default function MatchingReports({
           ) : report.status === "resolved" ? (
             <img
               src={
-                report.resolution?.quality === "temporary"
+                report.resolution.quality === "temporary"
                   ? tempApprovedImageUrl
                   : approvedImageUrl
               }
               alt="checkMark"
-              title={`${report.resolution?.quality}ly fixed`}
+              title={`${report.resolution.quality}ly fixed`}
             />
           ) : null}
         </div>
