@@ -3,7 +3,8 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { ReportContext } from "../../../../../context/createReportContext";
 import { MapContext } from "../../../../../context/createMapContext";
 import "../../../styles/filterReports.css";
-import type { Report } from "../../../types";
+import type { downloadKeys, Report } from "../../../types";
+import downloadIcon from "../../../../../assets/download-outline.svg";
 
 type ResolutionQuality = Extract<
   Report,
@@ -20,7 +21,7 @@ const defaultFilterValues: FilterValues = {
   yearTaken: "",
   location: "",
   resolutionQuality: "",
-  resolutionStatus: "",
+  reportStatus: "",
   severity: "",
 };
 
@@ -72,17 +73,14 @@ export default function FilterReports() {
 
   const filterTheReports = useMemo(() => {
     return cleanReports.filter((report) => {
-      if (filters.yearTaken) {
+      if (filters.yearTaken && Number.isInteger(filters.yearTaken)) {
         const date = new Date(report.dateTaken);
         if (isNaN(date.getTime())) return false;
         if (date.getUTCFullYear() !== filters.yearTaken) return false;
       }
       if (filters.severity && report.severity !== filters.severity)
         return false;
-      if (
-        filters.resolutionStatus &&
-        report.status !== filters.resolutionStatus
-      )
+      if (filters.reportStatus && report.status !== filters.reportStatus)
         return false;
       if (
         report.status === "resolved" &&
@@ -204,10 +202,10 @@ export default function FilterReports() {
           <select
             name="resolution-category"
             id="resolution-input"
-            value={filters.resolutionStatus}
+            value={filters.reportStatus}
             onChange={(e) => {
               const selectedCategory = e.target.value as Report["status"];
-              updateFilter("resolutionStatus", selectedCategory);
+              updateFilter("reportStatus", selectedCategory);
               if (selectedCategory !== "resolved") {
                 updateFilter("resolutionQuality", "");
               }
