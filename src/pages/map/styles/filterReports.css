@@ -35,3 +35,20 @@ select {
   background-color: var(--white-color);
   color: crimson;
 }
+button.download-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(240, 248, 255, 0.7);
+  width: 5rem;
+  padding: 0.5rem;
+  align-self: flex-end;
+  margin-right: 2rem;
+}
+.download-container img {
+  object-fit: cover;
+}
+.download-container:hover {
+  background-color: rgba(240, 248, 255, 1);
+  transform: scale(1.05);
+}
