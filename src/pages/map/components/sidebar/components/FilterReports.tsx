@@ -5,6 +5,7 @@ import { MapContext } from "../../../../../context/createMapContext";
 import "../../../styles/filterReports.css";
 import type { downloadKeys, Report } from "../../../types";
 import downloadIcon from "../../../../../assets/download-outline.svg";
+import { createRowData } from "../../../utils/utils";
 
 type ResolutionQuality = Extract<
   Report,
@@ -122,8 +123,8 @@ export default function FilterReports() {
     const anchorElement = document.createElement("a");
     function handleDownload() {
       try {
-        const isFiltered = Object.values(filters).some(Boolean);
-        if (isFiltered) {
+        if (!filterTheReports.length) return;
+
           anchorElement.classList.add("download-link");
           anchorElement.hidden = true;
 
@@ -138,9 +139,8 @@ export default function FilterReports() {
             return;
           }
 
-          const reportKeyMap: Partial<
-            Record<keyof Report, keyof downloadKeys>
-          > = {
+        const reportKeyMap: Partial<Record<keyof Report, keyof downloadKeys>> =
+          {
             _id: "_id",
             user: "user",
             severity: "severity",
@@ -193,82 +193,31 @@ export default function FilterReports() {
           const values = [];
           values.unshift(Array.from(uniqueKeys));
 
-          filterTheReports.map((report) => {
-            const row: Partial<downloadKeys> = {};
-
-            row._id = report._id;
-
-            row.user = report.user;
-
-            row.severity = report.severity;
-
-            if (report.location) {
-              row.type = report.location.type;
-              if (
-                "coordinates" in report.location &&
-                Array.isArray(report.location.coordinates)
-              ) {
-                row.longitude = Number(
-                  report.location.coordinates[0].toFixed(6),
-                );
-                row.latitude = Number(
-                  report.location.coordinates[1].toFixed(6),
-                );
-              }
-              if (report.location.address) {
-                row.road =
-                  report.location.address.road === "unknown"
-                    ? null
-                    : report.location.address.road
-                      ? report.location.address.road
-                      : null;
-
-                row.neighbourhood =
-                  report.location.address.neighbourhood || null;
-
-                row.state = report.location.address.state || null;
-              }
-            }
-
-            row.issueId = report.issueId;
-
-            row.report_image_URL = report.cloudinary_url;
-
-            row.dateTaken = report.dateTaken;
-
-            row.createdAt = report.createdAt;
-
-            row.status = report.status;
-
+        filterTheReports.forEach((report) => {
             if (report.status === "resolved") {
-              row.resolution_quality = report.resolution.quality;
+            const { issueId } = report;
 
-              row.resolution_date = report.resolution.dateTaken;
-              if (
-                "coordinates" in report.resolution &&
-                Array.isArray(report.resolution.coordinates)
-              ) {
-                row.resolution_longitude = Number(
-                  report.resolution.coordinates[0].toFixed(6),
-                );
-                row.resolution_latitude = Number(
-                  report.resolution.coordinates[1].toFixed(6),
-                );
-              }
-              row.resolution_image_URL = report.resolution.imageUrl;
-
-              row.resolution_note = report.resolution.note;
+            const similarReportIssue = cleanReports.filter(
+              (report) => report.issueId === issueId,
+            );
+            if (!similarReportIssue.length) return;
+            similarReportIssue.forEach((report) => {
+              const row = createRowData(report);
+              values.push(Object.values(row));
+              return;
+            });
+            return;
             } else {
+            const row = createRowData(report);
               row.resolution_quality = null;
               row.resolution_date = null;
               row.resolution_longitude = null;
               row.resolution_latitude = null;
               row.resolution_image_URL = null;
               row.resolution_note = null;
-            }
-
             values.push(Object.values(row));
             return;
+          }
           });
           console.table(values);
 
@@ -286,7 +235,6 @@ export default function FilterReports() {
           anchorElement.href = URL.createObjectURL(data);
           anchorElement.download = "filtered-reports.csv";
           anchorElement.click();
-        }
       } catch (error) {
         console.error(error);
       } finally {

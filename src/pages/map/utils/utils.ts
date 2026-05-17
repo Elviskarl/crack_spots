@@ -1,6 +1,6 @@
 import * as ExifReader from "exifreader";
 import * as turf from "@turf/turf";
-import type { CoordinateData } from "../types";
+import type { CoordinateData, downloadKeys, Report } from "../types";
 import { CustomError } from "../../../components/error/CustomError";
 import type { FeatureCollection, MultiPolygon, Polygon } from "geojson";
 
@@ -141,4 +141,68 @@ export function resolveData(
       "Invalid Data: Unable to resolve report due to invalid coordinate data.",
     );
   }
+}
+
+export function createRowData(report: Report): Partial<downloadKeys> {
+  const row: Partial<downloadKeys> = {};
+
+  row._id = report._id;
+
+  row.user = report.user;
+
+  row.severity = report.severity;
+
+  if (report.location) {
+    row.type = report.location.type;
+    if (
+      "coordinates" in report.location &&
+      Array.isArray(report.location.coordinates)
+    ) {
+      row.longitude = Number(report.location.coordinates[0].toFixed(6));
+      row.latitude = Number(report.location.coordinates[1].toFixed(6));
+    }
+    if (report.location.address) {
+      row.road =
+        report.location.address.road &&
+        report.location.address.road !== "unknown"
+          ? report.location.address.road
+          : null;
+
+      row.neighbourhood = report.location.address.neighbourhood || null;
+
+      row.state = report.location.address.state || null;
+    }
+  }
+
+  row.issueId = report.issueId;
+
+  row.report_image_URL = report.cloudinary_url;
+
+  row.dateTaken = report.dateTaken;
+
+  row.createdAt = report.createdAt;
+
+  row.status = report.status;
+
+  if (report.status === "resolved") {
+    row.resolution_quality = report.resolution.quality;
+
+    row.resolution_date = report.resolution.dateTaken;
+    if (
+      "coordinates" in report.resolution &&
+      Array.isArray(report.resolution.coordinates)
+    ) {
+      row.resolution_longitude = Number(
+        report.resolution.coordinates[0].toFixed(6),
+      );
+      row.resolution_latitude = Number(
+        report.resolution.coordinates[1].toFixed(6),
+      );
+    }
+    row.resolution_image_URL = report.resolution.imageUrl;
+
+    row.resolution_note = report.resolution.note;
+  }
+
+  return row;
 }
