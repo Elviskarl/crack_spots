@@ -17,6 +17,7 @@ interface FilterValues {
   reportStatus: "" | Report["status"];
   resolutionQuality: "" | ResolutionQuality;
   location: string;
+  streetName: string;
 }
 const defaultFilterValues: FilterValues = {
   yearTaken: "",
@@ -24,6 +25,7 @@ const defaultFilterValues: FilterValues = {
   resolutionQuality: "",
   reportStatus: "",
   severity: "",
+  streetName: "",
 };
 
 export default function FilterReports() {
@@ -55,6 +57,14 @@ export default function FilterReports() {
       cleanReports
         .filter((report) => report.status === "resolved")
         .map((report) => report.resolution.quality),
+    );
+  }, [cleanReports]);
+
+  const streetNames = useMemo(() => {
+    return new Set(
+      cleanReports
+        .map((item) => item.location.address?.road?.toLowerCase())
+        .filter(Boolean) as string[],
     );
   }, [cleanReports]);
 
@@ -101,6 +111,11 @@ export default function FilterReports() {
         ]);
         if (!booleanPointInPolygon(reportPoint, feature)) return false;
       }
+      if (filters.streetName) {
+        const road = report.location.address?.road?.toLowerCase();
+        if (!road) return false;
+        if (!road.includes(filters.streetName.toLowerCase())) return false;
+      }
       return true;
     });
   }, [filters, cleanReports, cleanShapeFile]);
@@ -125,19 +140,19 @@ export default function FilterReports() {
       try {
         if (!filterTheReports.length) return;
 
-          anchorElement.classList.add("download-link");
-          anchorElement.hidden = true;
+        anchorElement.classList.add("download-link");
+        anchorElement.hidden = true;
 
-          const uniqueKeys = new Set<keyof downloadKeys>();
+        const uniqueKeys = new Set<keyof downloadKeys>();
 
-          const resolvedReport = cleanReports.find(
-            (report) => report.status === "resolved",
-          );
+        const resolvedReport = cleanReports.find(
+          (report) => report.status === "resolved",
+        );
 
-          if (!resolvedReport) {
-            console.error("Missing resolved report");
-            return;
-          }
+        if (!resolvedReport) {
+          console.error("Missing resolved report");
+          return;
+        }
 
         const reportKeyMap: Partial<Record<keyof Report, keyof downloadKeys>> =
           {
@@ -151,50 +166,50 @@ export default function FilterReports() {
             cloudinary_url: "report_image_URL",
           };
 
-          [resolvedReport].map((report) =>
-            Object.keys(report).forEach((key) => {
-              if (key === "location") {
-                uniqueKeys.add("type");
-                if (
-                  "coordinates" in report.location &&
-                  Array.isArray(report.location.coordinates)
-                ) {
-                  uniqueKeys.add("longitude");
-                  uniqueKeys.add("latitude");
-                }
-                if ("address" in report.location) {
-                  uniqueKeys.add("road");
-                  uniqueKeys.add("neighbourhood");
-                  uniqueKeys.add("state");
-                }
-              } else if (key === "cloudinary_url") {
-                uniqueKeys.add("report_image_URL");
-              } else if (key === "resolution") {
-                uniqueKeys.add("resolution_quality" as keyof downloadKeys);
-                uniqueKeys.add("resolution_date" as keyof downloadKeys);
-                if (
-                  "coordinates" in report.resolution &&
-                  Array.isArray(report.resolution.coordinates)
-                ) {
-                  uniqueKeys.add("resolution_longitude" as keyof downloadKeys);
-                  uniqueKeys.add("resolution_latitude" as keyof downloadKeys);
-                }
-                uniqueKeys.add("resolution_image_URL" as keyof downloadKeys);
-                uniqueKeys.add("resolution_note" as keyof downloadKeys);
-              } else {
-                const mappedKey = reportKeyMap[key as keyof Report];
-
-                if (mappedKey) {
-                  uniqueKeys.add(mappedKey);
-                }
+        [resolvedReport].map((report) =>
+          Object.keys(report).forEach((key) => {
+            if (key === "location") {
+              uniqueKeys.add("type");
+              if (
+                "coordinates" in report.location &&
+                Array.isArray(report.location.coordinates)
+              ) {
+                uniqueKeys.add("longitude");
+                uniqueKeys.add("latitude");
               }
-            }),
-          );
-          const values = [];
-          values.unshift(Array.from(uniqueKeys));
+              if ("address" in report.location) {
+                uniqueKeys.add("road");
+                uniqueKeys.add("neighbourhood");
+                uniqueKeys.add("state");
+              }
+            } else if (key === "cloudinary_url") {
+              uniqueKeys.add("report_image_URL");
+            } else if (key === "resolution") {
+              uniqueKeys.add("resolution_quality" as keyof downloadKeys);
+              uniqueKeys.add("resolution_date" as keyof downloadKeys);
+              if (
+                "coordinates" in report.resolution &&
+                Array.isArray(report.resolution.coordinates)
+              ) {
+                uniqueKeys.add("resolution_longitude" as keyof downloadKeys);
+                uniqueKeys.add("resolution_latitude" as keyof downloadKeys);
+              }
+              uniqueKeys.add("resolution_image_URL" as keyof downloadKeys);
+              uniqueKeys.add("resolution_note" as keyof downloadKeys);
+            } else {
+              const mappedKey = reportKeyMap[key as keyof Report];
+
+              if (mappedKey) {
+                uniqueKeys.add(mappedKey);
+              }
+            }
+          }),
+        );
+        const values = [];
+        values.unshift(Array.from(uniqueKeys));
 
         filterTheReports.forEach((report) => {
-            if (report.status === "resolved") {
+          if (report.status === "resolved") {
             const { issueId } = report;
 
             const similarReportIssue = cleanReports.filter(
@@ -207,34 +222,34 @@ export default function FilterReports() {
               return;
             });
             return;
-            } else {
+          } else {
             const row = createRowData(report);
-              row.resolution_quality = null;
-              row.resolution_date = null;
-              row.resolution_longitude = null;
-              row.resolution_latitude = null;
-              row.resolution_image_URL = null;
-              row.resolution_note = null;
+            row.resolution_quality = null;
+            row.resolution_date = null;
+            row.resolution_longitude = null;
+            row.resolution_latitude = null;
+            row.resolution_image_URL = null;
+            row.resolution_note = null;
             values.push(Object.values(row));
             return;
           }
-          });
-          console.table(values);
+        });
+        console.table(values);
 
-          let csvContent = "";
-          values.forEach((row) => {
-            csvContent += row
-              .map((val) => JSON.stringify(val))
-              .join(",")
-              .concat("\n");
-          });
+        let csvContent = "";
+        values.forEach((row) => {
+          csvContent += row
+            .map((val) => JSON.stringify(val))
+            .join(",")
+            .concat("\n");
+        });
 
-          const data = new File([csvContent], "filtered-reports.csv", {
-            type: "text/csv;charset=utf-8;",
-          });
-          anchorElement.href = URL.createObjectURL(data);
-          anchorElement.download = "filtered-reports.csv";
-          anchorElement.click();
+        const data = new File([csvContent], "filtered-reports.csv", {
+          type: "text/csv;charset=utf-8;",
+        });
+        anchorElement.href = URL.createObjectURL(data);
+        anchorElement.download = "filtered-reports.csv";
+        anchorElement.click();
       } catch (error) {
         console.error(error);
       } finally {
@@ -323,6 +338,26 @@ export default function FilterReports() {
                   /\s*Sub\s+County\s*/i,
                   "",
                 )}
+              </option>
+            ))}
+          </select>
+        </fieldset>
+        <fieldset>
+          <legend>Filter by street name</legend>
+          <label htmlFor="street-input"></label>
+          <select
+            name="street-name"
+            id="street-input"
+            value={filters.streetName}
+            onChange={(e) => {
+              const selectedStreet = e.target.value;
+              updateFilter("streetName", selectedStreet);
+            }}
+          >
+            <option value="">--Please choose an option--</option>
+            {Array.from(streetNames).map((street, index) => (
+              <option key={index} value={street}>
+                {street}
               </option>
             ))}
           </select>
