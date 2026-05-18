@@ -53,11 +53,6 @@ export interface NotificationType {
   message: string;
 }
 
-export interface serverResponse {
-  success: boolean;
-  message: string;
-}
-
 export interface ListItemsProps {
   imageUrl: string;
   textContent: string;
@@ -107,3 +102,25 @@ export interface downloadKeys {
   resolution_image_URL: string | null;
   resolution_note: string | null;
 }
+
+interface BaseResponse {
+  success: boolean;
+}
+interface FetchSuccessResponse extends BaseResponse {
+  data: Report[];
+}
+interface FetchErrorResponse extends BaseResponse {
+  message: string;
+}
+
+interface resolveIssuesResponse extends BaseResponse {
+  message: string;
+}
+
+interface serverResponse extends BaseResponse {
+  message: string;
+}
+
+export type FetchBackendResponse = FetchSuccessResponse | FetchErrorResponse;
+export type ResolveIssuesResponse = resolveIssuesResponse;
+export type UploadResponse = serverResponse;

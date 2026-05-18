@@ -1,7 +1,7 @@
 import { FetchError } from "../../../components/error/FetchError";
-import type { Report } from "../types/index";
+import type { FetchBackendResponse } from "../types/index";
 
-export async function fetchReports(param: string): Promise<Report[]> {
+export async function fetchReports(param: string) {
   const fetchController = new AbortController();
   let timer: NodeJS.Timeout | null = null;
   try {
@@ -19,14 +19,11 @@ export async function fetchReports(param: string): Promise<Report[]> {
     if (!response.ok) {
       throw new FetchError(`Error fetching reports: ${response.statusText}`);
     }
-    const { data, success }: { success: boolean; data: Report[] } =
-      await response.json();
-    if (!success) {
-      throw new FetchError(
-        `Error fetching reports: ${response.statusText}: ${data}`,
-      );
+    const serverData = (await response.json()) as FetchBackendResponse;
+    if ("data" in serverData) {
+      return serverData.data;
     }
-    return data;
+    throw new FetchError(serverData.message);
   } catch (err) {
     if (err instanceof DOMException && err.name === "AbortError") {
       throw new FetchError(

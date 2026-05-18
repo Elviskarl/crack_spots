@@ -1,5 +1,5 @@
 import { FetchError } from "../../../components/error/FetchError";
-import type { serverResponse } from "../types";
+import type { ResolveIssuesResponse } from "../types";
 
 export default async function resolveIssues(url: string, data: FormData) {
   let timer: NodeJS.Timeout | null = null;
@@ -17,13 +17,16 @@ export default async function resolveIssues(url: string, data: FormData) {
     timer = setTimeout(() => {
       fetchController.abort();
     }, 60000);
-    
+
     const response = await fetch(request);
     if (!response.ok) {
       throw new FetchError(`Error resolving issue: ${response.statusText}`);
     }
-    const result = (await response.json()) as serverResponse;
-    return result;
+    const result = (await response.json()) as ResolveIssuesResponse;
+    if(result.success){
+      return result;
+    }
+    throw new FetchError(result.message);
   } catch (error) {
     if (error instanceof DOMException && error.name === "AbortError") {
       throw new FetchError(
@@ -31,6 +34,7 @@ export default async function resolveIssues(url: string, data: FormData) {
       );
     }
     console.error(error);
+    throw error;
   } finally {
     if (timer) clearTimeout(timer);
   }
