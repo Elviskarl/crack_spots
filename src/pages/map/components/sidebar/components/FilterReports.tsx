@@ -30,7 +30,6 @@ const defaultFilterValues: FilterValues = {
 
 export default function FilterReports() {
   const [filters, setFilters] = useState<FilterValues>(defaultFilterValues);
-  const [download, setDownload] = useState(false);
   const { setReports, originalReports } = useContext(ReportContext)!;
   const { nairobiSubCountyShapefile } = useContext(MapContext)!;
 
@@ -132,137 +131,145 @@ export default function FilterReports() {
     setReports(filterTheReports);
   }, [setReports, filterTheReports]);
 
-  useEffect(() => {
-    if (!download) return;
-
+  function handleDownload() {
     const anchorElement = document.createElement("a");
-    function handleDownload() {
-      try {
-        if (!filterTheReports.length) return;
 
-        anchorElement.classList.add("download-link");
-        anchorElement.hidden = true;
+    try {
+      if (!filterTheReports.length) return;
 
-        const uniqueKeys = new Set<keyof downloadKeys>();
+      anchorElement.classList.add("download-link");
+      anchorElement.hidden = true;
 
-        const resolvedReport = cleanReports.find(
-          (report) => report.status === "resolved",
-        );
+      const uniqueKeys = new Set<keyof downloadKeys>();
 
-        if (!resolvedReport) {
-          console.error("Missing resolved report");
-          return;
+      const groupedReports = new Map<string, Report[]>();
+
+      cleanReports.forEach((report) => {
+        const group = groupedReports.get(report.issueId);
+        if (group) {
+          group.push(report);
+        } else {
+          groupedReports.set(report.issueId, [report]);
         }
+      });
 
-        const reportKeyMap: Partial<Record<keyof Report, keyof downloadKeys>> =
-          {
-            _id: "_id",
-            user: "user",
-            severity: "severity",
-            issueId: "issueId",
-            dateTaken: "dateTaken",
-            createdAt: "createdAt",
-            status: "status",
-            cloudinary_url: "report_image_URL",
-          };
+      const resolvedReport = cleanReports.find(
+        (report) => report.status === "resolved",
+      );
 
-        [resolvedReport].map((report) =>
-          Object.keys(report).forEach((key) => {
-            if (key === "location") {
-              uniqueKeys.add("type");
-              if (
-                "coordinates" in report.location &&
-                Array.isArray(report.location.coordinates)
-              ) {
-                uniqueKeys.add("longitude");
-                uniqueKeys.add("latitude");
-              }
-              if ("address" in report.location) {
-                uniqueKeys.add("road");
-                uniqueKeys.add("neighbourhood");
-                uniqueKeys.add("state");
-              }
-            } else if (key === "cloudinary_url") {
-              uniqueKeys.add("report_image_URL");
-            } else if (key === "resolution") {
-              uniqueKeys.add("resolution_quality" as keyof downloadKeys);
-              uniqueKeys.add("resolution_date" as keyof downloadKeys);
-              if (
-                "coordinates" in report.resolution &&
-                Array.isArray(report.resolution.coordinates)
-              ) {
-                uniqueKeys.add("resolution_longitude" as keyof downloadKeys);
-                uniqueKeys.add("resolution_latitude" as keyof downloadKeys);
-              }
-              uniqueKeys.add("resolution_image_URL" as keyof downloadKeys);
-              uniqueKeys.add("resolution_note" as keyof downloadKeys);
-            } else {
-              const mappedKey = reportKeyMap[key as keyof Report];
+      if (!resolvedReport) {
+        console.error("Missing resolved report");
+        return;
+      }
 
-              if (mappedKey) {
-                uniqueKeys.add(mappedKey);
-              }
-            }
-          }),
-        );
-        const values = [];
-        values.unshift(Array.from(uniqueKeys));
+      const reportKeyMap: Partial<Record<keyof Report, keyof downloadKeys>> = {
+        _id: "_id",
+        user: "user",
+        severity: "severity",
+        issueId: "issueId",
+        dateTaken: "dateTaken",
+        createdAt: "createdAt",
+        status: "status",
+        cloudinary_url: "report_image_URL",
+      };
 
-        filterTheReports.forEach((report) => {
-          if (report.status === "resolved") {
-            const { issueId } = report;
+      Object.keys(resolvedReport).forEach((key) => {
+        if (key === "location") {
+          uniqueKeys.add("type");
+          if (
+            "coordinates" in resolvedReport.location &&
+            Array.isArray(resolvedReport.location.coordinates)
+          ) {
+            uniqueKeys.add("longitude");
+            uniqueKeys.add("latitude");
+          }
+          if ("address" in resolvedReport.location) {
+            uniqueKeys.add("road");
+            uniqueKeys.add("neighbourhood");
+            uniqueKeys.add("state");
+          }
+        } else if (key === "cloudinary_url") {
+          uniqueKeys.add("report_image_URL");
+        } else if (key === "resolution") {
+          uniqueKeys.add("resolution_quality" as keyof downloadKeys);
+          uniqueKeys.add("resolution_date" as keyof downloadKeys);
+          if (
+            "coordinates" in resolvedReport.resolution &&
+            Array.isArray(resolvedReport.resolution.coordinates)
+          ) {
+            uniqueKeys.add("resolution_longitude" as keyof downloadKeys);
+            uniqueKeys.add("resolution_latitude" as keyof downloadKeys);
+          }
+          uniqueKeys.add("resolution_image_URL" as keyof downloadKeys);
+          uniqueKeys.add("resolution_note" as keyof downloadKeys);
+        } else {
+          const mappedKey = reportKeyMap[key as keyof Report];
 
-            const similarReportIssue = cleanReports.filter(
-              (report) => report.issueId === issueId,
-            );
-            if (!similarReportIssue.length) return;
-            similarReportIssue.forEach((report) => {
-              const row = createRowData(report);
-              values.push(Object.values(row));
-              return;
-            });
-            return;
-          } else {
+          if (mappedKey) {
+            uniqueKeys.add(mappedKey);
+          }
+        }
+      });
+
+      const values = [];
+      values.unshift(Array.from(uniqueKeys));
+
+      const resolvedIssueIds = new Set<string>();
+
+      filterTheReports.forEach((report) => {
+        if (report.status === "resolved") {
+          const { issueId } = report;
+
+          if (resolvedIssueIds.has(issueId)) return;
+          const similarReportIssue = groupedReports.get(issueId);
+
+          if (!similarReportIssue || !similarReportIssue.length) return;
+
+          similarReportIssue.forEach((report) => {
             const row = createRowData(report);
-            row.resolution_quality = null;
-            row.resolution_date = null;
-            row.resolution_longitude = null;
-            row.resolution_latitude = null;
-            row.resolution_image_URL = null;
-            row.resolution_note = null;
             values.push(Object.values(row));
             return;
-          }
-        });
+          });
+          resolvedIssueIds.add(issueId);
+        } else {
+          const row = createRowData(report);
+          row.resolution_quality = null;
+          row.resolution_date = null;
+          row.resolution_longitude = null;
+          row.resolution_latitude = null;
+          row.resolution_image_URL = null;
+          row.resolution_note = null;
+          values.push(Object.values(row));
+        }
+      });
 
-        let csvContent = "\uFEFF";
-        values.forEach((row) => {
-          csvContent += row
-            .map((val) => {
-              const escaped = String(val ?? "").replace(/"/g, '""');
+      let csvContent = "\uFEFF";
+      values.forEach((row) => {
+        csvContent += row
+          .map((val) => {
+            const escaped = String(val ?? "").replace(/"/g, '""');
 
-              return `"${escaped}"`;
-            })
-            .join(",")
-            .concat("\n");
-        });
+            return `"${escaped}"`;
+          })
+          .join(",")
+          .concat("\n");
+      });
 
-        const data = new File([csvContent], "filtered-reports.csv", {
-          type: "text/csv;charset=utf-8;",
-        });
-        anchorElement.href = URL.createObjectURL(data);
-        anchorElement.download = "filtered-reports.csv";
-        anchorElement.click();
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setDownload(false);
+      const data = new File([csvContent], "filtered-reports.csv", {
+        type: "text/csv;charset=utf-8;",
+      });
+      anchorElement.href = URL.createObjectURL(data);
+      anchorElement.download = "filtered-reports.csv";
+      anchorElement.click();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setTimeout(() => {
         URL.revokeObjectURL(anchorElement.href);
-        anchorElement.remove();
-      }
+      }, 1000);
+      anchorElement.remove();
     }
-    handleDownload();
-  }, [download, filterTheReports, filters, cleanReports]);
+  }
 
   return (
     <div className="filter-report-section">
@@ -270,9 +277,7 @@ export default function FilterReports() {
       <button
         className="download-container"
         title="download"
-        onClick={() => {
-          setDownload(true);
-        }}
+        onClick={handleDownload}
       >
         <img src={downloadIcon} alt="Download" />
       </button>
