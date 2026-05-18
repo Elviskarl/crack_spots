@@ -2,18 +2,36 @@ import { FetchError } from "../../../components/error/FetchError";
 import type { serverResponse } from "../types";
 
 export default async function resolveIssues(url: string, data: FormData) {
-  const request = new Request(url, {
-    method: "PATCH",
-    body: data,
-  });
-  const response = await fetch(request);
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
+  let timer: NodeJS.Timeout | null = null;
+  try {
+    const fetchController = new AbortController();
 
-    throw new FetchError(
-      errorData?.message || `Request failed with ${response.status}`,
-    );
+    const { signal } = fetchController;
+
+    const request = new Request(url, {
+      method: "PATCH",
+      body: data,
+      signal,
+    });
+
+    timer = setTimeout(() => {
+      fetchController.abort();
+    }, 60000);
+    
+    const response = await fetch(request);
+    if (!response.ok) {
+      throw new FetchError(`Error resolving issue: ${response.statusText}`);
+    }
+    const result = (await response.json()) as serverResponse;
+    return result;
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new FetchError(
+        "Server took too long to respond. Please refresh the page.",
+      );
+    }
+    console.error(error);
+  } finally {
+    if (timer) clearTimeout(timer);
   }
-  const result = (await response.json()) as serverResponse;
-  return result;
 }
