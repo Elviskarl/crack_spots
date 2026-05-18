@@ -234,12 +234,15 @@ export default function FilterReports() {
             return;
           }
         });
-        console.table(values);
 
-        let csvContent = "";
+        let csvContent = "\uFEFF";
         values.forEach((row) => {
           csvContent += row
-            .map((val) => JSON.stringify(val))
+            .map((val) => {
+              const escaped = String(val ?? "").replace(/"/g, '""');
+
+              return `"${escaped}"`;
+            })
             .join(",")
             .concat("\n");
         });
