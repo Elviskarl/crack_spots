@@ -25,6 +25,7 @@ import { MapContext } from "../../../../context/createMapContext";
 import LoadingScreen from "../../../../components/LoadingScreen";
 import { Notifications } from "./components/Notifications";
 import resolveIssues from "../../utils/resolveIssues";
+import { ReportContext } from "../../../../context/createReportContext";
 
 export default function ResolveReport(props: ListItemOptional) {
   const isResolving = true;
@@ -38,6 +39,7 @@ export default function ResolveReport(props: ListItemOptional) {
   const notificationRef = useRef<HTMLDivElement>(null);
   const { nairobiSubCountyShapefile, setIsNotInNairobi } =
     useContext(MapContext)!;
+  const { isLoading: isReportLoading } = useContext(ReportContext)!;
   const [notification, setNotification] = useState<NotificationType | null>(
     null,
   );
@@ -375,7 +377,9 @@ export default function ResolveReport(props: ListItemOptional) {
                 maxLength={100}
               ></textarea>
             </fieldset>
-            <button className="submit-report-resolution-btn">Submit</button>
+            <button className="submit-report-resolution-btn" disabled={isReportLoading}>
+              Submit
+            </button>
           </form>
         </div>
       )}

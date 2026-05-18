@@ -14,6 +14,7 @@ import { Notifications } from "./Notifications";
 import "../../../styles/report-form.css";
 import LoadingScreen from "../../../../../components/LoadingScreen";
 import { MapContext } from "../../../../../context/createMapContext";
+import { ReportContext } from "../../../../../context/createReportContext";
 
 export default function ReportForm() {
   const [file, setFile] = useState<File | null>(null);
@@ -26,6 +27,8 @@ export default function ReportForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { nairobiSubCountyShapefile, setIsNotInNairobi } =
     useContext(MapContext)!;
+
+  const { isLoading: isReportLoading } = useContext(ReportContext)!;
 
   useEffect(() => {
     if (!imageUrl) return;
@@ -232,7 +235,11 @@ export default function ReportForm() {
               <ReportPreview url={imageUrl} coordinateData={coordinates} />
             )
           )}
-          <button className="submit-button" disabled={!file || !coordinates}>
+          <button
+            className="submit-button"
+            disabled={!file || !coordinates || isReportLoading}
+            type="submit"
+          >
             submit
           </button>
         </form>
