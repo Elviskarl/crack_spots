@@ -30,7 +30,7 @@ const defaultFilterValues: FilterValues = {
 
 export default function FilterReports() {
   const [filters, setFilters] = useState<FilterValues>(defaultFilterValues);
-  const { setReports, originalReports } = useContext(ReportContext)!;
+  const { setReports, originalReports, isLoading } = useContext(ReportContext)!;
   const { nairobiSubCountyShapefile } = useContext(MapContext)!;
 
   // To resolve a react compiler warning when working with useRef
@@ -243,7 +243,7 @@ export default function FilterReports() {
         }
       });
 
-      let csvContent = "\uFEFF";
+      let csvContent = "";
       values.forEach((row) => {
         csvContent += row
           .map((val) => {
@@ -278,6 +278,7 @@ export default function FilterReports() {
         className="download-container"
         title="download"
         onClick={handleDownload}
+        disabled={isLoading || !filterTheReports.length}
       >
         <img src={downloadIcon} alt="Download" />
       </button>
