@@ -13,10 +13,11 @@ export function ReportProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Fetch the report data from the API
     const url = "https://crackspots-server.onrender.com/api/v1/reports";
+    const fetchController = new AbortController();
     async function loadReports(url: string) {
       setIsLoading(true);
       try {
-        const data = await fetchReports(url);
+        const data = await fetchReports(url, fetchController.signal);
         setNotification({
           type: "Success",
           message: "Reports fetched successfully.",
@@ -24,6 +25,14 @@ export function ReportProvider({ children }: { children: React.ReactNode }) {
         originalReports.current = data;
         setReports(data);
       } catch (err) {
+        if (err instanceof DOMException && err.name === "AbortError") {
+          console.error("Fetch aborted:", err);
+          setNotification({
+            type: "Error",
+            message: "Fetch aborted. Server took too long to respond. Please refresh the page.",
+          });
+          return;
+        }
         console.error("Error fetching reports:", err);
         setNotification({
           type: "Error",
@@ -35,6 +44,9 @@ export function ReportProvider({ children }: { children: React.ReactNode }) {
       }
     }
     loadReports(url);
+    return () => {
+      fetchController.abort();
+    };
   }, []);
 
   return (

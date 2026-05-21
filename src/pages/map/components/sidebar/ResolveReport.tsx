@@ -163,6 +163,7 @@ export default function ResolveReport(props: ListItemOptional) {
 
   async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
+    const fetchController = new AbortController();
 
     try {
       setIsLoading(true);
@@ -186,6 +187,7 @@ export default function ResolveReport(props: ListItemOptional) {
       const results = await resolveIssues(
         "https://crackspots-server.onrender.com/api/v1/resolve",
         formData,
+        fetchController.signal,
       );
 
       setNotification({
@@ -202,6 +204,8 @@ export default function ResolveReport(props: ListItemOptional) {
           message: error.message,
           type: "Error",
         });
+        return;
+      } else if (error instanceof DOMException && error.name === "AbortError") {
         return;
       } else {
         setNotification({
@@ -377,7 +381,10 @@ export default function ResolveReport(props: ListItemOptional) {
                 maxLength={100}
               ></textarea>
             </fieldset>
-            <button className="submit-report-resolution-btn" disabled={isReportLoading}>
+            <button
+              className="submit-report-resolution-btn"
+              disabled={isReportLoading}
+            >
               Submit
             </button>
           </form>
