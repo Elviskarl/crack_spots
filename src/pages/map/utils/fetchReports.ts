@@ -17,11 +17,6 @@ export async function fetchReports(param: string) {
     }
     throw new FetchError(serverData.message);
   } catch (err) {
-    if (err instanceof DOMException && err.name === "AbortError") {
-      throw new FetchError(
-        "Server took too long to respond. Please refresh the page.",
-      );
-    }
     console.error(err);
     throw err;
   }
