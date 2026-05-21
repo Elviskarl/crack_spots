@@ -122,7 +122,6 @@ export default function ReportForm() {
       });
       return;
     }
-    const fetchController = new AbortController();
     try {
       const coordsCopy = coordinates;
 
@@ -132,7 +131,6 @@ export default function ReportForm() {
       const results = await uploadReports(
         "https://crackspots-server.onrender.com/api/v1/reports",
         formData,
-        fetchController.signal,
       );
       if (!results.success) {
         setNotification({
@@ -154,8 +152,6 @@ export default function ReportForm() {
           message: error.message,
           type: "Error",
         });
-        return;
-      } else if (error instanceof DOMException && error.name === "AbortError") {
         return;
       } else {
         setNotification({
