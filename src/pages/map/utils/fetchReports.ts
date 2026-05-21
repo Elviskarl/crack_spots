@@ -2,18 +2,10 @@ import { FetchError } from "../../../components/error/FetchError";
 import type { FetchBackendResponse } from "../types/index";
 
 export async function fetchReports(param: string) {
-  const fetchController = new AbortController();
-  let timer: NodeJS.Timeout | null = null;
   try {
-    const { signal } = fetchController;
     const request = new Request(param, {
       method: "GET",
-      signal,
     });
-
-    timer = setTimeout(() => {
-      fetchController.abort();
-    }, 60000);
 
     const response = await fetch(request);
     if (!response.ok) {
@@ -32,7 +24,5 @@ export async function fetchReports(param: string) {
     }
     console.error(err);
     throw err;
-  } finally {
-    if (timer) clearTimeout(timer);
   }
 }
