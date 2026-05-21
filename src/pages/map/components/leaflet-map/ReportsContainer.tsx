@@ -14,7 +14,7 @@ import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
 import { MapContext } from "../../../../context/createMapContext";
 import useCreateIssues from "../../utils/CreateIssues";
-// import useLocationCluster from "../../hooks/locationCluster";
+import useLocationCluster from "../../hooks/locationCluster";
 
 const resolvedIcon = new Icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/128/13984/13984191.png",
@@ -37,8 +37,6 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
   );
 
   const issues = useCreateIssues(reports);
-  // const locationCluster = useLocationCluster(issues);
-  // console.log(locationCluster);
   const sortedIssues = useMemo(() => {
     return issues.map((issue) => ({
       ...issue,
@@ -48,43 +46,56 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
       ),
     }));
   }, [issues]);
+
+  const locationCluster = useLocationCluster(sortedIssues);
+
   return (
     <MarkerClusterGroup key={reports.map((report) => report._id).join("-")}>
-      {sortedIssues.map((issue) => {
-        const { issueId, reports } = issue;
+      {locationCluster.map((cluster) => {
+        const { issues } = cluster;
+        const latestIssue = issues[0];
+
+        const { issueId, reports } = latestIssue;
 
         const latestReport = reports[0];
 
-        const isResolved =
-          latestReport.status === "resolved";
+        // Flatten all reports in the cluster into a single array
+        const structuredReports = cluster.issues.flatMap((issue) => {
+          const latestReport = issue.reports[0];
 
-        const structuredReports = isResolved
-          ? [
-              {
-                imageUrl: latestReport.resolution.imageUrl,
-                dateTaken: latestReport.resolution.dateTaken,
-                location: latestReport.location,
-                status: latestReport.status,
-                severity: latestReport.severity,
-                type: "After",
-              },
-              ...reports.map((report) => ({
+          const isResolved = latestReport.status === "resolved";
+
+          return isResolved
+            ? [
+                {
+                  imageUrl: latestReport.resolution.imageUrl,
+                  dateTaken: latestReport.resolution.dateTaken,
+                  location: latestReport.location,
+                  status: latestReport.status,
+                  severity: latestReport.severity,
+                  type: "After",
+                  issueId: issue.issueId,
+                },
+                ...issue.reports.map((report) => ({
+                  imageUrl: report.cloudinary_url,
+                  dateTaken: report.dateTaken,
+                  location: latestReport.location,
+                  status: report.status,
+                  severity: report.severity,
+                  type: "Before" as const,
+                  issueId: issue.issueId,
+                })),
+              ]
+            : issue.reports.map((report) => ({
                 imageUrl: report.cloudinary_url,
                 dateTaken: report.dateTaken,
-                location: report.location,
+                location: latestReport.location,
                 status: report.status,
                 severity: report.severity,
-                type: "Before",
-              })),
-            ]
-          : reports.map((report) => ({
-              imageUrl: report.cloudinary_url,
-              dateTaken: report.dateTaken,
-              severity: report.severity,
-              location: report.location,
-              status: report.status,
-              type: "Before",
-            }));
+                type: "Before" as const,
+                issueId: issue.issueId,
+              }));
+        });
 
         const currentIndex = activeIndexes[issueId] ?? 0;
 
