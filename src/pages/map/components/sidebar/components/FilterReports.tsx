@@ -3,9 +3,10 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { ReportContext } from "../../../../../context/createReportContext";
 import { MapContext } from "../../../../../context/createMapContext";
 import "../../../styles/filterReports.css";
-import type { downloadKeys, Report } from "../../../types";
+import type { downloadKeys, NotificationType, Report } from "../../../types";
 import downloadIcon from "../../../../../assets/download-outline.svg";
 import { createRowData } from "../../../utils/utils";
+import { Notifications } from "./Notifications";
 
 type ResolutionQuality = Extract<
   Report,
@@ -30,6 +31,9 @@ const defaultFilterValues: FilterValues = {
 
 export default function FilterReports() {
   const [filters, setFilters] = useState<FilterValues>(defaultFilterValues);
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null,
+  );
   const { setReports, originalReports, isLoading } = useContext(ReportContext)!;
   const { nairobiSubCountyShapefile } = useContext(MapContext)!;
 
@@ -135,7 +139,11 @@ export default function FilterReports() {
     const anchorElement = document.createElement("a");
 
     try {
-      if (!filterTheReports.length) return;
+      if (!filterTheReports.length) {
+        throw new Error(
+          "The selected filters did not return any reports. Adjust your filters and try again.",
+        );
+      }
 
       anchorElement.classList.add("download-link");
       anchorElement.hidden = true;
@@ -158,8 +166,9 @@ export default function FilterReports() {
       );
 
       if (!resolvedReport) {
-        console.error("Missing resolved report");
-        return;
+        throw new Error(
+          "No resolved reports found to determine CSV structure.",
+        );
       }
 
       const reportKeyMap: Partial<Record<keyof Report, keyof downloadKeys>> = {
@@ -262,6 +271,12 @@ export default function FilterReports() {
       anchorElement.download = "filtered-reports.csv";
       anchorElement.click();
     } catch (error) {
+      if (error instanceof Error) {
+        setNotification({
+          type: "Error",
+          message: error.message,
+        });
+      }
       console.error(error);
     } finally {
       setTimeout(() => {
@@ -278,7 +293,7 @@ export default function FilterReports() {
         className="download-container"
         title="download"
         onClick={handleDownload}
-        disabled={isLoading || !filterTheReports.length}
+        disabled={isLoading}
       >
         <img src={downloadIcon} alt="Download" />
       </button>
@@ -429,6 +444,13 @@ export default function FilterReports() {
           Reset
         </button>
       </form>
+      {notification && (
+        <Notifications
+          message={notification.message}
+          type={notification.type}
+          func={setNotification}
+        />
+      )}
     </div>
   );
 }
