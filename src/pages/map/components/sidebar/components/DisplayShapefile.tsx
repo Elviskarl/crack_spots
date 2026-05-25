@@ -28,7 +28,7 @@ export default function DisplayShapefile() {
       map.flyTo(previousCenter, previousZoom, {
         duration: 1.2,
       });
-    }, 2000);
+    }, 4000);
     return () => clearTimeout(timer);
   }, [isNotInNairobi, setIsNotInNairobi, shapefile, map]);
   const styleOptions = {
