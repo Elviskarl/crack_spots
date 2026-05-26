@@ -112,12 +112,30 @@ export default function ReportForm() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (isReportLoading) {
+      setNotification({
+        type: "Info",
+        message: "Fetching reports from the server. Please wait a moment.",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
-    if (!file || !coordinates) {
+    if (!file) {
       setNotification({
         code: "MISSING_DATA",
-        message: "File or exif metadata is missing.",
+        message: "Image file is missing.",
+        type: "Error",
+      });
+      return;
+    }
+
+    if (!coordinates) {
+      setNotification({
+        code: "MISSING_METADATA",
+        message: "EXIF metadata is missing or incomplete.",
         type: "Error",
       });
       return;
@@ -235,11 +253,7 @@ export default function ReportForm() {
               <ReportPreview url={imageUrl} coordinateData={coordinates} />
             )
           )}
-          <button
-            className="submit-button"
-            disabled={!file || !coordinates || isReportLoading}
-            type="submit"
-          >
+          <button className="submit-button" type="submit">
             submit
           </button>
         </form>

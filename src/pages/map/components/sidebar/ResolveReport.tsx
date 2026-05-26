@@ -164,18 +164,41 @@ export default function ResolveReport(props: ListItemOptional) {
   async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    if (isReportLoading) {
+      setNotification({
+        type: "Info",
+        message: "Fetching reports from the server. Please wait a moment.",
+      });
+      return;
+    }
+
+    if (!interestedReport) {
+      throw new CustomError(
+        "MISSING_REPORT",
+        "No report selected for resolution.",
+      );
+    }
+    if (!file) {
+      setNotification({
+        code: "MISSING_DATA",
+        message: "Image file is missing.",
+        type: "Error",
+      });
+      return;
+    }
+
+    if (!coordinates) {
+      setNotification({
+        code: "MISSING_METADATA",
+        message: "EXIF metadata is missing or incomplete.",
+        type: "Error",
+      });
+      return;
+    }
+
     try {
       setIsLoading(true);
 
-      if (!interestedReport) {
-        throw new CustomError(
-          "MISSING_REPORT",
-          "No report selected for resolution.",
-        );
-      }
-      if (!file || !coordinates) {
-        throw new CustomError("MISSING_FILE", "Image file is missing.");
-      }
       const coordsCopy = coordinates;
       const { _id } = interestedReport;
 
@@ -377,9 +400,7 @@ export default function ResolveReport(props: ListItemOptional) {
                 maxLength={100}
               ></textarea>
             </fieldset>
-            <button className="submit-report-resolution-btn" disabled={isReportLoading}>
-              Submit
-            </button>
+            <button className="submit-report-resolution-btn">Submit</button>
           </form>
         </div>
       )}

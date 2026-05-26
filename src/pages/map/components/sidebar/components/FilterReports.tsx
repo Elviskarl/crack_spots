@@ -136,6 +136,13 @@ export default function FilterReports() {
   }, [setReports, filterTheReports]);
 
   function handleDownload() {
+    if (isLoading) {
+      setNotification({
+        type: "Info",
+        message: "Fetching reports from the server. Please wait a moment.",
+      });
+      return;
+    }
     const anchorElement = document.createElement("a");
 
     try {
@@ -293,7 +300,6 @@ export default function FilterReports() {
         className="download-container"
         title="download"
         onClick={handleDownload}
-        disabled={isLoading}
       >
         <img src={downloadIcon} alt="Download" />
       </button>
