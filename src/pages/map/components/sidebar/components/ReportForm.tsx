@@ -151,11 +151,6 @@ export default function ReportForm() {
         formData,
       );
       if (!results.success) {
-        setNotification({
-          code: "SERVER_ERROR",
-          message: results.message || "Failed to upload report.",
-          type: "Error",
-        });
         throw new CustomError("SERVER_ERROR", results.message);
       } else {
         setNotification({
