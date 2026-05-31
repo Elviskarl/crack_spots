@@ -305,6 +305,7 @@ export default function ResolveReport(props: ListItemOptional) {
                     ref={fileInputRef}
                     onChange={handleFileChange}
                     accept="image/jpg, image/jpeg, image/webp, .png, .jpg, .jpeg"
+                    hidden
                   />
                   <div className="drop-area-container">
                     <span> Drag & Drop or </span>
