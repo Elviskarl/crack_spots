@@ -196,25 +196,28 @@ export default function ResolveReport(props: ListItemOptional) {
       return;
     }
 
+    setIsLoading(true);
     try {
-      setIsLoading(true);
-
       const coordsCopy = coordinates;
+      const fileCopy = file;
       const { _id } = interestedReport;
 
       const formData = new FormData(e.currentTarget);
       formData.append("coordinates", JSON.stringify(coordsCopy));
       formData.append("_id", _id);
+      formData.append("file", fileCopy);
 
       const results = await resolveIssues(
         "https://crackspots-server.onrender.com/api/v1/resolve",
         formData,
       );
 
-      setNotification({
-        type: "Success",
-        message: `Upload successful: ${results.message}.`,
-      });
+      if ("success" in results && results.success) {
+        setNotification({
+          type: "Success",
+          message: `Upload successful: ${results.message}.`,
+        });
+      }
       // Only clear on success
       resetPreview();
       setInterestedReport(null);

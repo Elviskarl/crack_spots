@@ -121,8 +121,6 @@ export default function ReportForm() {
       return;
     }
 
-    setIsLoading(true);
-
     if (!file) {
       setNotification({
         code: "MISSING_DATA",
@@ -140,19 +138,23 @@ export default function ReportForm() {
       });
       return;
     }
+
+    setIsLoading(true);
     try {
       const coordsCopy = coordinates;
+      const fileCopy = file;
 
       const formData = new FormData(e.currentTarget);
+
       formData.append("coordinates", JSON.stringify(coordsCopy));
+      formData.append("file", fileCopy);
+      console.log(formData);
 
       const results = await uploadReports(
         "https://crackspots-server.onrender.com/api/v1/reports",
         formData,
       );
-      if (!results.success) {
-        throw new CustomError("SERVER_ERROR", results.message);
-      } else {
+      if ("success" in results) {
         setNotification({
           type: "Success",
           message: `Upload successful: ${results.message}.`,
