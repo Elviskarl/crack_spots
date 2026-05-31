@@ -9,20 +9,21 @@ export default async function resolveIssues(url: string, data: FormData) {
     });
 
     const response = await fetch(request);
-    if (!response.ok) {
-      throw new FetchError(`Error resolving issue: ${response.statusText}`);
-    }
     const result = (await response.json()) as ResolveIssuesResponse;
-    if (result.success) {
-      return result;
+    if (!response.ok && "error" in result) {
+      throw new FetchError(result.error);
     }
-    throw new FetchError(result.message);
+
+    if ("success" in result && !result.success) {
+      throw new FetchError(result.message);
+    }
+    return result;
   } catch (error) {
-    if (error instanceof DOMException && error.name === "AbortError") {
-      throw new FetchError(
-        "Server took too long to respond. Please refresh the page.",
-      );
-    }
+    // if (error instanceof DOMException && error.name === "AbortError") {
+    //   throw new FetchError(
+    //     "Server took too long to respond. Please refresh the page.",
+    //   );
+    // }
     console.error(error);
     throw error;
   }

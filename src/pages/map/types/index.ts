@@ -121,6 +121,10 @@ interface serverResponse extends BaseResponse {
   message: string;
 }
 
+interface MissingFields {
+  error: string;
+}
+
 export type FetchBackendResponse = FetchSuccessResponse | FetchErrorResponse;
-export type ResolveIssuesResponse = resolveIssuesResponse;
-export type UploadResponse = serverResponse;
+export type ResolveIssuesResponse = resolveIssuesResponse | MissingFields;
+export type UploadResponse = serverResponse | MissingFields;

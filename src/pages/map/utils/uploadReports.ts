@@ -9,20 +9,22 @@ export async function uploadReports(param: string, data: FormData) {
     });
 
     const response = await fetch(request);
-    if (!response.ok) {
-      throw new FetchError(`Error uploading report: ${response.statusText}`);
-    }
+
     const result = (await response.json()) as UploadResponse;
-    if (result.success) {
-      return result;
+
+    if (!response.ok && "error" in result) {
+      throw new FetchError(result.error);
     }
-    throw new FetchError(result.message);
+    if ("success" in result && !result.success) {
+      throw new FetchError(result.message);
+    }
+    return result;
   } catch (error) {
-    if (error instanceof DOMException && error.name === "AbortError") {
-      throw new FetchError(
-        "Server took too long to respond. Please refresh the page.",
-      );
-    }
+    // if (error instanceof DOMException && error.name === "AbortError") {
+    //   throw new FetchError(
+    //     "Server took too long to respond. Please refresh the page.",
+    //   );
+    // }
     console.error("Error uploading report:", error);
     throw error;
   }
