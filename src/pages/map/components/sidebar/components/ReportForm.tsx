@@ -4,6 +4,8 @@ import {
   useEffect,
   type ChangeEvent,
   useContext,
+  type SubmitEvent,
+  type DragEvent,
 } from "react";
 import ReportPreview from "./ReportPreview";
 import { isInNairobi, readFile, validateFile } from "../../../utils/utils";
@@ -110,7 +112,7 @@ export default function ReportForm() {
     }
   }
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (isReportLoading) {
@@ -190,10 +192,10 @@ export default function ReportForm() {
       processImage(file);
     }
   }
-  function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
+  function handleDragOver(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
   }
-  function handleDrop(e: React.DragEvent<HTMLDivElement>) {
+  function handleDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
     if (e.dataTransfer) {
       const filesList = e.dataTransfer.files;

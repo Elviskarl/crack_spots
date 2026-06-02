@@ -12,6 +12,7 @@ import {
   useRef,
   useState,
   type ChangeEvent,
+  type DragEvent,
   type SubmitEvent,
 } from "react";
 import {
@@ -249,10 +250,10 @@ export default function ResolveReport(props: ListItemOptional) {
       processImage(file);
     }
   }
-  function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
+  function handleDragOver(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
   }
-  function handleDrop(e: React.DragEvent<HTMLDivElement>) {
+  function handleDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
     if (e.dataTransfer) {
       const filesList = e.dataTransfer.files;
