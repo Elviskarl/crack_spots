@@ -60,6 +60,13 @@ export default function useLocationGroups(issues: Issue[]) {
       }
     }
 
-    return groups;
+    return groups.map((group) => ({
+      ...group,
+      issues: [...group.issues].sort(
+        (a, b) =>
+          new Date(b.reports[0].createdAt).getTime() -
+          new Date(a.reports[0].createdAt).getTime(),
+      ),
+    }));
   }, [issues]);
 }
