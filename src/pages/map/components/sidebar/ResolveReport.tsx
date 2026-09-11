@@ -38,6 +38,7 @@ export default function ResolveReport(props: ListItemOptional) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const resolveReportsContainerRef = useRef<HTMLDivElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
+  const imagePreviewUrl = useRef<string | null>(null);
   const { nairobiSubCountyShapefile, setIsNotInNairobi } =
     useContext(MapContext)!;
   const { isLoading: isReportLoading } = useContext(ReportContext)!;
@@ -73,9 +74,22 @@ export default function ResolveReport(props: ListItemOptional) {
   }, [notification]);
 
   function resetPreview() {
+    if (imagePreviewUrl.current) {
+      URL.revokeObjectURL(imagePreviewUrl.current);
+      imagePreviewUrl.current = null;
+    }
     setFile(null);
     setImageUrl(null);
     setCoordinates(null);
+  }
+
+  function createPreview(file: File) {
+    if (imagePreviewUrl.current) {
+      URL.revokeObjectURL(imagePreviewUrl.current);
+    }
+    const url = URL.createObjectURL(file);
+    imagePreviewUrl.current = url;
+    setImageUrl(url);
   }
 
   async function processImage(param: File) {
@@ -109,12 +123,7 @@ export default function ResolveReport(props: ListItemOptional) {
       }
       setFile(param);
 
-      const url = URL.createObjectURL(param);
-      setCoordinates({
-        ...data,
-      });
-
-      setImageUrl(url);
+      createPreview(param);
 
       // Validate Resolution Location
       if (!interestedReport) {

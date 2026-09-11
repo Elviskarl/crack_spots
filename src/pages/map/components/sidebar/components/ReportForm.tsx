@@ -27,6 +27,7 @@ export default function ReportForm() {
     null,
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imagePreviewUrl = useRef<string | null>(null);
   const { nairobiSubCountyShapefile, setIsNotInNairobi } =
     useContext(MapContext)!;
 
@@ -41,9 +42,22 @@ export default function ReportForm() {
   }, [imageUrl]);
 
   function resetPreview() {
+    if (imagePreviewUrl.current) {
+      URL.revokeObjectURL(imagePreviewUrl.current);
+      imagePreviewUrl.current = null;
+    }
     setFile(null);
     setImageUrl(null);
     setCoordinates(null);
+  }
+
+  function createPreview(file: File) {
+    if (imagePreviewUrl.current) {
+      URL.revokeObjectURL(imagePreviewUrl.current);
+    }
+    const url = URL.createObjectURL(file);
+    imagePreviewUrl.current = url;
+    setImageUrl(url);
   }
 
   async function processImage(param: File) {
@@ -75,11 +89,10 @@ export default function ReportForm() {
       }
       setFile(param);
 
-      const url = URL.createObjectURL(param);
+      createPreview(param);
       setCoordinates({
         ...data,
       });
-      setImageUrl(url);
     } catch (err) {
       resetPreview();
       if (err instanceof CustomError) {
