@@ -1,7 +1,7 @@
 /* Element styles */
 aside.sidebar {
   /* max-width: 400px; */
-  width: 30%;
+  /* width: 30%; */
   display: flex;
   justify-content: center;
   height: calc(100vh - var(--navbar-height));
@@ -22,10 +22,10 @@ aside.sidebar {
   margin-top: 1rem;
   width: 95%;
 }
-aside.sidebar .sidebar-wrapper .notification {
+aside.sidebar > .sidebar-wrapper .notification {
   display: block;
 }
-aside.sidebar.closed .sidebar-wrapper .notification {
+aside.sidebar.closed > .sidebar-wrapper .notification {
   display: none;
 }
 .sidebar-toggle-image-container {
