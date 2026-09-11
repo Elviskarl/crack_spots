@@ -3,75 +3,20 @@ import {
   TileLayer,
   ZoomControl,
   LayersControl,
-  useMap,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 import "../../styles/map-container.css";
 import { ReportContext } from "../../../../context/createReportContext";
 import { ReportsContainer } from "./ReportsContainer";
 import { MapContext } from "../../../../context/createMapContext";
 import DisplayShapefile from "../sidebar/components/DisplayShapefile";
+import { FlyToReport, ResizeMap } from "../sidebar/components/LeafletHelpers";
 
 function LeafletMap() {
   const { reports, isLoading } = useContext(ReportContext)!;
-  const { selectedReport, markerRefs, setSelectedReport, isNotInNairobi } =
-    useContext(MapContext)!;
-
-  function FlyToReport() {
-    const map = useMap();
-
-    useEffect(() => {
-      if (!selectedReport) return;
-      // Only fly if lastFlownReport report is different from the last selectedReport
-      // if (lastFlownReport.current === selectedReport._id) return;
-
-      const marker = markerRefs.current[selectedReport.issueId];
-
-      map.closePopup();
-      // This is to fix a bug where Leaflet is trying to access an internal DOM element that does not exist anymore.
-
-      setTimeout(() => {
-        // Force Leaflet to recompute layout before flying
-        map.invalidateSize();
-
-        map.flyTo(
-          [
-            selectedReport.location.coordinates[1],
-            selectedReport.location.coordinates[0],
-          ],
-          19,
-          { duration: 3 },
-        );
-
-        map.once("moveend", () => {
-          marker?.openPopup();
-          // Mark as flown
-          // lastFlownReport.current = selectedReport._id;
-          setSelectedReport(null);
-        });
-      }, 500); // match sidebar transition
-    }, []);
-
-    return null;
-  }
-
-  function ResizeMap() {
-    const map = useMap();
-
-    useEffect(() => {
-      const container = map.getContainer();
-      const observer = new ResizeObserver(() => {
-        map.invalidateSize();
-      });
-      observer.observe(container);
-      return () => {
-        observer.disconnect();
-      };
-    }, [map]);
-    return null;
-  }
+  const { isNotInNairobi } = useContext(MapContext)!;
 
   return (
     <div className={`map-container ${isLoading && "pulse-animation"}`}>
