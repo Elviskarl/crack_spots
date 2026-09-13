@@ -73,7 +73,7 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
                   location: latestReport.location,
                   status: latestReport.status,
                   severity: latestReport.severity,
-                  type: "After",
+                  type: "After" as const,
                   issueId: issue.issueId,
                 },
                 ...issue.reports.map((report) => ({
