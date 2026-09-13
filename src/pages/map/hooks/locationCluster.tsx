@@ -15,7 +15,7 @@ type LocationGroup = {
 export default function useLocationGroups(issues: Issue[]) {
   return useMemo(() => {
     const groups: LocationGroup[] = [];
-    const RADIUS = 10;
+    const RADIUS = 20; // 20 meters
 
     for (const issue of issues) {
       const latest = issue.reports[0];
