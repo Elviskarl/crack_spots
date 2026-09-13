@@ -19,7 +19,7 @@ function LeafletMap() {
   const { isNotInNairobi } = useContext(MapContext)!;
 
   return (
-    <div className={`map-container ${isLoading && "pulse-animation"}`}>
+    <div className={`map-container ${isLoading ? "pulse-animation" : ""}`}>
       <MapContainer
         center={[-1.216013888888889, 36.90145277777778]}
         zoom={14}
@@ -39,13 +39,14 @@ function LeafletMap() {
               url="https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
               maxZoom={20}
               subdomains={["mt1", "mt2", "mt3"]}
+              attribution="Imagery © Google"
             />
           </LayersControl.BaseLayer>
         </LayersControl>
         <FlyToReport />
         <ResizeMap />
         {isNotInNairobi && <DisplayShapefile />}
-        {reports && reports.length > 0 && (
+        {reports.length > 0 && (
           <ReportsContainer reports={reports} />
         )}
       </MapContainer>
