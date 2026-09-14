@@ -1,3 +1,10 @@
+/* large Laptops - 1248 px and up */
+@media (min-width: 78rem) {
+  aside.sidebar {
+    width: 30%;
+  }
+}
+
 /* small to large Laptops - 1000 to 1248 px */
 @media (max-width: 78rem) {
   /* 1248 / 16 = 78 */
