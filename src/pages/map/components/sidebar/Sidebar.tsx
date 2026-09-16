@@ -29,6 +29,7 @@ export default function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
             Component={ReportForm}
             textContent="Upload"
             requiresLoading={false}
+            setCollapsed={setCollapsed}
           />
           <ListItems
             imageUrl={searchImageUrl}

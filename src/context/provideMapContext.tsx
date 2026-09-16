@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { MapContext } from "./createMapContext";
-import type { Report } from "../pages/map/types";
+import type { Report, ReportCoordinates } from "../pages/map/types";
 import type { FeatureCollection, MultiPolygon, Polygon } from "geojson";
 import { loadBoundary } from "../pages/map/utils/utils";
 
@@ -15,6 +15,11 @@ export function MapContextProvider({
   const nairobiSubCountyShapefile =
     useRef<FeatureCollection<Polygon | MultiPolygon>>(null);
   const [isNotInNairobi, setIsNotInNairobi] = useState(false);
+  const [initialReportCoordinates, setInitialReportCoordinates] =
+    useState<ReportCoordinates | null>(null);
+  const [correctedReportCoordinates, setCorrectedReportCoordinates] =
+    useState<ReportCoordinates | null>(null);
+  const [isCorrecting, setIsCorrecting] = useState(false);
 
   useEffect(() => {
     async function loadShapefile() {
@@ -39,6 +44,12 @@ export function MapContextProvider({
         markerRefs,
         lastFlownReport,
         nairobiSubCountyShapefile,
+        initialReportCoordinates,
+        setInitialReportCoordinates,
+        isCorrecting,
+        setIsCorrecting,
+        correctedReportCoordinates,
+        setCorrectedReportCoordinates,
       }}
     >
       {children}

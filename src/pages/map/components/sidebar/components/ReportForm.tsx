@@ -9,7 +9,11 @@ import {
 } from "react";
 import ReportPreview from "./ReportPreview";
 import { isInNairobi, readFile, validateFile } from "../../../utils/utils";
-import type { CoordinateData, NotificationType } from "../../../types";
+import type {
+  CoordinateData,
+  ListItemOptional,
+  NotificationType,
+} from "../../../types";
 import { uploadReports } from "../../../utils/uploadReports";
 import { CustomError } from "../../../../../components/error/CustomError";
 import { Notifications } from "./Notifications";
@@ -18,7 +22,7 @@ import LoadingScreen from "../../../../../components/LoadingScreen";
 import { MapContext } from "../../../../../context/createMapContext";
 import { ReportContext } from "../../../../../context/createReportContext";
 
-export default function ReportForm() {
+export default function ReportForm(props: ListItemOptional) {
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,10 +32,18 @@ export default function ReportForm() {
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imagePreviewUrl = useRef<string | null>(null);
-  const { nairobiSubCountyShapefile, setIsNotInNairobi } =
-    useContext(MapContext)!;
+  const {
+    nairobiSubCountyShapefile,
+    setIsNotInNairobi,
+    setInitialReportCoordinates,
+    correctedReportCoordinates,
+    setCorrectedReportCoordinates,
+    setIsCorrecting,
+  } = useContext(MapContext)!;
 
-  const { isLoading: isReportLoading } = useContext(ReportContext)!;
+  const { isLoading: isReportLoading, setNotification: setGlobalNotification } =
+    useContext(ReportContext)!;
+  const { setCollapsed } = props;
 
   useEffect(() => {
     if (!imageUrl) return;
@@ -49,6 +61,9 @@ export default function ReportForm() {
     setFile(null);
     setImageUrl(null);
     setCoordinates(null);
+    setInitialReportCoordinates(null);
+    setCorrectedReportCoordinates(null);
+    setIsCorrecting(false);
   }
 
   function createPreview(file: File) {
@@ -60,6 +75,23 @@ export default function ReportForm() {
     setImageUrl(url);
   }
 
+  function confirmCoordinates(coords: CoordinateData) {
+    if (setCollapsed) {
+      setTimeout(() => {
+        setCollapsed(true);
+        setGlobalNotification({
+          type: "Info",
+          message: "Please confirm the coordinates of the report.",
+        });
+        setIsCorrecting(true);
+      }, 1000);
+    }
+    setCoordinates(coords);
+    setInitialReportCoordinates({
+      lat: coords.GPSLatitude,
+      lng: coords.GPSLongitude,
+    });
+  }
   async function processImage(param: File) {
     setIsLoading(true);
     const start = Date.now();
@@ -90,9 +122,7 @@ export default function ReportForm() {
       setFile(param);
 
       createPreview(param);
-      setCoordinates({
-        ...data,
-      });
+      confirmCoordinates(data);
     } catch (err) {
       resetPreview();
       if (err instanceof CustomError) {
@@ -145,7 +175,7 @@ export default function ReportForm() {
       return;
     }
 
-    if (!coordinates) {
+    if (!reportCoordinates) {
       setNotification({
         code: "MISSING_METADATA",
         message: "EXIF metadata is missing or incomplete.",
@@ -156,7 +186,7 @@ export default function ReportForm() {
 
     setIsLoading(true);
     try {
-      const coordsCopy = coordinates;
+      const coordsCopy = reportCoordinates;
       const fileCopy = file;
 
       const formData = new FormData(e.currentTarget);
@@ -220,6 +250,17 @@ export default function ReportForm() {
   function clearForm() {
     resetPreview();
   }
+
+  const reportCoordinates =
+    correctedReportCoordinates && coordinates
+      ? {
+          DateTimeOriginal: coordinates.DateTimeOriginal,
+          GPSLatitudeRef: coordinates.GPSLatitudeRef,
+          GPSLongitudeRef: coordinates.GPSLongitudeRef,
+          GPSLatitude: correctedReportCoordinates.lat,
+          GPSLongitude: correctedReportCoordinates.lng,
+        }
+      : coordinates;
   return (
     <>
       <div className="form-container report-upload-form">
@@ -262,8 +303,11 @@ export default function ReportForm() {
           ) : (
             file &&
             imageUrl &&
-            coordinates && (
-              <ReportPreview url={imageUrl} coordinateData={coordinates} />
+            reportCoordinates && (
+              <ReportPreview
+                url={imageUrl}
+                coordinateData={reportCoordinates}
+              />
             )
           )}
           <button className="submit-button" type="submit">

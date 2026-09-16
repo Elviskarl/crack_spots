@@ -5,3 +5,17 @@ section.map-section-container > div.notification {
   z-index: 1500;
   width: 80%;
 }
+button.confirm-correction {
+  position: absolute;
+  bottom: 5rem;
+  left: 50%;
+  z-index: 500;
+  transform: translateX(-50%);
+  font-size: var(--text-paragraph);
+  background-color: limegreen;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}

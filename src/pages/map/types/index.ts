@@ -125,6 +125,11 @@ interface MissingFields {
   error: string;
 }
 
+export interface ReportCoordinates {
+  lat: number;
+  lng: number;
+}
+
 export type FetchBackendResponse = FetchSuccessResponse | FetchErrorResponse;
 export type ResolveIssuesResponse = resolveIssuesResponse | MissingFields;
 export type UploadResponse = serverResponse | MissingFields;
