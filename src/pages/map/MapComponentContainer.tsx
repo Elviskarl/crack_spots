@@ -4,16 +4,30 @@ import { ReportContext } from "../../context/createReportContext";
 import Sidebar from "./components/sidebar/Sidebar";
 import LeafletMap from "./components/leaflet-map/LeafletMap";
 import "./styles/mapComponentContainer.css";
+import { MapContext } from "../../context/createMapContext";
 
 export default function MapComponentContainer() {
   const [collapsed, setCollapsed] = useState(false);
   const { notification, setNotification } = useContext(ReportContext)!;
+  const { isCorrecting, setIsCorrecting } = useContext(MapContext)!;
+
+  function handleClick(/*e: MouseEvent<HTMLButtonElement>*/) {
+    setIsCorrecting(false);
+    setCollapsed(false);
+  }
   return (
     <section className="map-section-container">
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
       <>
         <LeafletMap />
       </>
+      {isCorrecting ? (
+        <button className="confirm-correction" onClick={handleClick}>
+          confirm
+        </button>
+      ) : (
+        ""
+      )}
       {notification && (
         <Notifications
           message={notification?.message}
