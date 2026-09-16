@@ -40,7 +40,7 @@ export default function ReportPreview(props: Params) {
                       ? "West"
                       : null}
                 </td>
-                <td className="table-gps-lng">{GPSLongitude.toFixed(4)}</td>
+                <td className="table-gps-lng">{GPSLongitude.toFixed(5)}</td>
               </tr>
               <tr>
                 <td>GPS Latitude</td>
@@ -51,7 +51,7 @@ export default function ReportPreview(props: Params) {
                       ? "South"
                       : null}
                 </td>
-                <td className="table-gps-lat">{GPSLatitude.toFixed(4)}</td>
+                <td className="table-gps-lat">{GPSLatitude.toFixed(5)}</td>
               </tr>
             </tbody>
             <tfoot>
