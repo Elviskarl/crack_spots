@@ -32,10 +32,18 @@ export default function ReportForm(props: ListItemOptional) {
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imagePreviewUrl = useRef<string | null>(null);
-  const { nairobiSubCountyShapefile, setIsNotInNairobi } =
-    useContext(MapContext)!;
+  const {
+    nairobiSubCountyShapefile,
+    setIsNotInNairobi,
+    setInitialReportCoordinates,
+    correctedReportCoordinates,
+    setCorrectedReportCoordinates,
+    setIsCorrecting,
+  } = useContext(MapContext)!;
 
-  const { isLoading: isReportLoading } = useContext(ReportContext)!;
+  const { isLoading: isReportLoading, setNotification: setGlobalNotification } =
+    useContext(ReportContext)!;
+  const { setCollapsed } = props;
 
   useEffect(() => {
     if (!imageUrl) return;
@@ -53,6 +61,9 @@ export default function ReportForm(props: ListItemOptional) {
     setFile(null);
     setImageUrl(null);
     setCoordinates(null);
+    setInitialReportCoordinates(null);
+    setCorrectedReportCoordinates(null);
+    setIsCorrecting(false);
   }
 
   function createPreview(file: File) {
@@ -64,6 +75,23 @@ export default function ReportForm(props: ListItemOptional) {
     setImageUrl(url);
   }
 
+  function confirmCoordinates(coords: CoordinateData) {
+    if (setCollapsed) {
+      setTimeout(() => {
+        setCollapsed(true);
+        setGlobalNotification({
+          type: "Info",
+          message: "Please confirm the coordinates of the report.",
+        });
+        setIsCorrecting(true);
+      }, 1000);
+    }
+    setCoordinates(coords);
+    setInitialReportCoordinates({
+      lat: coords.GPSLatitude,
+      lng: coords.GPSLongitude,
+    });
+  }
   async function processImage(param: File) {
     setIsLoading(true);
     const start = Date.now();
@@ -94,9 +122,7 @@ export default function ReportForm(props: ListItemOptional) {
       setFile(param);
 
       createPreview(param);
-      setCoordinates({
-        ...data,
-      });
+      confirmCoordinates(data);
     } catch (err) {
       resetPreview();
       if (err instanceof CustomError) {

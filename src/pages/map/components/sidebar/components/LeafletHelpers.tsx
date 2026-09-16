@@ -57,3 +57,25 @@ export function ResizeMap() {
   }, [map]);
   return null;
 }
+
+export function FlyToCoordinates() {
+  const map = useMap();
+  const { initialReportCoordinates } = useContext(MapContext)!;
+
+  useEffect(() => {
+    if (!initialReportCoordinates) return;
+
+    setTimeout(() => {
+      // Force Leaflet to recompute layout before flying
+      map.invalidateSize();
+
+      map.flyTo(
+        [initialReportCoordinates.lat, initialReportCoordinates.lng],
+        19,
+        { duration: 3 },
+      );
+    }, 500); // match sidebar transition
+  }, [map, initialReportCoordinates]);
+
+  return null;
+}
