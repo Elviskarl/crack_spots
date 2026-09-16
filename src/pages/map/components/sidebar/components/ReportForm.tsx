@@ -9,7 +9,11 @@ import {
 } from "react";
 import ReportPreview from "./ReportPreview";
 import { isInNairobi, readFile, validateFile } from "../../../utils/utils";
-import type { CoordinateData, NotificationType } from "../../../types";
+import type {
+  CoordinateData,
+  ListItemOptional,
+  NotificationType,
+} from "../../../types";
 import { uploadReports } from "../../../utils/uploadReports";
 import { CustomError } from "../../../../../components/error/CustomError";
 import { Notifications } from "./Notifications";
@@ -18,7 +22,7 @@ import LoadingScreen from "../../../../../components/LoadingScreen";
 import { MapContext } from "../../../../../context/createMapContext";
 import { ReportContext } from "../../../../../context/createReportContext";
 
-export default function ReportForm() {
+export default function ReportForm(props: ListItemOptional) {
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
