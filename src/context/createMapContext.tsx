@@ -4,7 +4,7 @@ import {
   type RefObject,
   type SetStateAction,
 } from "react";
-import type { Report } from "../pages/map/types";
+import type { Report, ReportCoordinates } from "../pages/map/types";
 import type { FeatureCollection, MultiPolygon, Polygon } from "geojson";
 
 interface MapContextType {
@@ -17,6 +17,16 @@ interface MapContextType {
   > | null>;
   isNotInNairobi: boolean;
   setIsNotInNairobi: Dispatch<SetStateAction<boolean>>;
+  initialReportCoordinates: ReportCoordinates | null;
+  setInitialReportCoordinates: Dispatch<
+    SetStateAction<ReportCoordinates | null>
+  >;
+  isCorrecting: boolean;
+  setIsCorrecting: Dispatch<SetStateAction<boolean>>;
+  correctedReportCoordinates: ReportCoordinates | null;
+  setCorrectedReportCoordinates: Dispatch<
+    SetStateAction<ReportCoordinates | null>
+  >;
 }
 
 export const MapContext = createContext<MapContextType | null>(null);
