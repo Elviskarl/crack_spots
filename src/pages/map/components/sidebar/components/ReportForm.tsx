@@ -175,7 +175,7 @@ export default function ReportForm(props: ListItemOptional) {
       return;
     }
 
-    if (!coordinates) {
+    if (!reportCoordinates) {
       setNotification({
         code: "MISSING_METADATA",
         message: "EXIF metadata is missing or incomplete.",
@@ -186,7 +186,7 @@ export default function ReportForm(props: ListItemOptional) {
 
     setIsLoading(true);
     try {
-      const coordsCopy = coordinates;
+      const coordsCopy = reportCoordinates;
       const fileCopy = file;
 
       const formData = new FormData(e.currentTarget);
@@ -250,6 +250,17 @@ export default function ReportForm(props: ListItemOptional) {
   function clearForm() {
     resetPreview();
   }
+
+  const reportCoordinates =
+    correctedReportCoordinates && coordinates
+      ? {
+          DateTimeOriginal: coordinates.DateTimeOriginal,
+          GPSLatitudeRef: coordinates.GPSLatitudeRef,
+          GPSLongitudeRef: coordinates.GPSLongitudeRef,
+          GPSLatitude: correctedReportCoordinates.lat,
+          GPSLongitude: correctedReportCoordinates.lng,
+        }
+      : coordinates;
   return (
     <>
       <div className="form-container report-upload-form">
@@ -292,8 +303,11 @@ export default function ReportForm(props: ListItemOptional) {
           ) : (
             file &&
             imageUrl &&
-            coordinates && (
-              <ReportPreview url={imageUrl} coordinateData={coordinates} />
+            reportCoordinates && (
+              <ReportPreview
+                url={imageUrl}
+                coordinateData={reportCoordinates}
+              />
             )
           )}
           <button className="submit-button" type="submit">
