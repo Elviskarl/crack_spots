@@ -84,7 +84,7 @@ export default function ReportForm(props: ListItemOptional) {
         setCollapsed(true);
         setGlobalNotification({
           type: "Info",
-          message: "Please confirm the coordinates of the report.",
+          message: "Move the marker and confirm the coordinates of the report.",
         });
       }, 1000);
     }
