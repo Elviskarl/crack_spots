@@ -306,7 +306,11 @@ export default function ReportForm(props: ListItemOptional) {
               />
             )
           )}
-          <button className="submit-button" type="submit">
+          <button
+            className="submit-button"
+            type="submit"
+            disabled={isCorrecting}
+          >
             submit
           </button>
         </form>

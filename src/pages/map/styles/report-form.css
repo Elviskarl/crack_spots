@@ -54,3 +54,11 @@ form.report-form .loading-screen {
   position: relative;
   margin: auto;
 }
+.submit-button:disabled {
+  background-color: #e0e0e0; /* Faded grey background */
+  color: #a0a0a0; /* Faded text color */
+}
+button:disabled {
+  cursor: not-allowed; /* Changes mouse pointer to a red block circle */
+  transform: none; /* Prevents any click shrinkage */
+}

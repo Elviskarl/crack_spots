@@ -63,10 +63,8 @@ aside.sidebar.closed .sidebar-wrapper {
   align-self: center;
   border: none;
   border-radius: 8px;
-  padding: 1rem;
   background-color: crimson;
   color: var(--white-color);
-  overflow-x: auto;
 }
 .clear-form-container button {
   color: unset;
@@ -74,7 +72,7 @@ aside.sidebar.closed .sidebar-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.1rem;
+  padding: 1rem;
   width: 100%;
   text-transform: capitalize;
 }

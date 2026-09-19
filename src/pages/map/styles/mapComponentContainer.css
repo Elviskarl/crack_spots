@@ -1,7 +1,7 @@
 section.map-section-container > div.notification {
   position: absolute;
   right: 2rem;
-  bottom: 4rem;
+  bottom: 10rem;
   z-index: 1500;
   width: 80%;
 }
