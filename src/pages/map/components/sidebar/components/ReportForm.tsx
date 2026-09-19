@@ -30,6 +30,7 @@ export default function ReportForm(props: ListItemOptional) {
   const [notification, setNotification] = useState<NotificationType | null>(
     null,
   );
+  const [isResponseLoading, setIsResponseLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imagePreviewUrl = useRef<string | null>(null);
   const {
@@ -39,6 +40,7 @@ export default function ReportForm(props: ListItemOptional) {
     correctedReportCoordinates,
     setCorrectedReportCoordinates,
     setIsCorrecting,
+    isCorrecting,
   } = useContext(MapContext)!;
 
   const { isLoading: isReportLoading, setNotification: setGlobalNotification } =
@@ -64,6 +66,7 @@ export default function ReportForm(props: ListItemOptional) {
     setInitialReportCoordinates(null);
     setCorrectedReportCoordinates(null);
     setIsCorrecting(false);
+    setIsLoading(false);
   }
 
   function createPreview(file: File) {
@@ -83,7 +86,6 @@ export default function ReportForm(props: ListItemOptional) {
           type: "Info",
           message: "Please confirm the coordinates of the report.",
         });
-        setIsCorrecting(true);
       }, 1000);
     }
     setCoordinates(coords);
@@ -94,7 +96,7 @@ export default function ReportForm(props: ListItemOptional) {
   }
   async function processImage(param: File) {
     setIsLoading(true);
-    const start = Date.now();
+    // const start = Date.now();
     try {
       const { fileType, isValid } = validateFile(param);
       if (!isValid) {
@@ -145,13 +147,6 @@ export default function ReportForm(props: ListItemOptional) {
         });
         console.error(err);
       }
-    } finally {
-      const elapsed = Date.now() - start;
-      const remaining = Math.max(0, 500 - elapsed);
-
-      setTimeout(() => {
-        setIsLoading(false);
-      }, remaining);
     }
   }
 
@@ -184,7 +179,7 @@ export default function ReportForm(props: ListItemOptional) {
       return;
     }
 
-    setIsLoading(true);
+    setIsResponseLoading(true);
     try {
       const coordsCopy = reportCoordinates;
       const fileCopy = file;
@@ -222,7 +217,7 @@ export default function ReportForm(props: ListItemOptional) {
     } finally {
       // Only clear on success
       resetPreview();
-      setIsLoading(false);
+      setIsResponseLoading(false);
     }
   }
 
@@ -300,11 +295,12 @@ export default function ReportForm(props: ListItemOptional) {
           )}
           <LoadingScreen category="image" condition={isLoading} />
           {file && imageUrl && reportCoordinates && (
-              <ReportPreview
-                url={imageUrl}
-                coordinateData={reportCoordinates}
-              />
-            )
+            <ReportPreview
+              url={imageUrl}
+              coordinateData={reportCoordinates}
+              setCollapsed={setCollapsed}
+              setIsLoading={setIsLoading}
+            />
           )}
           <button
             className="submit-button"
@@ -316,12 +312,11 @@ export default function ReportForm(props: ListItemOptional) {
         </form>
         <LoadingScreen category="notification" condition={isResponseLoading} />
         {notification && (
-            <Notifications
-              message={notification.message}
-              func={setNotification}
-              type={notification.type}
-            />
-          )
+          <Notifications
+            message={notification.message}
+            func={setNotification}
+            type={notification.type}
+          />
         )}
       </div>
     </>
