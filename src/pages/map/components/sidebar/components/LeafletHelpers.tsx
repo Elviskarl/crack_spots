@@ -1,5 +1,7 @@
 import { useContext, useEffect } from "react";
-import { useMap } from "react-leaflet";
+import * as L from "leaflet";
+import * as turf from "@turf/turf";
+import { Circle, Marker, useMap } from "react-leaflet";
 import { MapContext } from "../../../../../context/createMapContext";
 
 export function FlyToReport() {
@@ -60,22 +62,93 @@ export function ResizeMap() {
 
 export function FlyToCoordinates() {
   const map = useMap();
-  const { initialReportCoordinates } = useContext(MapContext)!;
+  const { initialReportCoordinates, isCorrecting } = useContext(MapContext)!;
 
   useEffect(() => {
     if (!initialReportCoordinates) return;
-
-    setTimeout(() => {
-      // Force Leaflet to recompute layout before flying
-      map.invalidateSize();
-
+    if (isCorrecting) {
+      map.setView(
+        [initialReportCoordinates.lat, initialReportCoordinates.lng],
+        19,
+      );
+    } else {
       map.flyTo(
         [initialReportCoordinates.lat, initialReportCoordinates.lng],
         19,
         { duration: 3 },
       );
-    }, 500); // match sidebar transition
-  }, [map, initialReportCoordinates]);
+    }
+  }, [map, initialReportCoordinates, isCorrecting]);
 
   return null;
+}
+export function MapCorrection() {
+  const {
+    initialReportCoordinates,
+    correctedReportCoordinates,
+    setCorrectedReportCoordinates,
+  } = useContext(MapContext)!;
+  function enforceBounds(e: L.LeafletEvent) {
+    if (!initialReportCoordinates) return;
+
+    const marker = e.target;
+    const originalPosition = L.latLng(
+      initialReportCoordinates.lat,
+      initialReportCoordinates.lng,
+    );
+    const newPosition = marker.getLatLng();
+
+    const distance = originalPosition.distanceTo(newPosition);
+
+    if (distance > 30) {
+      const direction = turf.bearing(
+        [originalPosition.lng, originalPosition.lat],
+        [newPosition.lng, newPosition.lat],
+      );
+      const boundaryPoint = turf.destination(
+        [originalPosition.lng, originalPosition.lat],
+        30,
+        direction,
+        { units: "meters" },
+      );
+      const boundaryLatLng = L.latLng(
+        boundaryPoint.geometry.coordinates[1],
+        boundaryPoint.geometry.coordinates[0],
+      );
+      marker.setLatLng(boundaryLatLng);
+    }
+  }
+  if (!initialReportCoordinates) return null;
+  return (
+    <>
+      <Circle
+        center={[initialReportCoordinates.lat, initialReportCoordinates.lng]}
+        radius={30}
+        pathOptions={{
+          fillOpacity: 0.15,
+          weight: 2,
+        }}
+      />
+      <Marker
+        position={
+          correctedReportCoordinates
+            ? [correctedReportCoordinates.lat, correctedReportCoordinates.lng]
+            : [initialReportCoordinates.lat, initialReportCoordinates.lng]
+        }
+        draggable
+        eventHandlers={{
+          dragstart: (e) => {
+            e.target.setOpacity(0.7);
+          },
+          drag: enforceBounds,
+          dragend: (e) => {
+            const { lat, lng } = e.target.getLatLng();
+            e.target.setOpacity(1);
+            setCorrectedReportCoordinates({ lat, lng });
+          },
+        }}
+        zIndexOffset={40}
+      />
+    </>
+  );
 }
