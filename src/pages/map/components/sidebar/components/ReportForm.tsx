@@ -298,12 +298,8 @@ export default function ReportForm(props: ListItemOptional) {
               </div>
             </div>
           )}
-          {isLoading ? (
-            <LoadingScreen category="image" />
-          ) : (
-            file &&
-            imageUrl &&
-            reportCoordinates && (
+          <LoadingScreen category="image" condition={isLoading} />
+          {file && imageUrl && reportCoordinates && (
               <ReportPreview
                 url={imageUrl}
                 coordinateData={reportCoordinates}
@@ -314,10 +310,8 @@ export default function ReportForm(props: ListItemOptional) {
             submit
           </button>
         </form>
-        {isLoading ? (
-          <LoadingScreen category="notification" />
-        ) : (
-          notification && (
+        <LoadingScreen category="notification" condition={isResponseLoading} />
+        {notification && (
             <Notifications
               message={notification.message}
               func={setNotification}

@@ -1,8 +1,9 @@
 import upArrowUrl from "../../../../../assets/up_arrow.png";
-import { useState /*type MouseEvent*/ } from "react";
+import { useContext, useState /*type MouseEvent*/ } from "react";
 import type { ListItemsProps } from "../../../types";
 import "../../../styles/listItems.css";
 import LoadingScreen from "../../../../../components/LoadingScreen";
+import { ReportContext } from "../../../../../context/createReportContext";
 
 export function ListItems(props: ListItemsProps) {
   const [isOpen, setIsOpen] = useState(true);
@@ -14,6 +15,7 @@ export function ListItems(props: ListItemsProps) {
     collapsed,
     setCollapsed,
   } = props;
+  const { isLoading } = useContext(ReportContext)!;
   function toggleList(/*e: MouseEvent<HTMLButtonElement>*/) {
     setIsOpen((prevVal) => !prevVal);
   }
@@ -31,7 +33,7 @@ export function ListItems(props: ListItemsProps) {
         </div>
         {requiresLoading ? (
           !collapsed ? (
-            <LoadingScreen category="notification" />
+            <LoadingScreen category="notification" condition={isLoading} />
           ) : null
         ) : null}
         <button
