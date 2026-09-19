@@ -1,9 +1,14 @@
 import type { CoordinateData } from "../../../types/index";
 import "../../../styles/report-preview.css";
+import editImageUrl from "../../../../../assets/edit.svg";
+import { useContext, type Dispatch, type SetStateAction } from "react";
+import { MapContext } from "../../../../../context/createMapContext";
 
 interface Params {
   url: string;
   coordinateData: CoordinateData;
+  setCollapsed: Dispatch<SetStateAction<boolean>> | undefined;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
 }
 export default function ReportPreview(props: Params) {
   const {
@@ -13,11 +18,32 @@ export default function ReportPreview(props: Params) {
     GPSLongitude,
     GPSLongitudeRef,
   } = props.coordinateData;
+  const { setCollapsed, setIsLoading } = props;
   const dateTaken = DateTimeOriginal.split(" ");
+
+  const { setInitialReportCoordinates, setIsCorrecting, isCorrecting } =
+    useContext(MapContext)!;
+
+  if (!setInitialReportCoordinates) return;
+
+  function handleClick() {
+    if (!setCollapsed) return;
+    setInitialReportCoordinates({ lat: GPSLatitude, lng: GPSLongitude });
+    setIsCorrecting(true);
+    setCollapsed(true);
+  }
   return (
     <>
       <div className="image-preview-container">
-        <img src={props.url} alt="Road Damage" className="preview-image" />
+        <img
+          src={props.url}
+          alt="Road Damage"
+          className="preview-image"
+          onLoad={() => setIsLoading(false)}
+          onError={() => {
+            setIsLoading(false);
+          }}
+        />
       </div>
       <div className="image-details-container">
         <div className="table-container">
@@ -63,6 +89,14 @@ export default function ReportPreview(props: Params) {
               </tr>
             </tfoot>
           </table>
+          <button
+            className="image-container edit-image-container"
+            title="edit"
+            onClick={handleClick}
+            disabled={isCorrecting}
+          >
+            <img src={editImageUrl} alt="edit" className="edit-img" />
+          </button>
         </div>
 
         <fieldset>

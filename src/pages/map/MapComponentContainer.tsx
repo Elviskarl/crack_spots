@@ -9,11 +9,16 @@ import { MapContext } from "../../context/createMapContext";
 export default function MapComponentContainer() {
   const [collapsed, setCollapsed] = useState(false);
   const { notification, setNotification } = useContext(ReportContext)!;
-  const { isCorrecting, setIsCorrecting } = useContext(MapContext)!;
+  const {
+    setIsCorrecting,
+    setInitialReportCoordinates,
+    initialReportCoordinates,
+  } = useContext(MapContext)!;
 
   function handleClick(/*e: MouseEvent<HTMLButtonElement>*/) {
     setIsCorrecting(false);
     setCollapsed(false);
+    setInitialReportCoordinates(null);
   }
   return (
     <section className="map-section-container">
@@ -21,7 +26,7 @@ export default function MapComponentContainer() {
       <>
         <LeafletMap />
       </>
-      {isCorrecting ? (
+      {initialReportCoordinates ? (
         <button className="confirm-correction" onClick={handleClick}>
           confirm
         </button>
@@ -35,7 +40,6 @@ export default function MapComponentContainer() {
           type={notification.type}
         />
       )}
-      {/* <Notifications message="Hello there" type="Info" func={setNotification} /> */}
     </section>
   );
 }
