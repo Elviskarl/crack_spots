@@ -84,7 +84,7 @@ export default function ReportForm(props: ListItemOptional) {
         setCollapsed(true);
         setGlobalNotification({
           type: "Info",
-          message: "Move the marker and confirm the coordinates of the report.",
+          message: "Drag the marker and confirm the coordinates of the report.",
         });
       }, 1000);
     }
@@ -188,7 +188,6 @@ export default function ReportForm(props: ListItemOptional) {
 
       formData.append("coordinates", JSON.stringify(coordsCopy));
       formData.append("file", fileCopy);
-      console.log(formData);
 
       const results = await uploadReports(
         "https://crackspots-server.onrender.com/api/v1/reports",
@@ -226,7 +225,6 @@ export default function ReportForm(props: ListItemOptional) {
     if (!files) return;
     if (files.length > 0) {
       const file = files[0];
-      setIsLoading(true);
       processImage(file);
     }
   }
@@ -238,7 +236,6 @@ export default function ReportForm(props: ListItemOptional) {
     if (e.dataTransfer) {
       const filesList = e.dataTransfer.files;
       const file = Array.from(filesList)[0];
-      setIsLoading(true);
       processImage(file);
     }
   }
