@@ -310,7 +310,7 @@ export default function ReportForm(props: ListItemOptional) {
             submit
           </button>
         </form>
-        <LoadingScreen category="notification" condition={isResponseLoading} />
+        <LoadingScreen category="report" condition={isResponseLoading} />
         {notification && (
           <Notifications
             message={notification.message}

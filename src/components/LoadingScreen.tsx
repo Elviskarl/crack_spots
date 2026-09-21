@@ -1,5 +1,5 @@
 import "./styles/loading.css";
-import { ClipLoader, ScaleLoader } from "react-spinners";
+import { ClipLoader, PropagateLoader, ScaleLoader } from "react-spinners";
 
 interface LoadingScreenProp {
   category: "report" | "image" | "notification";
@@ -26,7 +26,11 @@ export default function LoadingScreen({
           color="var(--tertiary-shade)"
         />
       ) : (
-        ""
+        <PropagateLoader
+          loading={condition}
+          aria-label="Loading Spinner"
+          color="#32cd32"
+        />
       )}
     </div>
   );

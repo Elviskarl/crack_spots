@@ -418,10 +418,8 @@ export default function ResolveReport(props: ListItemOptional) {
           </form>
         </div>
       )}
-      {isLoading ? (
-        <LoadingScreen category="notification" />
-      ) : (
-        notification && (
+      <LoadingScreen category="report" condition={isResponseLoading} />
+      {notification && (
           <div className="notifications-scroll-container" ref={notificationRef}>
             <Notifications
               message={notification.message}
