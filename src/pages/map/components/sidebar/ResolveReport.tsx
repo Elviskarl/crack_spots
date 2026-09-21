@@ -27,6 +27,7 @@ import LoadingScreen from "../../../../components/LoadingScreen";
 import { Notifications } from "./components/Notifications";
 import resolveIssues from "../../utils/resolveIssues";
 import { ReportContext } from "../../../../context/createReportContext";
+import ReportPreview from "./components/ReportPreview";
 
 export default function ResolveReport(props: ListItemOptional) {
   const isResolving = true;
@@ -35,16 +36,22 @@ export default function ResolveReport(props: ListItemOptional) {
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [coordinates, setCoordinates] = useState<CoordinateData | null>(null);
+  const [isResponseLoading, setIsResponseLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const resolveReportsContainerRef = useRef<HTMLDivElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
   const imagePreviewUrl = useRef<string | null>(null);
-  const { nairobiSubCountyShapefile, setIsNotInNairobi } =
-    useContext(MapContext)!;
-  const { isLoading: isReportLoading } = useContext(ReportContext)!;
+  const {
+    nairobiSubCountyShapefile,
+    setIsNotInNairobi,
+    setInitialReportCoordinates,
+  } = useContext(MapContext)!;
+  const { isLoading: isReportLoading, setNotification: setGlobalNotification } =
+    useContext(ReportContext)!;
   const [notification, setNotification] = useState<NotificationType | null>(
     null,
   );
+  const { setCollapsed } = props;
   useEffect(() => {
     if (!imageUrl) return;
 
@@ -81,6 +88,7 @@ export default function ResolveReport(props: ListItemOptional) {
     setFile(null);
     setImageUrl(null);
     setCoordinates(null);
+    setIsLoading(false);
   }
 
   function createPreview(file: File) {
@@ -92,9 +100,25 @@ export default function ResolveReport(props: ListItemOptional) {
     setImageUrl(url);
   }
 
+  function confirmCoordinates(coords: CoordinateData) {
+    if (setCollapsed) {
+      setTimeout(() => {
+        setCollapsed(true);
+        setGlobalNotification({
+          type: "Info",
+          message: "Drag the marker and confirm the coordinates of the report.",
+        });
+      }, 1000);
+    }
+    setCoordinates(coords);
+    setInitialReportCoordinates({
+      lat: coords.GPSLatitude,
+      lng: coords.GPSLongitude,
+    });
+  }
+
   async function processImage(param: File) {
     setIsLoading(true);
-    const start = Date.now();
     try {
       const { fileType, isValid } = validateFile(param);
       if (!isValid) {
@@ -139,6 +163,7 @@ export default function ResolveReport(props: ListItemOptional) {
         },
         { ...data },
       );
+      confirmCoordinates(data);
     } catch (err) {
       resetPreview();
       if (err instanceof CustomError) {
@@ -161,14 +186,10 @@ export default function ResolveReport(props: ListItemOptional) {
         });
         console.error(err);
       }
-    } finally {
-      const elapsed = Date.now() - start;
-      const remaining = Math.max(0, 500 - elapsed);
-
-      setTimeout(() => {
-        setIsLoading(false);
-      }, remaining);
     }
+    //  finally {
+    //   setIsLoading(false);
+    // }
   }
 
   async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
@@ -206,7 +227,7 @@ export default function ResolveReport(props: ListItemOptional) {
       return;
     }
 
-    setIsLoading(true);
+    setIsResponseLoading(true);
     try {
       const coordsCopy = coordinates;
       const fileCopy = file;
@@ -246,7 +267,7 @@ export default function ResolveReport(props: ListItemOptional) {
         });
       }
     } finally {
-      setIsLoading(false);
+      setIsResponseLoading(false);
     }
   }
 
@@ -255,7 +276,6 @@ export default function ResolveReport(props: ListItemOptional) {
     if (!files) return;
     if (files.length > 0) {
       const file = files[0];
-      setIsLoading(true);
       processImage(file);
     }
   }
@@ -268,7 +288,6 @@ export default function ResolveReport(props: ListItemOptional) {
       const filesList = e.dataTransfer.files;
       if (!filesList.length) return;
       const file = Array.from(filesList)[0];
-      setIsLoading(true);
       processImage(file);
     }
   }
@@ -349,7 +368,6 @@ export default function ResolveReport(props: ListItemOptional) {
                 id="repair-quality-input"
                 defaultValue={""}
                 required
-                onChange={(e) => console.log(e.target.value)}
               >
                 <option value="" disabled>
                   --Please choose an option--
@@ -376,14 +394,13 @@ export default function ResolveReport(props: ListItemOptional) {
       )}
       <LoadingScreen category="report" condition={isResponseLoading} />
       {notification && (
-          <div className="notifications-scroll-container" ref={notificationRef}>
-            <Notifications
-              message={notification.message}
-              func={setNotification}
-              type={notification.type}
-            />
-          </div>
-        )
+        <div className="notifications-scroll-container" ref={notificationRef}>
+          <Notifications
+            message={notification.message}
+            func={setNotification}
+            type={notification.type}
+          />
+        </div>
       )}
     </div>
   );
