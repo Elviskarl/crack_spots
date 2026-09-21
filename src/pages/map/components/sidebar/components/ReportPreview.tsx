@@ -9,6 +9,7 @@ interface Params {
   coordinateData: CoordinateData;
   setCollapsed: Dispatch<SetStateAction<boolean>> | undefined;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
+  resolving: boolean;
 }
 export default function ReportPreview(props: Params) {
   const {
@@ -18,7 +19,7 @@ export default function ReportPreview(props: Params) {
     GPSLongitude,
     GPSLongitudeRef,
   } = props.coordinateData;
-  const { setCollapsed, setIsLoading } = props;
+  const { setCollapsed, setIsLoading, resolving } = props;
   const dateTaken = DateTimeOriginal.split(" ");
 
   const { setInitialReportCoordinates, setIsCorrecting, isCorrecting } =
@@ -99,39 +100,43 @@ export default function ReportPreview(props: Params) {
           </button>
         </div>
 
-        <fieldset>
-          <legend>Severity: </legend>
-          <label>
-            <input
-              type="radio"
-              name="severity"
-              className="damage-severity"
-              value="low"
-              required
-            />
-            Minor
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="severity"
-              className="damage-severity"
-              value="medium"
-              required
-            />
-            Moderate
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="severity"
-              className="damage-severity"
-              value="high"
-              required
-            />
-            Extensive
-          </label>
-        </fieldset>
+        {resolving ? (
+          ""
+        ) : (
+          <fieldset>
+            <legend>Severity: </legend>
+            <label>
+              <input
+                type="radio"
+                name="severity"
+                className="damage-severity"
+                value="low"
+                required
+              />
+              Minor
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="severity"
+                className="damage-severity"
+                value="medium"
+                required
+              />
+              Moderate
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="severity"
+                className="damage-severity"
+                value="high"
+                required
+              />
+              Extensive
+            </label>
+          </fieldset>
+        )}
       </div>
     </>
   );

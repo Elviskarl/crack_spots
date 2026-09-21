@@ -331,59 +331,15 @@ export default function ResolveReport(props: ListItemOptional) {
                   </div>
                 </div>
               )}
-              {isLoading ? (
-                <LoadingScreen category="image" />
-              ) : (
-                file &&
-                imageUrl &&
-                coordinates && (
-                  <>
-                    <div className="image-preview-container">
-                      <img
-                        src={imageUrl}
-                        alt="Road Damage"
-                        className="preview-image"
-                      />
-                    </div>
-                    <div className="image-details-container">
-                      <table>
-                        <caption>Image Metadata</caption>
-                        <thead>
-                          <tr>
-                            <th>Property</th>
-                            <th>Value</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>GPS Latitude</td>
-                            <td>
-                              {interestedReport.location.coordinates[1].toFixed(
-                                4,
-                              )}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>GPS Longitude</td>
-                            <td>
-                              {interestedReport.location.coordinates[0].toFixed(
-                                4,
-                              )}
-                            </td>
-                          </tr>
-                        </tbody>
-                        <tfoot>
-                          <tr>
-                            <td>Date Taken</td>
-                            <td>
-                              {interestedReport.dateTaken.split(":").join("-")}
-                            </td>
-                          </tr>
-                        </tfoot>
-                      </table>
-                    </div>
-                  </>
-                )
+              <LoadingScreen category="image" condition={isLoading} />
+              {file && imageUrl && coordinates && (
+                <ReportPreview
+                  setCollapsed={props.setCollapsed}
+                  setIsLoading={setIsLoading}
+                  coordinateData={coordinates}
+                  url={imageUrl}
+                  resolving={true}
+                />
               )}
             </fieldset>
             <fieldset className="repair-quality-fieldset">

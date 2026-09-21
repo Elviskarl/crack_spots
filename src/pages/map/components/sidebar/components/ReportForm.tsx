@@ -300,6 +300,7 @@ export default function ReportForm(props: ListItemOptional) {
               coordinateData={reportCoordinates}
               setCollapsed={setCollapsed}
               setIsLoading={setIsLoading}
+              resolving={false}
             />
           )}
           <button
