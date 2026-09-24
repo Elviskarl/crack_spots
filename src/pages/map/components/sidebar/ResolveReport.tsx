@@ -357,7 +357,6 @@ export default function ResolveReport(props: ListItemOptional) {
                   setIsLoading={setIsLoading}
                   coordinateData={coordinates}
                   url={imageUrl}
-                  resolving={true}
                 />
               )}
             </fieldset>

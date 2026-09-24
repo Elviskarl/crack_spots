@@ -9,7 +9,6 @@ interface Params {
   coordinateData: CoordinateData;
   setCollapsed: Dispatch<SetStateAction<boolean>> | undefined;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
-  resolving: boolean;
 }
 export default function ReportPreview(props: Params) {
   const {
@@ -19,7 +18,7 @@ export default function ReportPreview(props: Params) {
     GPSLongitude,
     GPSLongitudeRef,
   } = props.coordinateData;
-  const { setCollapsed, setIsLoading, resolving } = props;
+  const { setCollapsed, setIsLoading } = props;
   const dateTaken = DateTimeOriginal.split(" ");
 
   const { setInitialReportCoordinates, setIsCorrecting, isCorrecting } =
