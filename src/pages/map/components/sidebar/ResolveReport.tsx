@@ -57,7 +57,7 @@ export default function ResolveReport(props: ListItemOptional) {
     if (notification && notificationRef.current) {
       notificationRef.current.scrollIntoView({
         behavior: "smooth",
-        block: "center",
+        block: "end",
       });
     }
   }, [notification]);
@@ -84,13 +84,11 @@ export default function ResolveReport(props: ListItemOptional) {
 
   function confirmCoordinates(coords: CoordinateData) {
     if (setCollapsed) {
-      setTimeout(() => {
-        setCollapsed(true);
-        setGlobalNotification({
-          type: "Info",
-          message: "Drag the marker and confirm the coordinates of the report.",
-        });
-      }, 1000);
+      setCollapsed(true);
+      setGlobalNotification({
+        type: "Info",
+        message: "Drag the marker and confirm the coordinates of the report.",
+      });
     }
     setCoordinates(coords);
     setInitialReportCoordinates({
@@ -100,11 +98,13 @@ export default function ResolveReport(props: ListItemOptional) {
   }
 
   async function processImage(param: File) {
+    if (!interestedReport) {
+      return;
+    }
     setIsLoading(true);
     try {
       const { fileType, isValid } = validateFile(param);
       if (!isValid) {
-        resetPreview();
         throw new CustomError(
           "INVALID_FILE_TYPE",
           `Please upload a JPG, PNG, or WEBP image. Received: ${fileType}`,
@@ -120,30 +120,23 @@ export default function ResolveReport(props: ListItemOptional) {
       );
       if (!within) {
         setIsNotInNairobi(true);
-        resetPreview();
-        setNotification({
-          type: "Error",
-          message: "Reports must be located within Nairobi County.",
-        });
-        return;
+        throw new CustomError(
+          "LOCATION_MISMATCH",
+          "Reports must be located within Nairobi County.",
+        );
       }
       setFile(param);
 
       createPreview(param);
 
       // Validate Resolution Location
-      if (!interestedReport) {
-        return;
-      }
-      if (!interestedReport?.location) return;
-
       resolveData(
         {
           GPSLongitude: interestedReport.location.coordinates[0],
           GPSLatitude: interestedReport.location.coordinates[1],
           DateTimeOriginal: interestedReport.dateTaken!,
         },
-        { ...data },
+        data,
       );
       confirmCoordinates(data);
     } catch (err) {
@@ -155,11 +148,6 @@ export default function ResolveReport(props: ListItemOptional) {
           type: "Error",
         });
         return;
-      } else if (notification) {
-        setNotification({
-          message: notification.message,
-          type: notification.type,
-        });
       } else {
         setNotification({
           code: "UNKNOWN_ERROR",
@@ -169,9 +157,6 @@ export default function ResolveReport(props: ListItemOptional) {
         console.error(err);
       }
     }
-    //  finally {
-    //   setIsLoading(false);
-    // }
   }
 
   async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
@@ -185,32 +170,26 @@ export default function ResolveReport(props: ListItemOptional) {
       return;
     }
 
-    if (!interestedReport) {
-      throw new CustomError(
-        "MISSING_REPORT",
-        "No report selected for resolution.",
-      );
-    }
-    if (!file) {
-      setNotification({
-        code: "MISSING_DATA",
-        message: "Image file is missing.",
-        type: "Error",
-      });
-      return;
-    }
-
-    if (!coordinates) {
-      setNotification({
-        code: "MISSING_METADATA",
-        message: "EXIF metadata is missing or incomplete.",
-        type: "Error",
-      });
-      return;
-    }
-
     setIsResponseLoading(true);
     try {
+      if (!interestedReport) {
+        throw new CustomError(
+          "MISSING_REPORT",
+          "No report selected for resolution.",
+        );
+      }
+
+      if (!file) {
+        throw new CustomError("MISSING_FILE", "Image file is missing.");
+      }
+
+      if (!coordinates) {
+        throw new CustomError(
+          "NO_EXIF_DATA",
+          "EXIF metadata is missing or incomplete.",
+        );
+      }
+
       const coordsCopy = coordinates;
       const fileCopy = file;
       const { _id } = interestedReport;
@@ -254,10 +233,8 @@ export default function ResolveReport(props: ListItemOptional) {
   }
 
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
-    const files = e.target.files;
-    if (!files) return;
-    if (files.length > 0) {
-      const file = files[0];
+    const file = e.target?.files?.[0];
+    if (file) {
       processImage(file);
     }
   }
@@ -267,10 +244,10 @@ export default function ResolveReport(props: ListItemOptional) {
   function handleDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
     if (e.dataTransfer) {
-      const filesList = e.dataTransfer.files;
-      if (!filesList.length) return;
-      const file = Array.from(filesList)[0];
-      processImage(file);
+      const file = e.dataTransfer.files[0];
+      if (file) {
+        processImage(file);
+      }
     }
   }
   useEffect(() => {
@@ -281,10 +258,6 @@ export default function ResolveReport(props: ListItemOptional) {
       });
     }
   }, [notification]);
-
-  function clearForm() {
-    resetPreview();
-  }
 
   return (
     <div className="resolve-reports-container" ref={resolveReportsContainerRef}>
@@ -302,7 +275,11 @@ export default function ResolveReport(props: ListItemOptional) {
               <legend>Upload Image for Verification</legend>
               {file ? (
                 <div className="clear-form-container">
-                  <button type="reset" title="Clear Form" onClick={clearForm}>
+                  <button
+                    type="reset"
+                    title="Clear Form"
+                    onClick={resetPreview}
+                  >
                     clear Form
                   </button>
                 </div>

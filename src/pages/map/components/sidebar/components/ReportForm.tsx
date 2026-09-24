@@ -71,15 +71,12 @@ export default function ReportForm(props: ListItemOptional) {
   }
 
   function confirmCoordinates(coords: CoordinateData) {
-    if (setCollapsed) {
-      setTimeout(() => {
-        setCollapsed(true);
-        setGlobalNotification({
-          type: "Info",
-          message: "Drag the marker and confirm the coordinates of the report.",
-        });
-      }, 1000);
-    }
+    if (!setCollapsed) return;
+    setCollapsed(true);
+    setGlobalNotification({
+      type: "Info",
+      message: "Drag the marker and confirm the coordinates of the report.",
+    });
     setCoordinates(coords);
     setInitialReportCoordinates({
       lat: coords.GPSLatitude,
@@ -88,11 +85,9 @@ export default function ReportForm(props: ListItemOptional) {
   }
   async function processImage(param: File) {
     setIsLoading(true);
-    // const start = Date.now();
     try {
       const { fileType, isValid } = validateFile(param);
       if (!isValid) {
-        resetPreview();
         throw new CustomError(
           "INVALID_FILE_TYPE",
           `Please upload a JPG, PNG, or WEBP image. Received: ${fileType}`,
@@ -106,12 +101,10 @@ export default function ReportForm(props: ListItemOptional) {
       );
       if (!within) {
         setIsNotInNairobi(true);
-        resetPreview();
-        setNotification({
-          type: "Error",
-          message: "Reports must be located within Nairobi County.",
-        });
-        return;
+        throw new CustomError(
+          "LOCATION_MISMATCH",
+          "Reports must be located within Nairobi County.",
+        );
       }
       setFile(param);
 
@@ -126,11 +119,6 @@ export default function ReportForm(props: ListItemOptional) {
           type: "Error",
         });
         return;
-      } else if (notification) {
-        setNotification({
-          message: notification.message,
-          type: notification.type,
-        });
       } else {
         setNotification({
           code: "UNKNOWN_ERROR",
@@ -153,32 +141,23 @@ export default function ReportForm(props: ListItemOptional) {
       return;
     }
 
-    if (!file) {
-      setNotification({
-        code: "MISSING_DATA",
-        message: "Image file is missing.",
-        type: "Error",
-      });
-      return;
-    }
-
-    if (!reportCoordinates) {
-      setNotification({
-        code: "MISSING_METADATA",
-        message: "EXIF metadata is missing or incomplete.",
-        type: "Error",
-      });
-      return;
-    }
-
     setIsResponseLoading(true);
     try {
-      const coordsCopy = reportCoordinates;
+      if (!file) {
+        throw new CustomError("MISSING_FILE", "Image file is missing.");
+      }
+
+      if (!reportCoordinates) {
+        throw new CustomError(
+          "NO_EXIF_DATA",
+          "EXIF metadata is missing or incomplete.",
+        );
+      }
       const fileCopy = file;
 
       const formData = new FormData(e.currentTarget);
 
-      formData.append("coordinates", JSON.stringify(coordsCopy));
+      formData.append("coordinates", JSON.stringify(reportCoordinates));
       formData.append("file", fileCopy);
 
       const results = await uploadReports(
@@ -213,10 +192,8 @@ export default function ReportForm(props: ListItemOptional) {
   }
 
   function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
-    const files = e.target.files;
-    if (!files) return;
-    if (files.length > 0) {
-      const file = files[0];
+    const file = e.target?.files?.[0];
+    if (file) {
       processImage(file);
     }
   }
@@ -225,14 +202,10 @@ export default function ReportForm(props: ListItemOptional) {
   }
   function handleDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
-    if (e.dataTransfer) {
-      const filesList = e.dataTransfer.files;
-      const file = Array.from(filesList)[0];
+    const file = e.dataTransfer?.files?.[0];
+    if (file) {
       processImage(file);
     }
-  }
-  function clearForm() {
-    resetPreview();
   }
 
   const reportCoordinates =
@@ -255,7 +228,7 @@ export default function ReportForm(props: ListItemOptional) {
         >
           {file ? (
             <div className="clear-form-container">
-              <button type="reset" title="Clear Form" onClick={clearForm}>
+              <button type="reset" title="Clear Form" onClick={resetPreview}>
                 clear Form
               </button>
             </div>
@@ -285,11 +258,11 @@ export default function ReportForm(props: ListItemOptional) {
           <LoadingScreen category="image" condition={isLoading} />
           {file && imageUrl && reportCoordinates && (
             <>
-            <ReportPreview
-              url={imageUrl}
-              coordinateData={reportCoordinates}
-              setCollapsed={setCollapsed}
-              setIsLoading={setIsLoading}
+              <ReportPreview
+                url={imageUrl}
+                coordinateData={reportCoordinates}
+                setCollapsed={setCollapsed}
+                setIsLoading={setIsLoading}
               />
               <fieldset>
                 <legend>Severity: </legend>
