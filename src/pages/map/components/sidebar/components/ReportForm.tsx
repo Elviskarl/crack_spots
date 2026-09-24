@@ -20,6 +20,7 @@ import "../../../styles/report-form.css";
 import LoadingScreen from "../../../../../components/LoadingScreen";
 import { MapContext } from "../../../../../context/createMapContext";
 import { ReportContext } from "../../../../../context/createReportContext";
+import { severityValues } from "../../../data";
 
 export default function ReportForm(props: ListItemOptional) {
   const [file, setFile] = useState<File | null>(null);
@@ -283,13 +284,29 @@ export default function ReportForm(props: ListItemOptional) {
           )}
           <LoadingScreen category="image" condition={isLoading} />
           {file && imageUrl && reportCoordinates && (
+            <>
             <ReportPreview
               url={imageUrl}
               coordinateData={reportCoordinates}
               setCollapsed={setCollapsed}
               setIsLoading={setIsLoading}
-              resolving={false}
-            />
+              />
+              <fieldset>
+                <legend>Severity: </legend>
+                {severityValues.map(({ label, value }) => (
+                  <label key={label} className="damage-severity-label">
+                    <input
+                      type="radio"
+                      name="severity"
+                      className="damage-severity"
+                      value={value}
+                      required
+                    />
+                    {label}
+                  </label>
+                ))}
+              </fieldset>
+            </>
           )}
           <button
             className="submit-button"
