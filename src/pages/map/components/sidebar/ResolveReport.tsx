@@ -52,24 +52,6 @@ export default function ResolveReport(props: ListItemOptional) {
     null,
   );
   const { setCollapsed } = props;
-  useEffect(() => {
-    if (!imageUrl) return;
-
-    return () => {
-      URL.revokeObjectURL(imageUrl);
-    };
-  }, [imageUrl]);
-
-  useEffect(() => {
-    if (!interestedReport) return;
-    const resolveReportsContainer = document.querySelector(
-      ".resolve-reports-container",
-    )!;
-    resolveReportsContainer.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-    });
-  }, [interestedReport]);
 
   useEffect(() => {
     if (notification && notificationRef.current) {

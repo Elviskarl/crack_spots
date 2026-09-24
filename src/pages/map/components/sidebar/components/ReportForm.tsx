@@ -1,7 +1,6 @@
 import {
   useState,
   useRef,
-  useEffect,
   type ChangeEvent,
   useContext,
   type SubmitEvent,
@@ -46,14 +45,6 @@ export default function ReportForm(props: ListItemOptional) {
   const { isLoading: isReportLoading, setNotification: setGlobalNotification } =
     useContext(ReportContext)!;
   const { setCollapsed } = props;
-
-  useEffect(() => {
-    if (!imageUrl) return;
-
-    return () => {
-      URL.revokeObjectURL(imageUrl);
-    };
-  }, [imageUrl]);
 
   function resetPreview() {
     if (imagePreviewUrl.current) {
