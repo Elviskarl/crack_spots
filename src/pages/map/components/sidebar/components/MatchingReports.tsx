@@ -1,4 +1,12 @@
-import { useContext, useMemo, type Dispatch, type SetStateAction } from "react";
+import {
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { MapContext } from "../../../../../context/createMapContext";
 import type { Report } from "../../../types";
 import CreateIssues from "../../../utils/CreateIssues";
@@ -86,6 +94,7 @@ export default function MatchingReports({
             }
             alt="Report image"
             className="search-result-image"
+            loading="lazy"
           />
         </div>
         <ul className="result-details-list">
@@ -192,8 +201,16 @@ export default function MatchingReports({
       </div>
     );
   });
+
+  useEffect(() => {
+    if (!searchResultsContainer.current) return;
+    searchResultsContainer.current.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  }, [matchingReport]);
   return (
-    <div className="search-results">
+    <div className="search-results" ref={searchResultsContainer}>
       <div className="report-count-container">
         <p className="report-count-paragraph">
           {term}{" "}

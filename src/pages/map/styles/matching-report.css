@@ -62,3 +62,18 @@
 .report-count-span {
   color: var(--primary-tint);
 }
+.page-count-paragraph {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.change-page {
+  border: 1px solid;
+  height: 4rem;
+  width: 4rem;
+  border-radius: 50%;
+  text-align: center;
+  padding: 0.5rem 0;
+  margin: 0 2rem;
+  cursor: pointer;
+}
