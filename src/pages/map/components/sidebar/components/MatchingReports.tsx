@@ -30,6 +30,12 @@ export default function MatchingReports({
   term,
 }: MatchingReportprops) {
   const { setSelectedReport } = useContext(MapContext)!;
+  const searchResultsContainer = useRef<HTMLDivElement>(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const issuesPerPage = 4;
+  const startIndex = (currentPage - 1) * issuesPerPage;
+  const endIndex = currentPage * issuesPerPage;
 
   const sortedIssues = useMemo(() => {
     const sourceReport = interestedReport ? [interestedReport] : matchingReport;
@@ -63,7 +69,11 @@ export default function MatchingReports({
     setSelectedReport(param);
   }
 
-  const matchingIssuesEl = sortedIssues.map((issue) => {
+  const pages = Math.ceil(sortedIssues.length / issuesPerPage);
+
+  const displayedIssues = sortedIssues.slice(startIndex, endIndex);
+
+  const matchingIssuesEl = displayedIssues.map((issue) => {
     const report = issue.reports[0];
     return (
       <div className="search-result-card" key={issue.issueId}>
@@ -194,6 +204,37 @@ export default function MatchingReports({
         </p>
       </div>
       {matchingIssuesEl}
+      <div className="page-count-container">
+        <p className="page-count-paragraph">
+          <span
+            className="change-page previous-page"
+            onClick={() =>
+              setCurrentPage((prevVal) => {
+                if (prevVal === 1) {
+                  return 1;
+                }
+                return prevVal - 1;
+              })
+            }
+          >
+            &larr;
+          </span>
+          page {currentPage} of {pages}
+          <span
+            className="change-page next-page"
+            onClick={() =>
+              setCurrentPage((prevVal) => {
+                if (prevVal === pages) {
+                  return pages;
+                }
+                return prevVal + 1;
+              })
+            }
+          >
+            &rarr;
+          </span>
+        </p>
+      </div>
     </div>
   );
 }
