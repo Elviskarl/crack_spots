@@ -47,6 +47,11 @@ export default function MatchingReports({
           reports: sortedReports,
         };
       })
+      .sort(
+        (a, b) =>
+          new Date(b.reports[0].createdAt).getTime() -
+          new Date(a.reports[0].createdAt).getTime(),
+      )
       .filter((issue) => {
         if (!isResolving) return true;
         const latestReport = issue.reports[0];
