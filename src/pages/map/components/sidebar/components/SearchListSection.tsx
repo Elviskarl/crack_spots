@@ -2,6 +2,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type SubmitEvent,
 } from "react";
@@ -21,6 +22,7 @@ export default function SearchListSection(props: ListItemOptional) {
   const debouncedSearchTerm = useDebounce(searchTerm, 300).toLowerCase().trim();
   const { setCollapsed, isResolving, setInterestedReport, interestedReport } =
     props;
+  const searchInputElement = useRef<HTMLInputElement>(null);
 
   const hasSearch = debouncedSearchTerm.trim() !== "";
 
@@ -49,6 +51,9 @@ export default function SearchListSection(props: ListItemOptional) {
       if (setInterestedReport) {
         setInterestedReport(null);
       }
+      if (searchInputElement.current) {
+        searchInputElement.current.blur();
+      }
     } catch (error) {
       console.error(error);
     }
@@ -76,7 +81,10 @@ export default function SearchListSection(props: ListItemOptional) {
   }, [searchTerm, setInterestedReport]);
   return (
     <div className="search-input-section">
-      <form className="search-input-container" onSubmit={handleSubmit}>
+      <form
+        className={`search-input-container ${hasSearch && suggestions.length > 0 && isOpen ? "has-suggestions" : ""}`}
+        onSubmit={handleSubmit}
+      >
         <input
           type="text"
           placeholder="Search by street name..."
@@ -90,6 +98,7 @@ export default function SearchListSection(props: ListItemOptional) {
           onBlur={() => setIsOpen(false)}
           onFocus={() => searchTerm && setIsOpen(true)}
           maxLength={20}
+          ref={searchInputElement}
         />
         {searchTerm && (
           <button
