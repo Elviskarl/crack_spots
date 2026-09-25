@@ -24,10 +24,9 @@ export default function SearchSuggestions({
   func,
 }: SearchSuggestionsProps) {
   return (
-    <ul
-      className={`search-options ${isOpen && debouncedSearchTerm ? "active" : ""}`}
-    >
-      {suggestions.length > 0 ? (
+    <ul className={`search-options ${isOpen ? "active" : ""}`}>
+      {suggestions.length > 0 &&
+        debouncedSearchTerm &&
         suggestions.map((suggestion, index) => {
           return (
             <li
@@ -45,10 +44,7 @@ export default function SearchSuggestions({
               <span>{suggestion}</span>
             </li>
           );
-        })
-      ) : (
-        <li className="suggestion-list no-results">No results found.</li>
-      )}
+        })}
     </ul>
   );
 }
