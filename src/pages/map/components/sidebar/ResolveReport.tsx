@@ -38,7 +38,6 @@ export default function ResolveReport(props: ListItemOptional) {
   const [coordinates, setCoordinates] = useState<CoordinateData | null>(null);
   const [isResponseLoading, setIsResponseLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const resolveReportsContainerRef = useRef<HTMLDivElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
   const imagePreviewUrl = useRef<string | null>(null);
   const {
@@ -250,17 +249,9 @@ export default function ResolveReport(props: ListItemOptional) {
       }
     }
   }
-  useEffect(() => {
-    if (resolveReportsContainerRef.current) {
-      resolveReportsContainerRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }
-  }, [notification]);
 
   return (
-    <div className="resolve-reports-container" ref={resolveReportsContainerRef}>
+    <div className="resolve-reports-container">
       <p>Select the issue to resolve</p>
       <SearchListSection
         setCollapsed={props.setCollapsed}
