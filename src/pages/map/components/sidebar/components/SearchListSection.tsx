@@ -151,7 +151,6 @@ export default function SearchListSection(props: ListItemOptional) {
           setIsOpen={setIsOpen}
           setSearchTerm={setSearchTerm}
           suggestions={suggestions}
-          reports={reports}
           debouncedSearchTerm={debouncedSearchTerm}
           isOpen={isOpen}
           setMatchingReport={setMatchingReports}
@@ -160,19 +159,15 @@ export default function SearchListSection(props: ListItemOptional) {
           searchedTerm={searchedTerm}
         />
       </form>
-      {hasSearch ? (
-        matchingReports ? (
-          <MatchingReports
-            matchingReport={matchingReports}
-            setCollapsed={setCollapsed}
-            isResolving={isResolving}
-            setInterestedReport={setInterestedReport}
-            interestedReport={interestedReport}
+      {matchingReports ? (
+        <MatchingReports
+          matchingReport={matchingReports}
+          setCollapsed={setCollapsed}
+          isResolving={isResolving}
+          setInterestedReport={setInterestedReport}
+          interestedReport={interestedReport}
           searchedTerm={searchedTerm.current}
-          />
-        ) : (
-          <p className="no-results-found">No results found.</p>
-        )
+        />
       ) : null}
     </div>
   );

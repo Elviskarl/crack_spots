@@ -221,37 +221,41 @@ export default function MatchingReports({
         </p>
       </div>
       {matchingIssuesEl}
-      <div className="page-count-container">
-        <p className="page-count-paragraph">
-          <span
-            className="change-page previous-page"
-            onClick={() =>
-              setCurrentPage((prevVal) => {
-                if (prevVal === 1) {
-                  return 1;
-                }
-                return prevVal - 1;
-              })
-            }
-          >
-            &larr;
-          </span>
-          page {currentPage} of {pages}
-          <span
-            className="change-page next-page"
-            onClick={() =>
-              setCurrentPage((prevVal) => {
-                if (prevVal === pages) {
-                  return pages;
-                }
-                return prevVal + 1;
-              })
-            }
-          >
-            &rarr;
-          </span>
-        </p>
-      </div>
+      {matchingReport.length > 0 ? (
+        <div className="page-count-container">
+          <p className="page-count-paragraph">
+            <span
+              className="change-page previous-page"
+              onClick={() =>
+                setCurrentPage((prevVal) => {
+                  if (prevVal === 1) {
+                    return 1;
+                  }
+                  return prevVal - 1;
+                })
+              }
+            >
+              &larr;
+            </span>
+            page {currentPage} of {pages}
+            <span
+              className="change-page next-page"
+              onClick={() =>
+                setCurrentPage((prevVal) => {
+                  if (prevVal === pages) {
+                    return pages;
+                  }
+                  return prevVal + 1;
+                })
+              }
+            >
+              &rarr;
+            </span>
+          </p>
+        </div>
+      ) : (
+        <p className="no-results-found">No results found.</p>
+      )}
     </div>
   );
 }
