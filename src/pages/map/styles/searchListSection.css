@@ -53,8 +53,8 @@
   display: none;
   position: absolute;
   top: 101%;
-  left: 0;
-  width: 100%;
+  left: -1px;
+  right: -1px;
   background-color: white;
   border-top: none;
 }
@@ -63,7 +63,6 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  width: 100%;
   border: 1px solid var(--secondary-tint);
   border-top: none;
   border-bottom-left-radius: 8px;
@@ -71,8 +70,8 @@
   padding: 0 0.5rem;
 }
 .suggestion-list {
-  padding: 0.5rem;
-  border: 1px solid var(--secondary-shade);
+  padding: 0.5rem 0;
+  /* border: 1px solid var(--secondary-shade); */
   border-radius: 5px;
   cursor: pointer;
 }
