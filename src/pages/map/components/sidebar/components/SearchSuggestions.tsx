@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type RefObject, type SetStateAction } from "react";
 import type { Report } from "../../../types";
 
 interface SearchSuggestionsProps {
@@ -7,10 +7,10 @@ interface SearchSuggestionsProps {
   setMatchingReport: Dispatch<SetStateAction<Report[] | null>>;
   setInterestedReport: Dispatch<SetStateAction<Report | null>> | undefined;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  reports: Report[];
   debouncedSearchTerm: string;
   isOpen: boolean;
   func: (term: string) => Report[];
+  searchedTerm: RefObject<string>;
 }
 
 export default function SearchSuggestions({
@@ -22,6 +22,7 @@ export default function SearchSuggestions({
   setMatchingReport,
   setInterestedReport,
   func,
+  searchedTerm,
 }: SearchSuggestionsProps) {
   return (
     <ul className={`search-options ${isOpen ? "active" : ""}`}>
@@ -34,6 +35,7 @@ export default function SearchSuggestions({
               key={suggestion + index}
               onMouseDown={() => {
                 setSearchTerm(suggestion);
+                searchedTerm.current = suggestion;
                 setIsOpen(false);
                 if (setInterestedReport) {
                   setInterestedReport(null);

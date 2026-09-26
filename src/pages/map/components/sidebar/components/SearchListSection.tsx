@@ -23,6 +23,7 @@ export default function SearchListSection(props: ListItemOptional) {
   const { setCollapsed, isResolving, setInterestedReport, interestedReport } =
     props;
   const searchInputElement = useRef<HTMLInputElement>(null);
+  const searchedTerm = useRef<string>("");
 
   const hasSearch = debouncedSearchTerm.trim() !== "";
 
@@ -46,27 +47,33 @@ export default function SearchListSection(props: ListItemOptional) {
   function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      const filteredReports = filterReports(searchTerm);
+      const normalized = searchTerm.toLowerCase().trim();
+
+      if (!normalized) {
+        setSearchTerm("");
+        setMatchingReports(null);
+        return;
+      }
+      const filteredReports = filterReports(normalized);
+      searchedTerm.current = normalized;
       setMatchingReports(filteredReports);
       if (setInterestedReport) {
         setInterestedReport(null);
       }
-      if (searchInputElement.current) {
-        searchInputElement.current.blur();
-      }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsOpen(false);
+      searchInputElement.current?.blur();
     }
-    setIsOpen(false);
   }
 
   function filterReports(term: string) {
-    const normalized = term.toLowerCase().trim();
     return reports.filter((report) => {
       const isOnSameRoad = report.location.address?.road
         ?.toLowerCase()
         .trim()
-        .includes(normalized);
+        .includes(term);
 
       if (!isOnSameRoad) return false;
 
@@ -96,7 +103,15 @@ export default function SearchListSection(props: ListItemOptional) {
             setIsOpen(true);
           }}
           onBlur={() => setIsOpen(false)}
-          onFocus={() => searchTerm && setIsOpen(true)}
+          onFocus={(e) => {
+            if (searchTerm) {
+              setIsOpen(true);
+            }
+            e.target.setSelectionRange(
+              e.target.value.length,
+              e.target.value.length,
+            );
+          }}
           maxLength={20}
           ref={searchInputElement}
         />
@@ -142,6 +157,7 @@ export default function SearchListSection(props: ListItemOptional) {
           setMatchingReport={setMatchingReports}
           func={filterReports}
           setInterestedReport={setInterestedReport}
+          searchedTerm={searchedTerm}
         />
       </form>
       {hasSearch ? (
@@ -152,7 +168,7 @@ export default function SearchListSection(props: ListItemOptional) {
             isResolving={isResolving}
             setInterestedReport={setInterestedReport}
             interestedReport={interestedReport}
-            term={debouncedSearchTerm}
+          searchedTerm={searchedTerm.current}
           />
         ) : (
           <p className="no-results-found">No results found.</p>

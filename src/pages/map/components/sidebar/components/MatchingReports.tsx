@@ -26,7 +26,7 @@ interface MatchingReportprops {
   isResolving?: boolean;
   setInterestedReport?: Dispatch<SetStateAction<Report | null>>;
   interestedReport?: Report | null;
-  term: string;
+  searchedTerm: string;
 }
 
 export default function MatchingReports({
@@ -35,7 +35,7 @@ export default function MatchingReports({
   isResolving,
   setInterestedReport,
   interestedReport,
-  term,
+  searchedTerm,
 }: MatchingReportprops) {
   const { setSelectedReport } = useContext(MapContext)!;
   const searchResultsContainer = useRef<HTMLDivElement>(null);
@@ -213,7 +213,7 @@ export default function MatchingReports({
     <div className="search-results" ref={searchResultsContainer}>
       <div className="report-count-container">
         <p className="report-count-paragraph">
-          {term}{" "}
+          {searchedTerm}{" "}
           <span className="report-count-span">
             ({sortedIssues.length}{" "}
             {sortedIssues.length === 1 ? "result" : "results"})
