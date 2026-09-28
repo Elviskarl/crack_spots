@@ -3,13 +3,6 @@ import * as L from "leaflet";
 import * as turf from "@turf/turf";
 import { Circle, Marker, useMap } from "react-leaflet";
 import { MapContext } from "../../../../../context/createMapContext";
-import markerUrl from "../../../../../assets/location.png";
-
-const correctionIcon = L.icon({
-  iconUrl: markerUrl,
-  iconSize: [50, 50],
-  iconAnchor: [15, 30],
-});
 
 export function FlyToReport() {
   const map = useMap();
@@ -155,7 +148,6 @@ export function MapCorrection() {
           },
         }}
         zIndexOffset={40}
-        icon={correctionIcon}
       />
     </>
   );
