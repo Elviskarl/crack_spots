@@ -18,6 +18,7 @@ import {
 import {
   isInNairobi,
   readFile,
+  resizeImage,
   resolveData,
   validateFile,
 } from "../../utils/utils";
@@ -124,9 +125,6 @@ export default function ResolveReport(props: ListItemOptional) {
           "Reports must be located within Nairobi County.",
         );
       }
-      setFile(param);
-
-      createPreview(param);
 
       // Validate Resolution Location
       resolveData(
@@ -137,6 +135,10 @@ export default function ResolveReport(props: ListItemOptional) {
         },
         data,
       );
+
+      const resizedImage = await resizeImage(param);
+      setFile(resizedImage);
+      createPreview(resizedImage);
       confirmCoordinates(data);
     } catch (err) {
       resetPreview();

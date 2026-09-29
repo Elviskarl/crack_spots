@@ -7,7 +7,12 @@ import {
   type DragEvent,
 } from "react";
 import ReportPreview from "./ReportPreview";
-import { isInNairobi, readFile, validateFile } from "../../../utils/utils";
+import {
+  isInNairobi,
+  readFile,
+  resizeImage,
+  validateFile,
+} from "../../../utils/utils";
 import type {
   CoordinateData,
   ListItemOptional,
@@ -33,6 +38,7 @@ export default function ReportForm(props: ListItemOptional) {
   const [isResponseLoading, setIsResponseLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imagePreviewUrl = useRef<string | null>(null);
+
   const {
     nairobiSubCountyShapefile,
     setIsNotInNairobi,
@@ -106,9 +112,10 @@ export default function ReportForm(props: ListItemOptional) {
           "Reports must be located within Nairobi County.",
         );
       }
-      setFile(param);
+      const resizedImage = await resizeImage(param);
 
-      createPreview(param);
+      setFile(resizedImage);
+      createPreview(resizedImage);
       confirmCoordinates(data);
     } catch (err) {
       resetPreview();

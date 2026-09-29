@@ -206,3 +206,47 @@ export function createRowData(report: Report): Partial<downloadKeys> {
 
   return row;
 }
+
+export async function resizeImage(file: File, maxDimension = 1600) {
+  const bitmap = await createImageBitmap(file);
+  try {
+    const scale = Math.min(
+      1,
+      maxDimension / Math.max(bitmap.width, bitmap.height),
+    );
+
+    const width = Math.round(bitmap.width * scale);
+    const height = Math.round(bitmap.height * scale);
+
+    const canvas = document.createElement("canvas");
+
+    canvas.width = width;
+    canvas.height = height;
+
+    const canvasCtx = canvas.getContext("2d");
+    if (!canvasCtx) {
+      bitmap.close();
+      throw new Error("Could not create canvas context");
+    }
+
+    canvasCtx.drawImage(bitmap, 0, 0, width, height);
+
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, "image/jpeg", 0.85),
+    );
+
+    if (!blob) {
+      throw new Error("Could not create resized image");
+    }
+
+    return new File([blob], file.name, {
+      type: "image/jpeg",
+      lastModified: Date.now(),
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    bitmap.close();
+  }
+}
