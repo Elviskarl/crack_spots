@@ -19,12 +19,10 @@ export default function ReportPreview(props: Params) {
     GPSLongitudeRef,
   } = props.coordinateData;
   const { setCollapsed, setIsLoading } = props;
-  const dateTaken = DateTimeOriginal.split(" ");
-
   const { setInitialReportCoordinates, setIsCorrecting, isCorrecting } =
     useContext(MapContext)!;
 
-  if (!setInitialReportCoordinates) return;
+  const dateTaken = DateTimeOriginal.split(" ");
 
   function handleClick() {
     if (!setCollapsed) return;
@@ -32,6 +30,7 @@ export default function ReportPreview(props: Params) {
     setIsCorrecting(true);
     setCollapsed(true);
   }
+  if (!setInitialReportCoordinates) return;
   return (
     <>
       <div className="image-preview-container">
