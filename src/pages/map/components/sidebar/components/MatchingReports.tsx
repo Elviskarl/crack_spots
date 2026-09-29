@@ -176,6 +176,7 @@ export default function MatchingReports({
               onClick={() => {
                 if (setInterestedReport) {
                   setInterestedReport(report);
+                  setCurrentPage(1);
                 }
               }}
             >
@@ -209,6 +210,7 @@ export default function MatchingReports({
       block: "end",
     });
   }, [matchingReport]);
+
   return (
     <div className="search-results" ref={searchResultsContainer}>
       <div className="report-count-container">
