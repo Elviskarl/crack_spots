@@ -50,7 +50,11 @@ export function ReportsContainer({ reports }: { reports: Report[] }) {
   const locationCluster = useLocationCluster(sortedIssues);
 
   return (
-    <MarkerClusterGroup key={reports.map((report) => report._id).join("-")}>
+    <MarkerClusterGroup
+      key={reports.map((report) => report._id).join("-")}
+      chunkedLoading
+      removeOutsideVisibleBounds
+    >
       {locationCluster.map((cluster) => {
         const { issues } = cluster;
         const latestIssue = issues[0];
