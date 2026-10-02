@@ -1,5 +1,4 @@
 import {
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -7,7 +6,6 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { MapContext } from "../../../../../context/createMapContext";
 import type { Report } from "../../../types";
 import CreateIssues from "../../../utils/CreateIssues";
 import mapImgUrl from "../../../../../assets/location-outline.svg";
@@ -20,6 +18,7 @@ import approvedImageUrl from "../../../../../assets/approved.png";
 import tempApprovedImageUrl from "../../../../../assets/approved.png";
 
 import "../../../styles/matching-report.css";
+import useMapContext from "../../../hooks/getMapContext";
 interface MatchingReportprops {
   matchingReport: Report[];
   setCollapsed?: Dispatch<SetStateAction<boolean>>;
@@ -37,7 +36,7 @@ export default function MatchingReports({
   interestedReport,
   searchedTerm,
 }: MatchingReportprops) {
-  const { setSelectedReport } = useContext(MapContext)!;
+  const { setSelectedReport } = useMapContext();
   const searchResultsContainer = useRef<HTMLDivElement>(null);
 
   const [currentPage, setCurrentPage] = useState(1);

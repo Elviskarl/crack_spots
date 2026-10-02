@@ -16,13 +16,13 @@ import {
   type SubmitEvent,
 } from "react";
 import { CustomError } from "../../../../components/error/CustomError";
-import { MapContext } from "../../../../context/createMapContext";
 import LoadingScreen from "../../../../components/LoadingScreen";
 import { Notifications } from "./components/Notifications";
 import resolveIssues from "../../utils/resolveIssues";
 import { ReportContext } from "../../../../context/createReportContext";
 import ReportPreview from "./components/ReportPreview";
 import useProcessImage from "../../hooks/processImage";
+import useMapContext from "../../hooks/getMapContext";
 
 export default function ResolveReport(props: ListItemOptional) {
   const isResolving = true;
@@ -35,7 +35,7 @@ export default function ResolveReport(props: ListItemOptional) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
   const imagePreviewUrl = useRef<string | null>(null);
-  const { setInitialReportCoordinates } = useContext(MapContext)!;
+  const { setInitialReportCoordinates } = useMapContext();
   const { isLoading: isReportLoading, setNotification: setGlobalNotification } =
     useContext(ReportContext)!;
   const [notification, setNotification] = useState<NotificationType | null>(

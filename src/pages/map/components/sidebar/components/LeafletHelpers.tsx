@@ -3,6 +3,7 @@ import * as L from "leaflet";
 import * as turf from "@turf/turf";
 import { Circle, Marker, useMap } from "react-leaflet";
 import { MapContext } from "../../../../../context/createMapContext";
+import useMapContext from "../../../hooks/getMapContext";
 
 export function FlyToReport() {
   const map = useMap();
@@ -62,7 +63,7 @@ export function ResizeMap() {
 
 export function FlyToCoordinates() {
   const map = useMap();
-  const { initialReportCoordinates, isCorrecting } = useContext(MapContext)!;
+  const { initialReportCoordinates, isCorrecting } = useMapContext();
 
   useEffect(() => {
     if (!initialReportCoordinates) return;
@@ -87,7 +88,7 @@ export function MapCorrection() {
     initialReportCoordinates,
     correctedReportCoordinates,
     setCorrectedReportCoordinates,
-  } = useContext(MapContext)!;
+  } = useMapContext();
   function enforceBounds(e: L.LeafletEvent) {
     if (!initialReportCoordinates) return;
 

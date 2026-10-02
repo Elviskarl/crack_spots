@@ -1,8 +1,8 @@
 import type { CoordinateData } from "../../../types/index";
 import "../../../styles/report-preview.css";
 import editImageUrl from "../../../../../assets/edit.svg";
-import { useContext, type Dispatch, type SetStateAction } from "react";
-import { MapContext } from "../../../../../context/createMapContext";
+import { type Dispatch, type SetStateAction } from "react";
+import useMapContext from "../../../hooks/getMapContext";
 
 interface Params {
   url: string;
@@ -20,7 +20,7 @@ export default function ReportPreview(props: Params) {
   } = props.coordinateData;
   const { setCollapsed, setIsLoading } = props;
   const { setInitialReportCoordinates, setIsCorrecting, isCorrecting } =
-    useContext(MapContext)!;
+    useMapContext();
 
   const dateTaken = DateTimeOriginal.split(" ");
 

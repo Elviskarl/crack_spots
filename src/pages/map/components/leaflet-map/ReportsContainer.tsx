@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Icon } from "leaflet";
 import { Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
@@ -12,9 +12,9 @@ import changeReportIcon from "../../../../assets/up_arrow.png";
 // Import the required CSS for marker clustering
 import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
-import { MapContext } from "../../../../context/createMapContext";
 import useCreateIssues from "../../utils/CreateIssues";
 import useLocationCluster from "../../hooks/locationCluster";
+import useMapContext from "../../hooks/getMapContext";
 
 const resolvedIcon = new Icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/128/13984/13984191.png",
@@ -31,7 +31,7 @@ const unResolvedIcon = new Icon({
 });
 
 export function ReportsContainer({ reports }: { reports: Report[] }) {
-  const { markerRefs } = useContext(MapContext)!;
+  const { markerRefs } = useMapContext();
   const [activeIndexes, setActiveIndexes] = useState<Record<string, number>>(
     {},
   );
