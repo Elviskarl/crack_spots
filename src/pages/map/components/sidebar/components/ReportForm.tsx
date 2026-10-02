@@ -7,12 +7,6 @@ import {
   type DragEvent,
 } from "react";
 import ReportPreview from "./ReportPreview";
-import {
-  isInNairobi,
-  readFile,
-  resizeImage,
-  validateFile,
-} from "../../../utils/utils";
 import type {
   CoordinateData,
   ListItemOptional,
@@ -26,6 +20,7 @@ import LoadingScreen from "../../../../../components/LoadingScreen";
 import { MapContext } from "../../../../../context/createMapContext";
 import { ReportContext } from "../../../../../context/createReportContext";
 import { severityValues } from "../../../data";
+import useProcessImage from "../../../hooks/processImage";
 
 export default function ReportForm(props: ListItemOptional) {
   const [file, setFile] = useState<File | null>(null);
@@ -38,10 +33,9 @@ export default function ReportForm(props: ListItemOptional) {
   const [isResponseLoading, setIsResponseLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imagePreviewUrl = useRef<string | null>(null);
+  const { processImage } = useProcessImage();
 
   const {
-    nairobiSubCountyShapefile,
-    setIsNotInNairobi,
     setInitialReportCoordinates,
     correctedReportCoordinates,
     setCorrectedReportCoordinates,
@@ -89,31 +83,10 @@ export default function ReportForm(props: ListItemOptional) {
       lng: coords.GPSLongitude,
     });
   }
-  async function processImage(param: File) {
-    setIsLoading(true);
-    try {
-      const { fileType, isValid } = validateFile(param);
-      if (!isValid) {
-        throw new CustomError(
-          "INVALID_FILE_TYPE",
-          `Please upload a JPG, PNG, or WEBP image. Received: ${fileType}`,
-        );
-      }
-      const data = await readFile(param);
-      const within = isInNairobi(
-        data.GPSLatitude,
-        data.GPSLongitude,
-        nairobiSubCountyShapefile.current!,
-      );
-      if (!within) {
-        setIsNotInNairobi(true);
-        throw new CustomError(
-          "LOCATION_MISMATCH",
-          "Reports must be located within Nairobi County.",
-        );
-      }
-      const resizedImage = await resizeImage(param);
 
+  async function processFile(file: File) {
+    try {
+      const { data, resizedImage } = await processImage({ file });
       setFile(resizedImage);
       createPreview(resizedImage);
       confirmCoordinates(data);
@@ -160,12 +133,11 @@ export default function ReportForm(props: ListItemOptional) {
           "EXIF metadata is missing or incomplete.",
         );
       }
-      const fileCopy = file;
 
       const formData = new FormData(e.currentTarget);
 
       formData.append("coordinates", JSON.stringify(reportCoordinates));
-      formData.append("file", fileCopy);
+      formData.append("file", file);
 
       const results = await uploadReports(
         "https://crackspots-server.onrender.com/api/v1/reports",
@@ -198,20 +170,21 @@ export default function ReportForm(props: ListItemOptional) {
     }
   }
 
-  function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
+  async function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target?.files?.[0];
     if (file) {
-      processImage(file);
+      await processFile(file);
     }
   }
+
   function handleDragOver(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
   }
-  function handleDrop(e: DragEvent<HTMLDivElement>) {
+  async function handleDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
     const file = e.dataTransfer?.files?.[0];
     if (file) {
-      processImage(file);
+      await processFile(file);
     }
   }
 
@@ -263,7 +236,7 @@ export default function ReportForm(props: ListItemOptional) {
             </div>
           )}
           <LoadingScreen category="image" condition={isLoading} />
-          {file && imageUrl && reportCoordinates && (
+          {imageUrl && reportCoordinates && (
             <>
               <ReportPreview
                 url={imageUrl}

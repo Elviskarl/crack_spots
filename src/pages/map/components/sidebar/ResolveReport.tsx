@@ -15,13 +15,6 @@ import {
   type DragEvent,
   type SubmitEvent,
 } from "react";
-import {
-  isInNairobi,
-  readFile,
-  resizeImage,
-  resolveData,
-  validateFile,
-} from "../../utils/utils";
 import { CustomError } from "../../../../components/error/CustomError";
 import { MapContext } from "../../../../context/createMapContext";
 import LoadingScreen from "../../../../components/LoadingScreen";
@@ -29,6 +22,7 @@ import { Notifications } from "./components/Notifications";
 import resolveIssues from "../../utils/resolveIssues";
 import { ReportContext } from "../../../../context/createReportContext";
 import ReportPreview from "./components/ReportPreview";
+import useProcessImage from "../../hooks/processImage";
 
 export default function ResolveReport(props: ListItemOptional) {
   const isResolving = true;
@@ -41,17 +35,14 @@ export default function ResolveReport(props: ListItemOptional) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
   const imagePreviewUrl = useRef<string | null>(null);
-  const {
-    nairobiSubCountyShapefile,
-    setIsNotInNairobi,
-    setInitialReportCoordinates,
-  } = useContext(MapContext)!;
+  const { setInitialReportCoordinates } = useContext(MapContext)!;
   const { isLoading: isReportLoading, setNotification: setGlobalNotification } =
     useContext(ReportContext)!;
   const [notification, setNotification] = useState<NotificationType | null>(
     null,
   );
   const { setCollapsed } = props;
+  const { processImage } = useProcessImage();
 
   useEffect(() => {
     if (notification && notificationRef.current) {
@@ -97,46 +88,10 @@ export default function ResolveReport(props: ListItemOptional) {
     });
   }
 
-  async function processImage(param: File) {
-    if (!interestedReport) {
-      return;
-    }
+  async function processFile(file: File) {
     setIsLoading(true);
     try {
-      const { fileType, isValid } = validateFile(param);
-      if (!isValid) {
-        throw new CustomError(
-          "INVALID_FILE_TYPE",
-          `Please upload a JPG, PNG, or WEBP image. Received: ${fileType}`,
-        );
-      }
-      const data = await readFile(param);
-
-      if (!nairobiSubCountyShapefile.current) return;
-      const within = isInNairobi(
-        data.GPSLatitude,
-        data.GPSLongitude,
-        nairobiSubCountyShapefile.current,
-      );
-      if (!within) {
-        setIsNotInNairobi(true);
-        throw new CustomError(
-          "LOCATION_MISMATCH",
-          "Reports must be located within Nairobi County.",
-        );
-      }
-
-      // Validate Resolution Location
-      resolveData(
-        {
-          GPSLongitude: interestedReport.location.coordinates[0],
-          GPSLatitude: interestedReport.location.coordinates[1],
-          DateTimeOriginal: interestedReport.dateTaken!,
-        },
-        data,
-      );
-
-      const resizedImage = await resizeImage(param);
+      const { data, resizedImage } = await processImage({ file });
       setFile(resizedImage);
       createPreview(resizedImage);
       confirmCoordinates(data);
@@ -191,14 +146,12 @@ export default function ResolveReport(props: ListItemOptional) {
         );
       }
 
-      const coordsCopy = coordinates;
-      const fileCopy = file;
       const { _id } = interestedReport;
 
       const formData = new FormData(e.currentTarget);
-      formData.append("coordinates", JSON.stringify(coordsCopy));
+      formData.append("coordinates", JSON.stringify(coordinates));
       formData.append("_id", _id);
-      formData.append("file", fileCopy);
+      formData.append("file", file);
 
       const results = await resolveIssues(
         "https://crackspots-server.onrender.com/api/v1/resolve",
@@ -233,21 +186,21 @@ export default function ResolveReport(props: ListItemOptional) {
     }
   }
 
-  function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
+  async function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target?.files?.[0];
     if (file) {
-      processImage(file);
+      await processFile(file);
     }
   }
   function handleDragOver(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
   }
-  function handleDrop(e: DragEvent<HTMLDivElement>) {
+  async function handleDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
     if (e.dataTransfer) {
       const file = e.dataTransfer.files[0];
       if (file) {
-        processImage(file);
+        await processFile(file);
       }
     }
   }
@@ -303,7 +256,7 @@ export default function ResolveReport(props: ListItemOptional) {
                 </div>
               )}
               <LoadingScreen category="image" condition={isLoading} />
-              {file && imageUrl && coordinates && (
+              {imageUrl && coordinates && (
                 <ReportPreview
                   setCollapsed={props.setCollapsed}
                   setIsLoading={setIsLoading}
