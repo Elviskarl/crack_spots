@@ -11,6 +11,7 @@ interface SearchSuggestionsProps {
   isOpen: boolean;
   func: (term: string) => Report[];
   searchedTerm: RefObject<string>;
+  resetPreview?: () => void;
 }
 
 export default function SearchSuggestions({
@@ -23,6 +24,7 @@ export default function SearchSuggestions({
   setInterestedReport,
   func,
   searchedTerm,
+  resetPreview,
 }: SearchSuggestionsProps) {
   return (
     <ul className={`search-options ${isOpen ? "active" : ""}`}>
@@ -40,6 +42,7 @@ export default function SearchSuggestions({
                 if (setInterestedReport) {
                   setInterestedReport(null);
                 }
+                resetPreview?.();
                 setMatchingReport(func(suggestion));
               }}
             >

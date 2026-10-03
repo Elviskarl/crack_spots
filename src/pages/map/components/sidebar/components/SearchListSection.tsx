@@ -1,12 +1,4 @@
-import {
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type SubmitEvent,
-} from "react";
-import { ReportContext } from "../../../../../context/createReportContext";
+import { useEffect, useMemo, useRef, useState, type SubmitEvent } from "react";
 import searchIconUrl from "../../../../../assets/search-icon.svg";
 import SearchSuggestions from "./SearchSuggestions";
 import MatchingReports from "./MatchingReports";
@@ -15,14 +7,21 @@ import useDebounce from "../../../hooks/Debouncer";
 import { type Report, type ListItemOptional } from "../../../types";
 import useReportContext from "../../../hooks/getReportsContex";
 
-export default function SearchListSection(props: ListItemOptional) {
+export default function SearchListSection(
+  props: ListItemOptional & { resetPreview?: () => void },
+) {
   const [searchTerm, setSearchTerm] = useState("");
   const [matchingReports, setMatchingReports] = useState<Report[] | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const { reports } = useReportContext();
   const debouncedSearchTerm = useDebounce(searchTerm, 300).toLowerCase().trim();
-  const { setCollapsed, isResolving, setInterestedReport, interestedReport } =
-    props;
+  const {
+    setCollapsed,
+    isResolving,
+    setInterestedReport,
+    interestedReport,
+    resetPreview,
+  } = props;
   const searchInputElement = useRef<HTMLInputElement>(null);
   const searchedTerm = useRef<string>("");
 
@@ -47,6 +46,7 @@ export default function SearchListSection(props: ListItemOptional) {
   // Handle form submission
   function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
+    resetPreview?.();
     try {
       const normalized = searchTerm.toLowerCase().trim();
 
@@ -122,9 +122,8 @@ export default function SearchListSection(props: ListItemOptional) {
             onClick={() => {
               setSearchTerm("");
               setIsOpen(false);
-              setTimeout(() => {
-                setMatchingReports(null);
-              }, 350);
+              setMatchingReports(null);
+              resetPreview?.();
             }}
             type="button"
           >
@@ -158,6 +157,7 @@ export default function SearchListSection(props: ListItemOptional) {
           func={filterReports}
           setInterestedReport={setInterestedReport}
           searchedTerm={searchedTerm}
+          resetPreview={resetPreview}
         />
       </form>
       {matchingReports ? (
