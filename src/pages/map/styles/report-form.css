@@ -35,9 +35,10 @@ div.form-container {
 /* form element sub-styles */
 .submit-button {
   align-self: center;
+  transition: all 0.3s ease-in-out;
 }
 /* state */
-button:hover {
+.submit-button:hover {
   color: var(--accent-tint);
   background-color: var(--white-color);
 }
@@ -45,9 +46,6 @@ button:hover {
 .uplaod-file-label:hover {
   color: var(--accent-tint);
   background-color: var(--white-color);
-}
-.submit-button:hover {
-  box-shadow: 0px 1px 2px 2px var(--accent-tint);
 }
 /* Handle Loading state */
 form.report-form .loading-screen {

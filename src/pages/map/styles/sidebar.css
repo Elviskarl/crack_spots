@@ -58,25 +58,19 @@ aside.sidebar.closed {
 aside.sidebar.closed .sidebar-wrapper {
   overflow: visible;
 }
-/* Clear Form Container */
-.clear-form-container {
-  align-self: center;
-  border: none;
-  border-radius: 8px;
+.form-container-buttons {
+  display: flex;
+  justify-content: space-evenly;
+}
+.form-container-buttons button {
+  text-transform: capitalize;
+}
+/* Clear Form button */
+.clear-form-button {
   background-color: crimson;
   color: var(--white-color);
 }
-.clear-form-container button {
-  color: unset;
-  background-color: unset;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  width: 100%;
-  text-transform: capitalize;
-}
-.clear-form-container button:hover {
-  color: unset;
-  background-color: unset;
+.clear-form-button:hover {
+  color: crimson;
+  background-color: var(--white-color);
 }

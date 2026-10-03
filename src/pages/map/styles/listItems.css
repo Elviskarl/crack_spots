@@ -35,6 +35,9 @@
 
 /* ===== Accordion behavior ===== */
 .sidebar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
   transition: all 0.3s ease-in-out;
 }
 
