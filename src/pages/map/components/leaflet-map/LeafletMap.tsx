@@ -6,10 +6,7 @@ import {
 } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
-import { useContext } from "react";
-
 import "../../styles/map-container.css";
-import { ReportContext } from "../../../../context/createReportContext";
 import { ReportsContainer } from "./ReportsContainer";
 import DisplayShapefile from "../sidebar/components/DisplayShapefile";
 import {
@@ -19,9 +16,10 @@ import {
   MapCorrection,
 } from "../sidebar/components/LeafletHelpers";
 import useMapContext from "../../hooks/getMapContext";
+import useReportContext from "../../hooks/getReportsContex";
 
 function LeafletMap() {
-  const { reports, isLoading } = useContext(ReportContext)!;
+  const { reports, isLoading } = useReportContext();
   const { isNotInNairobi } = useMapContext();
   return (
     <div className={`map-container ${isLoading ? "pulse-animation" : ""}`}>

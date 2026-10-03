@@ -19,8 +19,8 @@ import "../../../styles/report-form.css";
 import LoadingScreen from "../../../../../components/LoadingScreen";
 import { MapContext } from "../../../../../context/createMapContext";
 import { ReportContext } from "../../../../../context/createReportContext";
-import { severityValues } from "../../../data";
-import useProcessImage from "../../../hooks/processImage";
+import useMapContext from "../../../hooks/getMapContext";
+import FormComponent from "./FormComponent";
 
 export default function ReportForm(props: ListItemOptional) {
   const [file, setFile] = useState<File | null>(null);
@@ -40,11 +40,9 @@ export default function ReportForm(props: ListItemOptional) {
     correctedReportCoordinates,
     setCorrectedReportCoordinates,
     setIsCorrecting,
-    isCorrecting,
-  } = useContext(MapContext)!;
+  } = useMapContext();
 
-  const { isLoading: isReportLoading, setNotification: setGlobalNotification } =
-    useContext(ReportContext)!;
+  const { setNotification: setGlobalNotification } = useContext(ReportContext)!;
   const { setCollapsed } = props;
 
   function resetPreview() {

@@ -1,14 +1,12 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import * as L from "leaflet";
 import * as turf from "@turf/turf";
 import { Circle, Marker, useMap } from "react-leaflet";
-import { MapContext } from "../../../../../context/createMapContext";
 import useMapContext from "../../../hooks/getMapContext";
 
 export function FlyToReport() {
   const map = useMap();
-  const { markerRefs, selectedReport, setSelectedReport } =
-    useContext(MapContext)!;
+  const { markerRefs, selectedReport, setSelectedReport } = useMapContext();
 
   useEffect(() => {
     if (!selectedReport) return;

@@ -23,6 +23,8 @@ import { ReportContext } from "../../../../context/createReportContext";
 import ReportPreview from "./components/ReportPreview";
 import useProcessImage from "../../hooks/processImage";
 import useMapContext from "../../hooks/getMapContext";
+import FormComponent from "./components/FormComponent";
+import useReportContext from "../../hooks/getReportsContex";
 
 export default function ResolveReport(props: ListItemOptional) {
   const isResolving = true;
@@ -35,9 +37,9 @@ export default function ResolveReport(props: ListItemOptional) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
   const imagePreviewUrl = useRef<string | null>(null);
-  const { setInitialReportCoordinates } = useMapContext();
-  const { isLoading: isReportLoading, setNotification: setGlobalNotification } =
-    useContext(ReportContext)!;
+  const { setInitialReportCoordinates, correctedReportCoordinates } =
+    useMapContext();
+  const { setNotification: setGlobalNotification } = useReportContext();
   const [notification, setNotification] = useState<NotificationType | null>(
     null,
   );

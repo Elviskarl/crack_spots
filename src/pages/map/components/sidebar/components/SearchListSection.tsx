@@ -13,12 +13,13 @@ import MatchingReports from "./MatchingReports";
 import "../../../styles/searchListSection.css";
 import useDebounce from "../../../hooks/Debouncer";
 import { type Report, type ListItemOptional } from "../../../types";
+import useReportContext from "../../../hooks/getReportsContex";
 
 export default function SearchListSection(props: ListItemOptional) {
   const [searchTerm, setSearchTerm] = useState("");
   const [matchingReports, setMatchingReports] = useState<Report[] | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const { reports } = useContext(ReportContext)!;
+  const { reports } = useReportContext();
   const debouncedSearchTerm = useDebounce(searchTerm, 300).toLowerCase().trim();
   const { setCollapsed, isResolving, setInterestedReport, interestedReport } =
     props;

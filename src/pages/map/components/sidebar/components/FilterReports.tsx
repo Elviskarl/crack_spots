@@ -1,12 +1,12 @@
 import { booleanPointInPolygon, point } from "@turf/turf";
-import { useContext, useEffect, useMemo, useState } from "react";
-import { ReportContext } from "../../../../../context/createReportContext";
+import { useEffect, useMemo, useState } from "react";
 import "../../../styles/filterReports.css";
 import type { downloadKeys, NotificationType, Report } from "../../../types";
 import downloadIcon from "../../../../../assets/download-outline.svg";
 import { createRowData } from "../../../utils/utils";
 import { Notifications } from "./Notifications";
 import useMapContext from "../../../hooks/getMapContext";
+import useReportContext from "../../../hooks/getReportsContex";
 
 type ResolutionQuality = Extract<
   Report,
@@ -34,8 +34,8 @@ export default function FilterReports() {
   const [notification, setNotification] = useState<NotificationType | null>(
     null,
   );
-  const { setReports, originalReports, isLoading } = useContext(ReportContext)!;
-  const { nairobiSubCountyShapefile} = useMapContext();
+  const { setReports, originalReports, isLoading } = useReportContext();
+  const { nairobiSubCountyShapefile } = useMapContext();
 
   // To resolve a react compiler warning when working with useRef
   const cleanReports = originalReports.current;

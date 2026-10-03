@@ -1,7 +1,7 @@
 import { GeoJSON, useMap } from "react-leaflet";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { geoJson } from "leaflet";
-import { MapContext } from "../../../../../context/createMapContext";
+import useMapContext from "../../../hooks/getMapContext";
 
 export default function DisplayShapefile() {
   const map = useMap();
@@ -9,7 +9,7 @@ export default function DisplayShapefile() {
     setIsNotInNairobi,
     nairobiSubCountyShapefile: shapefile,
     isNotInNairobi,
-  } = useContext(MapContext)!;
+  } = useMapContext();
 
   useEffect(() => {
     if (!isNotInNairobi) return;
