@@ -1,11 +1,4 @@
-import {
-  useState,
-  useRef,
-  type ChangeEvent,
-  useContext,
-  type SubmitEvent,
-  type DragEvent,
-} from "react";
+import { useState, useRef, useContext, useMemo } from "react";
 import ReportPreview from "./ReportPreview";
 import type {
   CoordinateData,
@@ -13,11 +6,9 @@ import type {
   NotificationType,
 } from "../../../types";
 import { uploadReports } from "../../../utils/uploadReports";
-import { CustomError } from "../../../../../components/error/CustomError";
 import { Notifications } from "./Notifications";
 import "../../../styles/report-form.css";
 import LoadingScreen from "../../../../../components/LoadingScreen";
-import { MapContext } from "../../../../../context/createMapContext";
 import { ReportContext } from "../../../../../context/createReportContext";
 import useMapContext from "../../../hooks/getMapContext";
 import FormComponent from "./FormComponent";
@@ -31,9 +22,7 @@ export default function ReportForm(props: ListItemOptional) {
     null,
   );
   const [isResponseLoading, setIsResponseLoading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const imagePreviewUrl = useRef<string | null>(null);
-  const { processImage } = useProcessImage();
 
   const {
     setInitialReportCoordinates,
@@ -82,191 +71,47 @@ export default function ReportForm(props: ListItemOptional) {
     });
   }
 
-  async function processFile(file: File) {
-    try {
-      const { data, resizedImage } = await processImage({ file });
-      setFile(resizedImage);
-      createPreview(resizedImage);
-      confirmCoordinates(data);
-    } catch (err) {
-      resetPreview();
-      if (err instanceof CustomError) {
-        setNotification({
-          code: err.code,
-          message: err.message,
-          type: "Error",
-        });
-        return;
-      } else {
-        setNotification({
-          code: "UNKNOWN_ERROR",
-          message: "An unknown error occurred while processing the image.",
-          type: "Error",
-        });
-        console.error(err);
-      }
-    }
-  }
+  const reportCoordinates = useMemo(() => {
+    const reportCoordinates =
+      correctedReportCoordinates && coordinates
+        ? {
+            DateTimeOriginal: coordinates.DateTimeOriginal,
+            GPSLatitudeRef: coordinates.GPSLatitudeRef,
+            GPSLongitudeRef: coordinates.GPSLongitudeRef,
+            GPSLatitude: correctedReportCoordinates.lat,
+            GPSLongitude: correctedReportCoordinates.lng,
+          }
+        : coordinates;
 
-  async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
-    e.preventDefault();
+    return reportCoordinates;
+  }, [correctedReportCoordinates, coordinates]);
 
-    if (isReportLoading) {
-      setNotification({
-        type: "Info",
-        message: "Fetching reports from the server. Please wait a moment.",
-      });
-      return;
-    }
-
-    setIsResponseLoading(true);
-    try {
-      if (!file) {
-        throw new CustomError("MISSING_FILE", "Image file is missing.");
-      }
-
-      if (!reportCoordinates) {
-        throw new CustomError(
-          "NO_EXIF_DATA",
-          "EXIF metadata is missing or incomplete.",
-        );
-      }
-
-      const formData = new FormData(e.currentTarget);
-
-      formData.append("coordinates", JSON.stringify(reportCoordinates));
-      formData.append("file", file);
-
-      const results = await uploadReports(
-        "https://crackspots-server.onrender.com/api/v1/reports",
-        formData,
-      );
-      if ("success" in results) {
-        setNotification({
-          type: "Success",
-          message: `Upload successful: ${results.message}.`,
-        });
-      }
-    } catch (error) {
-      if (error instanceof CustomError) {
-        setNotification({
-          code: error.code,
-          message: error.message,
-          type: "Error",
-        });
-        return;
-      } else {
-        setNotification({
-          type: "Error",
-          message: `Error uploading report: ${error}`,
-        });
-      }
-    } finally {
-      // Only clear on success
-      resetPreview();
-      setIsResponseLoading(false);
-    }
-  }
-
-  async function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target?.files?.[0];
-    if (file) {
-      await processFile(file);
-    }
-  }
-
-  function handleDragOver(e: DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-  }
-  async function handleDrop(e: DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-    const file = e.dataTransfer?.files?.[0];
-    if (file) {
-      await processFile(file);
-    }
-  }
-
-  const reportCoordinates =
-    correctedReportCoordinates && coordinates
-      ? {
-          DateTimeOriginal: coordinates.DateTimeOriginal,
-          GPSLatitudeRef: coordinates.GPSLatitudeRef,
-          GPSLongitudeRef: coordinates.GPSLongitudeRef,
-          GPSLatitude: correctedReportCoordinates.lat,
-          GPSLongitude: correctedReportCoordinates.lng,
-        }
-      : coordinates;
   return (
     <>
+      {imageUrl && reportCoordinates && (
+        <ReportPreview
+          url={imageUrl}
+          coordinateData={reportCoordinates}
+          setCollapsed={setCollapsed}
+          setIsLoading={setIsLoading}
+        />
+      )}
+      <FormComponent
+        confirmCoordinates={confirmCoordinates}
+        createPreview={createPreview}
+        resetPreview={resetPreview}
+        file={file}
+        reportCoordinates={reportCoordinates}
+        onResponseLoad={setIsResponseLoading}
+        onFileProcessed={setFile}
+        isLoading={isLoading}
+        onNotified={setNotification}
+        uploadFunction={uploadReports}
+        isResolving={false}
+        url="https://crackspots-server.onrender.com/api/v1/reports"
+      />
+
       <div className="form-container report-upload-form">
-        <form
-          onSubmit={handleSubmit}
-          className="report-form"
-          encType="multipart/form-data"
-        >
-          {file ? (
-            <div className="clear-form-container">
-              <button type="reset" title="Clear Form" onClick={resetPreview}>
-                clear Form
-              </button>
-            </div>
-          ) : (
-            <div
-              className="draggable-container"
-              onDragOver={handleDragOver}
-              onDrop={handleDrop}
-            >
-              <input
-                type="file"
-                name="file"
-                id="upload-file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                accept="image/jpg, image/jpeg, image/webp, .png, .jpg, .jpeg"
-                hidden
-              />
-              <div className="drop-area-container">
-                <span> Drag & Drop or </span>
-                <label htmlFor="upload-file" className="upload-file-label">
-                  Take or upload a photo
-                </label>
-              </div>
-            </div>
-          )}
-          <LoadingScreen category="image" condition={isLoading} />
-          {imageUrl && reportCoordinates && (
-            <>
-              <ReportPreview
-                url={imageUrl}
-                coordinateData={reportCoordinates}
-                setCollapsed={setCollapsed}
-                setIsLoading={setIsLoading}
-              />
-              <fieldset>
-                <legend>Severity: </legend>
-                {severityValues.map(({ label, value }) => (
-                  <label key={label} className="damage-severity-label">
-                    <input
-                      type="radio"
-                      name="severity"
-                      className="damage-severity"
-                      value={value}
-                      required
-                    />
-                    {label}
-                  </label>
-                ))}
-              </fieldset>
-            </>
-          )}
-          <button
-            className="submit-button"
-            type="submit"
-            disabled={isCorrecting}
-          >
-            submit
-          </button>
-        </form>
         <LoadingScreen category="report" condition={isResponseLoading} />
         {notification && (
           <Notifications

@@ -6,22 +6,11 @@ import type {
   NotificationType,
   Report,
 } from "../../types";
-import {
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-  type ChangeEvent,
-  type DragEvent,
-  type SubmitEvent,
-} from "react";
-import { CustomError } from "../../../../components/error/CustomError";
+import { useEffect, useRef, useState } from "react";
 import LoadingScreen from "../../../../components/LoadingScreen";
 import { Notifications } from "./components/Notifications";
 import resolveIssues from "../../utils/resolveIssues";
-import { ReportContext } from "../../../../context/createReportContext";
 import ReportPreview from "./components/ReportPreview";
-import useProcessImage from "../../hooks/processImage";
 import useMapContext from "../../hooks/getMapContext";
 import FormComponent from "./components/FormComponent";
 import useReportContext from "../../hooks/getReportsContex";
@@ -34,7 +23,6 @@ export default function ResolveReport(props: ListItemOptional) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [coordinates, setCoordinates] = useState<CoordinateData | null>(null);
   const [isResponseLoading, setIsResponseLoading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
   const imagePreviewUrl = useRef<string | null>(null);
   const { setInitialReportCoordinates, correctedReportCoordinates } =
@@ -44,7 +32,6 @@ export default function ResolveReport(props: ListItemOptional) {
     null,
   );
   const { setCollapsed } = props;
-  const { processImage } = useProcessImage();
 
   useEffect(() => {
     if (notification && notificationRef.current) {
@@ -90,213 +77,52 @@ export default function ResolveReport(props: ListItemOptional) {
     });
   }
 
-  async function processFile(file: File) {
-    setIsLoading(true);
-    try {
-      const { data, resizedImage } = await processImage({ file });
-      setFile(resizedImage);
-      createPreview(resizedImage);
-      confirmCoordinates(data);
-    } catch (err) {
-      resetPreview();
-      if (err instanceof CustomError) {
-        setNotification({
-          code: err.code,
-          message: err.message,
-          type: "Error",
-        });
-        return;
-      } else {
-        setNotification({
-          code: "UNKNOWN_ERROR",
-          message: "An unknown error occurred while processing the image.",
-          type: "Error",
-        });
-        console.error(err);
-      }
-    }
-  }
-
-  async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    if (isReportLoading) {
-      setNotification({
-        type: "Info",
-        message: "Fetching reports from the server. Please wait a moment.",
-      });
-      return;
-    }
-
-    setIsResponseLoading(true);
-    try {
-      if (!interestedReport) {
-        throw new CustomError(
-          "MISSING_REPORT",
-          "No report selected for resolution.",
-        );
-      }
-
-      if (!file) {
-        throw new CustomError("MISSING_FILE", "Image file is missing.");
-      }
-
-      if (!coordinates) {
-        throw new CustomError(
-          "NO_EXIF_DATA",
-          "EXIF metadata is missing or incomplete.",
-        );
-      }
-
-      const { _id } = interestedReport;
-
-      const formData = new FormData(e.currentTarget);
-      formData.append("coordinates", JSON.stringify(coordinates));
-      formData.append("_id", _id);
-      formData.append("file", file);
-
-      const results = await resolveIssues(
-        "https://crackspots-server.onrender.com/api/v1/resolve",
-        formData,
-      );
-
-      if ("success" in results && results.success) {
-        setNotification({
-          type: "Success",
-          message: `Upload successful: ${results.message}.`,
-        });
-      }
-      // Only clear on success
-      resetPreview();
-      setInterestedReport(null);
-    } catch (error) {
-      if (error instanceof CustomError) {
-        setNotification({
-          code: error.code,
-          message: error.message,
-          type: "Error",
-        });
-        return;
-      } else {
-        setNotification({
-          type: "Error",
-          message: `Error uploading report: ${error}`,
-        });
-      }
-    } finally {
-      setIsResponseLoading(false);
-    }
-  }
-
-  async function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target?.files?.[0];
-    if (file) {
-      await processFile(file);
-    }
-  }
-  function handleDragOver(e: DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-  }
-  async function handleDrop(e: DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-    if (e.dataTransfer) {
-      const file = e.dataTransfer.files[0];
-      if (file) {
-        await processFile(file);
-      }
-    }
-  }
+  const reportCoordinates =
+    correctedReportCoordinates && coordinates
+      ? {
+          DateTimeOriginal: coordinates.DateTimeOriginal,
+          GPSLatitudeRef: coordinates.GPSLatitudeRef,
+          GPSLongitudeRef: coordinates.GPSLongitudeRef,
+          GPSLatitude: correctedReportCoordinates.lat,
+          GPSLongitude: correctedReportCoordinates.lng,
+        }
+      : coordinates;
 
   return (
     <div className="resolve-reports-container">
       <p>Select the issue to resolve</p>
       <SearchListSection
-        setCollapsed={props.setCollapsed}
+        setCollapsed={setCollapsed}
         isResolving={isResolving}
         setInterestedReport={setInterestedReport}
         interestedReport={interestedReport}
+        resetPreview={resetPreview}
       />
+      {imageUrl && reportCoordinates && interestedReport && (
+        <ReportPreview
+          url={imageUrl}
+          coordinateData={reportCoordinates}
+          setCollapsed={setCollapsed}
+          setIsLoading={setIsLoading}
+        />
+      )}
       {interestedReport && (
-        <div className="interested-report-details">
-          <form onSubmit={handleSubmit} className="report-form">
-            <fieldset>
-              <legend>Upload Image for Verification</legend>
-              {file ? (
-                <div className="clear-form-container">
-                  <button
-                    type="reset"
-                    title="Clear Form"
-                    onClick={resetPreview}
-                  >
-                    clear Form
-                  </button>
-                </div>
-              ) : (
-                <div
-                  className="draggable-container"
-                  onDragOver={handleDragOver}
-                  onDrop={handleDrop}
-                >
-                  <input
-                    type="file"
-                    name="file"
-                    id="resolve-upload-file"
-                    ref={fileInputRef}
-                    onChange={handleFileChange}
-                    accept="image/jpg, image/jpeg, image/webp, .png, .jpg, .jpeg"
-                    hidden
-                  />
-                  <div className="drop-area-container">
-                    <span> Drag & Drop or </span>
-                    <label
-                      htmlFor="resolve-upload-file"
-                      className="upload-file-label"
-                    >
-                      Take or upload a photo
-                    </label>
-                  </div>
-                </div>
-              )}
-              <LoadingScreen category="image" condition={isLoading} />
-              {imageUrl && coordinates && (
-                <ReportPreview
-                  setCollapsed={props.setCollapsed}
-                  setIsLoading={setIsLoading}
-                  coordinateData={coordinates}
-                  url={imageUrl}
-                />
-              )}
-            </fieldset>
-            <fieldset className="repair-quality-fieldset">
-              <legend>Repair Quality</legend>
-              <select
-                name="quality"
-                id="repair-quality-input"
-                defaultValue={""}
-                required
-              >
-                <option value="" disabled>
-                  --Please choose an option--
-                </option>
-                <option value="temporary">Temporary (Filled with dirt)</option>
-                <option value="permanent">Permanent</option>
-              </select>
-            </fieldset>
-            <fieldset>
-              <legend>Description note</legend>
-              <textarea
-                name="note"
-                id="resolve-report-description-note"
-                rows={5}
-                placeholder="Enter a description of the resolution..."
-                required={true}
-                minLength={5}
-                maxLength={100}
-              ></textarea>
-            </fieldset>
-            <button className="submit-report-resolution-btn">Submit</button>
-          </form>
-        </div>
+        <FormComponent
+          confirmCoordinates={confirmCoordinates}
+          createPreview={createPreview}
+          resetPreview={resetPreview}
+          file={file}
+          isResolving={isResolving}
+          uploadFunction={resolveIssues}
+          isLoading={isLoading}
+          onFileProcessed={setFile}
+          onNotified={setNotification}
+          onResponseLoad={setIsResponseLoading}
+          reportCoordinates={reportCoordinates}
+          url="https://crackspots-server.onrender.com/api/v1/resolve"
+          interestedReport={interestedReport}
+          cleanUp={() => setInterestedReport(null)}
+        />
       )}
       <LoadingScreen category="report" condition={isResponseLoading} />
       {notification && (
