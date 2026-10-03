@@ -83,8 +83,6 @@ export default function FormComponent({
       const { data, resizedImage } = await processImage({ file });
 
       if (isResolving && interestedReport) {
-        console.log("resolving");
-
         resolveData(
           {
             GPSLongitude: interestedReport.location.coordinates[0],
