@@ -191,7 +191,7 @@ export default function FormComponent({
         className="draggable-container"
         onDragOver={handleDragOver}
         onDrop={handleDrop}
-        hidden={reportCoordinates ? true : false}
+        hidden={isLoading || !!reportCoordinates}
       >
         <input
           type="file"
