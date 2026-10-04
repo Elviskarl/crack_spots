@@ -122,6 +122,7 @@ export default function ResolveReport(props: ListItemOptional) {
           url="https://crackspots-server.onrender.com/api/v1/resolve"
           interestedReport={interestedReport}
           cleanUp={() => setInterestedReport(null)}
+          onImageLoad={setIsLoading}
         />
       )}
       <LoadingScreen category="report" condition={isResponseLoading} />

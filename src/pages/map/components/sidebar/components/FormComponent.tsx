@@ -27,6 +27,7 @@ interface FormComponentProps {
   confirmCoordinates: (data: CoordinateData) => void;
   onNotified: (notification: NotificationType) => void;
   onResponseLoad: (isLoading: boolean) => void;
+  onImageLoad: (isLoading: boolean) => void;
   reportCoordinates: CoordinateData | null;
   cleanUp?: () => void;
   uploadFunction: (
@@ -54,6 +55,7 @@ export default function FormComponent({
   url,
   interestedReport,
   cleanUp,
+  onImageLoad,
 }: FormComponentProps) {
   const { isCorrecting } = useMapContext();
   const { isLoading: isReportLoading } = useReportContext();
@@ -79,6 +81,7 @@ export default function FormComponent({
   }
 
   async function processFile(file: File) {
+    onImageLoad(true);
     try {
       const { data, resizedImage } = await processImage({ file });
 

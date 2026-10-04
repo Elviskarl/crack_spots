@@ -86,6 +86,8 @@ export default function ReportForm(props: ListItemOptional) {
     return reportCoordinates;
   }, [correctedReportCoordinates, coordinates]);
 
+  console.log(isLoading);
+
   return (
     <>
       {imageUrl && reportCoordinates && (
@@ -109,6 +111,7 @@ export default function ReportForm(props: ListItemOptional) {
         uploadFunction={uploadReports}
         isResolving={false}
         url="https://crackspots-server.onrender.com/api/v1/reports"
+        onImageLoad={setIsLoading}
       />
 
       <div className="form-container report-upload-form">
