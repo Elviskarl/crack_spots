@@ -1,5 +1,5 @@
 import { FetchError } from "../../../components/error/FetchError";
-import type { FetchBackendResponse } from "../types/index";
+import type { FetchReportsResponse } from "../types/index";
 
 export async function fetchReports(param: string) {
   try {
@@ -8,11 +8,9 @@ export async function fetchReports(param: string) {
     });
 
     const response = await fetch(request);
-    if (!response.ok) {
-      throw new FetchError(`Error fetching reports: ${response.statusText}`);
-    }
-    const serverData = (await response.json()) as FetchBackendResponse;
-    if ("data" in serverData) {
+
+    const serverData = (await response.json()) as FetchReportsResponse;
+    if (serverData.success) {
       return serverData.data;
     }
     throw new FetchError(serverData.message);

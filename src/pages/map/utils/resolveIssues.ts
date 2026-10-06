@@ -1,5 +1,5 @@
 import { FetchError } from "../../../components/error/FetchError";
-import type { ResolveIssuesResponse } from "../types";
+import type { ServerResponse } from "../types";
 
 export default async function resolveIssues(url: string, data: FormData) {
   try {
@@ -9,12 +9,9 @@ export default async function resolveIssues(url: string, data: FormData) {
     });
 
     const response = await fetch(request);
-    const result = (await response.json()) as ResolveIssuesResponse;
-    if (!response.ok && "error" in result) {
-      throw new FetchError(result.error);
-    }
+    const result = (await response.json()) as ServerResponse;
 
-    if ("success" in result && !result.success) {
+    if (!result.success) {
       throw new FetchError(result.message);
     }
     return result;

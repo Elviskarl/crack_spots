@@ -1,5 +1,5 @@
 import { FetchError } from "../../../components/error/FetchError";
-import type { UploadResponse } from "../types";
+import type { ServerResponse } from "../types";
 
 export async function uploadReports(param: string, data: FormData) {
   try {
@@ -10,12 +10,9 @@ export async function uploadReports(param: string, data: FormData) {
 
     const response = await fetch(request);
 
-    const result = (await response.json()) as UploadResponse;
+    const result = (await response.json()) as ServerResponse;
 
-    if (!response.ok && "error" in result) {
-      throw new FetchError(result.error);
-    }
-    if ("success" in result && !result.success) {
+    if (!result.success) {
       throw new FetchError(result.message);
     }
     return result;

@@ -103,33 +103,31 @@ export interface downloadKeys {
   resolution_note: string | null;
 }
 
-interface BaseResponse {
-  success: boolean;
+interface SuccessServerResponse {
+  success: true;
+  message: string;
 }
-interface FetchSuccessResponse extends BaseResponse {
+interface ErrorServerResponse {
+  success: false;
+  message: string;
+}
+interface FetchSuccessResponse {
+  success: true;
   data: Report[];
 }
-interface FetchErrorResponse extends BaseResponse {
+interface FetchErrorResponse {
+  success: false;
   message: string;
 }
 
-interface resolveIssuesResponse extends BaseResponse {
-  message: string;
-}
-
-interface serverResponse extends BaseResponse {
-  message: string;
-}
-
-interface MissingFields {
-  error: string;
-}
+// export interface UploadResponse extends BaseResponse {
+//   message: string;
+// }
 
 export interface ReportCoordinates {
   lat: number;
   lng: number;
 }
 
-export type FetchBackendResponse = FetchSuccessResponse | FetchErrorResponse;
-export type ResolveIssuesResponse = resolveIssuesResponse | MissingFields;
-export type UploadResponse = serverResponse | MissingFields;
+export type ServerResponse = SuccessServerResponse | ErrorServerResponse;
+export type FetchReportsResponse = FetchSuccessResponse | FetchErrorResponse;

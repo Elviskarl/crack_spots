@@ -12,8 +12,7 @@ import type {
   CoordinateData,
   NotificationType,
   Report,
-  ResolveIssuesResponse,
-  UploadResponse,
+  ServerResponse,
 } from "../../../types";
 import useReportContext from "../../../hooks/getReportsContex";
 import { severityValues } from "../../../data";
@@ -30,10 +29,7 @@ interface FormComponentProps {
   onImageLoad: (isLoading: boolean) => void;
   reportCoordinates: CoordinateData | null;
   cleanUp?: () => void;
-  uploadFunction: (
-    url: string,
-    formData: FormData,
-  ) => Promise<UploadResponse | ResolveIssuesResponse>;
+  uploadFunction: (url: string, formData: FormData) => Promise<ServerResponse>;
   isLoading: boolean;
   isResolving: boolean;
   url: string;
@@ -152,7 +148,7 @@ export default function FormComponent({
       }
 
       const results = await uploadFunction(url, formData);
-      if ("success" in results) {
+      if (results.success) {
         onNotified({
           type: "Success",
           message: `Upload successful: ${results.message}.`,

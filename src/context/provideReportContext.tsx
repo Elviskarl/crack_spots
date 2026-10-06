@@ -27,7 +27,7 @@ export function ReportProvider({ children }: { children: React.ReactNode }) {
         console.error("Error fetching reports:", err);
         setNotification({
           type: "Error",
-          message: "Failed to fetch reports.",
+          message: `Failed to fetch reports: ${err}`,
         });
         return null;
       } finally {
