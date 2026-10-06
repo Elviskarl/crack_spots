@@ -36,10 +36,11 @@ div.form-container {
 .submit-button {
   align-self: center;
   transition: all 0.3s ease-in-out;
+  background-color: limegreen;
 }
 /* state */
 .submit-button:hover {
-  color: var(--accent-tint);
+  color: limegreen;
   background-color: var(--white-color);
 }
 .browse-btn:hover,
