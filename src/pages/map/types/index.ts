@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, RefObject, SetStateAction } from "react";
 
 interface BaseReport {
   _id: string;
@@ -66,6 +66,19 @@ export interface ListItemOptional {
   isResolving?: boolean;
   interestedReport?: Report | null;
   setInterestedReport?: Dispatch<SetStateAction<Report | null>>;
+}
+
+export interface SearchSuggestionsProps {
+  suggestions: string[];
+  setSearchTerm: Dispatch<SetStateAction<string>>;
+  setMatchingReport: Dispatch<SetStateAction<Report[] | null>>;
+  setInterestedReport: Dispatch<SetStateAction<Report | null>> | undefined;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  debouncedSearchTerm: string;
+  isOpen: boolean;
+  func: (term: string) => Report[];
+  searchedTerm: RefObject<string>;
+  resetPreview?: () => void;
 }
 
 export interface LocationGroup {

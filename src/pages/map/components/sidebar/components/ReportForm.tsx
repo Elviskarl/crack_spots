@@ -86,8 +86,6 @@ export default function ReportForm(props: ListItemOptional) {
     return reportCoordinates;
   }, [correctedReportCoordinates, coordinates]);
 
-  console.log(isLoading);
-
   return (
     <>
       {imageUrl && reportCoordinates && (

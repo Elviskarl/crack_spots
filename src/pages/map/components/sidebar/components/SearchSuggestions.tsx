@@ -1,18 +1,4 @@
-import { type Dispatch, type RefObject, type SetStateAction } from "react";
-import type { Report } from "../../../types";
-
-interface SearchSuggestionsProps {
-  suggestions: string[];
-  setSearchTerm: Dispatch<SetStateAction<string>>;
-  setMatchingReport: Dispatch<SetStateAction<Report[] | null>>;
-  setInterestedReport: Dispatch<SetStateAction<Report | null>> | undefined;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-  debouncedSearchTerm: string;
-  isOpen: boolean;
-  func: (term: string) => Report[];
-  searchedTerm: RefObject<string>;
-  resetPreview?: () => void;
-}
+import type { SearchSuggestionsProps } from "../../../types";
 
 export default function SearchSuggestions({
   suggestions,
