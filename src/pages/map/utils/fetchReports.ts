@@ -1,11 +1,10 @@
 import { FetchError } from "../../../components/error/FetchError";
 import type { FetchReportsResponse } from "../types/index";
 
-export async function fetchReports(param: string, signal: AbortSignal) {
+export async function fetchReports(param: string) {
   try {
     const request = new Request(param, {
       method: "GET",
-      signal,
     });
 
     const response = await fetch(request);
@@ -16,10 +15,6 @@ export async function fetchReports(param: string, signal: AbortSignal) {
     }
     throw new FetchError(serverData.message);
   } catch (err) {
-    if (err instanceof Error && err.name === "AbortError") {
-      console.error(err);
-      throw err;
-    }
     console.error(err);
     throw err;
   }
