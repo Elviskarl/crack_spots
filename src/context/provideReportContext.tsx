@@ -11,12 +11,14 @@ export function ReportProvider({ children }: { children: React.ReactNode }) {
   );
   const originalReports = useRef<Report[]>([]);
   useEffect(() => {
+    const abortController = new AbortController();
     // Fetch the report data from the API
     const url = "https://crackspots-server.onrender.com/api/v1/reports";
     async function loadReports(url: string) {
       setIsLoading(true);
       try {
-        const data = await fetchReports(url);
+        const { signal } = abortController;
+        const data = await fetchReports(url, signal);
         setNotification({
           type: "Success",
           message: "Reports fetched successfully.",
