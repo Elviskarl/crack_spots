@@ -16,8 +16,8 @@ export function ReportProvider({ children }: { children: React.ReactNode }) {
     const url = "https://crackspots-server.onrender.com/api/v1/reports";
     async function loadReports(url: string) {
       setIsLoading(true);
+      const { signal } = abortController;
       try {
-        const { signal } = abortController;
         const data = await fetchReports(url, signal);
         setNotification({
           type: "Success",
@@ -37,6 +37,10 @@ export function ReportProvider({ children }: { children: React.ReactNode }) {
       }
     }
     loadReports(url);
+
+    return () => {
+      abortController.abort();
+    };
   }, []);
 
   return (
