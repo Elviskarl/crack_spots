@@ -1,21 +1,22 @@
 import { FetchError } from "../../../components/error/FetchError";
 import type { FetchReportsResponse } from "../types/index";
 
-export async function fetchReports(param: string) {
-  try {
-    const request = new Request(param, {
-      method: "GET",
-    });
+export async function fetchReports(param: string, signal: AbortSignal) {
+  const request = new Request(param, {
+    method: "GET",
+    signal,
+  });
 
-    const response = await fetch(request);
+  const response = await fetch(request);
 
-    const serverData = (await response.json()) as FetchReportsResponse;
-    if (serverData.success) {
-      return serverData.data;
-    }
-    throw new FetchError(serverData.message);
-  } catch (err) {
-    console.error(err);
-    throw err;
+  if (!response.ok) {
+    throw new Error(`Request failed: ${response.status}`);
   }
+
+  const serverData = (await response.json()) as FetchReportsResponse;
+
+  if (!serverData.success) {
+    throw new FetchError(serverData.message);
+  }
+  return serverData.data;
 }
