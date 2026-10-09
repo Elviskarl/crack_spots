@@ -2,7 +2,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import imgSrc from "../assets/app_logo.jpg";
 import "./styles/index.css";
 import "./styles/navbarMediaQuerry.css";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -62,7 +62,9 @@ function Navbar() {
           <span className="menu-label">Menu</span>
         </div>
       </nav>
-      <Outlet />
+      <Suspense fallback="...">
+        <Outlet />
+      </Suspense>
     </>
   );
 }
