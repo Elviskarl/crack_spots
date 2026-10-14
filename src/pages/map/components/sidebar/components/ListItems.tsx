@@ -1,4 +1,3 @@
-import upArrowUrl from "../../../../../assets/up_arrow.png";
 import { useState } from "react";
 import LoadingScreen from "../../../../../components/LoadingScreen";
 // styles
@@ -20,7 +19,7 @@ export function ListItems(props: ListItemsProps) {
     collapsed,
     setCollapsed,
   } = props;
-  const { isLoading } = useReportContext();
+  const { isLoading } = useReports();
   function toggleList(/*e: MouseEvent<HTMLButtonElement>*/) {
     setIsOpen((prevVal) => !prevVal);
   }

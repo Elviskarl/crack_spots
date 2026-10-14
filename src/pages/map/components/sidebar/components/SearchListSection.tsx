@@ -19,7 +19,7 @@ export default function SearchListSection(
   const [searchTerm, setSearchTerm] = useState("");
   const [matchingReports, setMatchingReports] = useState<Report[] | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const { reports } = useReportContext();
+  const { data: reports = [] } = useReports();
   const debouncedSearchTerm = useDebounce(searchTerm, 300).toLowerCase().trim();
   const {
     setCollapsed,

@@ -19,11 +19,14 @@ import {
 } from "../sidebar/components/LeafletHelpers";
 // hooks
 import useMapContext from "../../hooks/getMapContext";
-import useReportContext from "../../hooks/getReportsContex";
+import useReports from "../../hooks/useReports";
+import useFilteredReports from "../../hooks/filteredReports";
 
 function LeafletMap() {
-  const { reports, isLoading } = useReportContext();
   const { isNotInNairobi } = useMapContext();
+  const { isLoading } = useReports();
+  const filteredReports = useFilteredReports();
+
   return (
     <div className={`map-container ${isLoading ? "pulse-animation" : ""}`}>
       <MapContainer
@@ -54,7 +57,7 @@ function LeafletMap() {
         <FlyToCoordinates />
         <MapCorrection />
         {isNotInNairobi && <DisplayShapefile />}
-        {reports.length > 0 && <ReportsContainer reports={reports} />}
+        {<ReportsContainer reports={filteredReports} />}
       </MapContainer>
     </div>
   );

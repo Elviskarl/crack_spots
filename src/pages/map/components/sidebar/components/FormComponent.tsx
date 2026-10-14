@@ -59,9 +59,9 @@ export default function FormComponent({
   onImageLoad,
 }: FormComponentProps) {
   const { isCorrecting } = useMapContext();
-  const { isLoading: isReportLoading } = useReportContext();
   const { processImage } = useProcessImage();
   const fileInputId = useId();
+  const { isLoading: isReportLoading } = useReports();
 
   async function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.currentTarget.files?.[0];

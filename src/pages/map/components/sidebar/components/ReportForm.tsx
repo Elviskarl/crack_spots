@@ -36,7 +36,7 @@ export default function ReportForm(props: ListItemOptional) {
     setIsCorrecting,
   } = useMapContext();
 
-  const { setNotification: setGlobalNotification } = useContext(ReportContext)!;
+  const { setNotification: setGlobalNotification } = useReportContext();
   const { setCollapsed } = props;
 
   function resetPreview() {
