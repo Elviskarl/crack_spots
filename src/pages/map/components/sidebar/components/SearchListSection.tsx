@@ -1,11 +1,17 @@
 import { useEffect, useMemo, useRef, useState, type SubmitEvent } from "react";
+// assets
 import searchIconUrl from "../../../../../assets/search-icon.svg";
+// components
 import SearchSuggestions from "./SearchSuggestions";
 import MatchingReports from "./MatchingReports";
+// styles
 import "../../../styles/searchListSection.css";
+// hooks
 import useDebounce from "../../../hooks/Debouncer";
+// types
 import { type Report, type ListItemOptional } from "../../../types";
-import useReportContext from "../../../hooks/getReportsContex";
+// context
+import useReports from "../../../hooks/useReports";
 
 export default function SearchListSection(
   props: ListItemOptional & { resetPreview?: () => void },

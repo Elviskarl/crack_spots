@@ -1,19 +1,25 @@
+import { useEffect, useRef, useState } from "react";
+// components
 import SearchListSection from "./components/SearchListSection";
+// styles
 import "../../styles/resloveReport.css";
+// types
 import type {
   CoordinateData,
   ListItemOptional,
   NotificationType,
   Report,
 } from "../../types";
-import { useEffect, useRef, useState } from "react";
+// components
 import LoadingScreen from "../../../../components/LoadingScreen";
 import { Notifications } from "./components/Notifications";
-import resolveIssues from "../../utils/resolveIssues";
 import ReportPreview from "./components/ReportPreview";
-import useMapContext from "../../hooks/getMapContext";
 import FormComponent from "./components/FormComponent";
-import useReportContext from "../../hooks/getReportsContex";
+// Helper Fn
+import resolveIssues from "../../utils/resolveIssues";
+// context
+import useMapContext from "../../hooks/getMapContext";
+import useReportContext from "../../hooks/getReportsContext";
 
 export default function ResolveReport(props: ListItemOptional) {
   const isResolving = true;

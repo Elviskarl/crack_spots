@@ -6,8 +6,11 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
+// types
 import type { Report } from "../../../types";
+// Helper Fn
 import CreateIssues from "../../../utils/CreateIssues";
+// assets
 import mapImgUrl from "../../../../../assets/location-outline.svg";
 import locationImgUrl from "../../../../../assets/map-outline.svg";
 import imageCategoryUrl from "../../../../../assets/analytics-outline.svg";
@@ -16,8 +19,9 @@ import leafUrl from "../../../../../assets/leaf-outline.svg";
 import checkUrl from "../../../../../assets/check.png";
 import approvedImageUrl from "../../../../../assets/approved.png";
 import tempApprovedImageUrl from "../../../../../assets/approved.png";
-
+// styles
 import "../../../styles/matching-report.css";
+// context
 import useMapContext from "../../../hooks/getMapContext";
 interface MatchingReportprops {
   matchingReport: Report[];

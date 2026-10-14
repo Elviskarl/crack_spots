@@ -2,7 +2,9 @@ import { useMemo, useState } from "react";
 import { Icon } from "leaflet";
 import { Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
+// types
 import type { Report } from "../../types";
+// assets
 import roadNameIcon from "../../../../assets/distance.png";
 import locationNameIcon from "../../../../assets/map.png";
 import neighbourhoodNameIcon from "../../../../assets/neighborhood.png";
@@ -12,7 +14,9 @@ import changeReportIcon from "../../../../assets/up_arrow.png";
 // Import the required CSS for marker clustering
 import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
+// Helper Fn
 import useCreateIssues from "../../utils/CreateIssues";
+// hooks
 import useLocationCluster from "../../hooks/locationCluster";
 import useMapContext from "../../hooks/getMapContext";
 

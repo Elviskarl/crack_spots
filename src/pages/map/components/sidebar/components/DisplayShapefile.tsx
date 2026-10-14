@@ -1,6 +1,7 @@
 import { GeoJSON, useMap } from "react-leaflet";
 import { useEffect } from "react";
 import { geoJson } from "leaflet";
+// hooks
 import useMapContext from "../../../hooks/getMapContext";
 
 export default function DisplayShapefile() {

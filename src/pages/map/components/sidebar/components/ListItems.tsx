@@ -1,9 +1,14 @@
 import upArrowUrl from "../../../../../assets/up_arrow.png";
 import { useState } from "react";
-import type { ListItemsProps } from "../../../types";
-import "../../../styles/listItems.css";
 import LoadingScreen from "../../../../../components/LoadingScreen";
-import useReportContext from "../../../hooks/getReportsContex";
+// styles
+import "../../../styles/listItems.css";
+// types
+import type { ListItemsProps } from "../../../types";
+// hooks
+import useReports from "../../../hooks/useReports";
+// assets
+import upArrowUrl from "../../../../../assets/up_arrow.png";
 
 export function ListItems(props: ListItemsProps) {
   const [isOpen, setIsOpen] = useState(true);

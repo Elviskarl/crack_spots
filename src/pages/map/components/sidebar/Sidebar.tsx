@@ -1,15 +1,19 @@
-import { ListItems } from "./components/ListItems";
+// styles
 import "../../styles/sidebar.css";
+// assets
 import uploadImageUrl from "../../../../assets/image-upload-icon.png";
 import searchImageUrl from "../../../../assets/search.png";
 import filterImageUrl from "../../../../assets/funnel-outline.svg";
-import ReportForm from "./components/ReportForm";
-import SearchListSection from "./components/SearchListSection";
 import menuImageUrl from "../../../../assets/menu-outline.svg";
 import checkmarkResolve from "../../../../assets/checkmark-resolve.png";
-import { type Dispatch, type SetStateAction } from "react";
+// components
+import ReportForm from "./components/ReportForm";
+import SearchListSection from "./components/SearchListSection";
 import FilterReports from "./components/FilterReports";
 import ResolveReport from "./ResolveReport";
+import { ListItems } from "./components/ListItems";
+// types
+import { type Dispatch, type SetStateAction } from "react";
 
 interface SidebarProps {
   collapsed: boolean;

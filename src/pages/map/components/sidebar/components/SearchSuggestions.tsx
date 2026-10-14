@@ -1,3 +1,4 @@
+// types
 import type { SearchSuggestionsProps } from "../../../types";
 
 export default function SearchSuggestions({

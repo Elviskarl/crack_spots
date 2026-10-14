@@ -1,7 +1,11 @@
 import { useEffect, type Dispatch } from "react";
+// types
 import type { NotificationType } from "../../../types";
+// assets
 import closeBtn from "../../../../../assets/close.svg";
+// styles
 import "../../../styles/notification.css";
+
 interface Params {
   message: string;
   func: Dispatch<React.SetStateAction<NotificationType | null>>;

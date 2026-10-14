@@ -1,17 +1,22 @@
-import { useState, useRef, useContext, useMemo } from "react";
-import ReportPreview from "./ReportPreview";
+import { useState, useRef, useMemo } from "react";
+// types
 import type {
   CoordinateData,
   ListItemOptional,
   NotificationType,
 } from "../../../types";
+// Helper Fn
 import { uploadReports } from "../../../utils/uploadReports";
 import { Notifications } from "./Notifications";
+// styles
 import "../../../styles/report-form.css";
-import LoadingScreen from "../../../../../components/LoadingScreen";
-import { ReportContext } from "../../../../../context/createReportContext";
+// context
+import useReportContext from "../../../hooks/getReportsContext";
 import useMapContext from "../../../hooks/getMapContext";
+// components
+import ReportPreview from "./ReportPreview";
 import FormComponent from "./FormComponent";
+import LoadingScreen from "../../../../../components/LoadingScreen";
 
 export default function ReportForm(props: ListItemOptional) {
   const [file, setFile] = useState<File | null>(null);

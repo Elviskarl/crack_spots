@@ -1,7 +1,11 @@
+// types
 import type { CoordinateData } from "../../../types/index";
-import "../../../styles/report-preview.css";
-import editImageUrl from "../../../../../assets/edit.svg";
 import { type Dispatch, type SetStateAction } from "react";
+// styles
+import "../../../styles/report-preview.css";
+// assets
+import editImageUrl from "../../../../../assets/edit.svg";
+// context
 import useMapContext from "../../../hooks/getMapContext";
 
 interface Params {

@@ -1,10 +1,15 @@
-import { booleanPointInPolygon, point } from "@turf/turf";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+// styles
 import "../../../styles/filterReports.css";
-import type { downloadKeys, NotificationType, Report } from "../../../types";
+// types
+import type { NotificationType, Report, FilterValues } from "../../../types";
+// assets
 import downloadIcon from "../../../../../assets/download-outline.svg";
-import { createRowData } from "../../../utils/utils";
+// Helper Fn
+import handleDownload from "../../../utils/handleDownLoad";
+// components
 import { Notifications } from "./Notifications";
+// context
 import useMapContext from "../../../hooks/getMapContext";
 import useReportContext from "../../../hooks/getReportsContex";
 

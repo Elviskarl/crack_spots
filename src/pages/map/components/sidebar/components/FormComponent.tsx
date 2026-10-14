@@ -5,18 +5,23 @@ import {
   type SubmitEvent,
 } from "react";
 import LoadingScreen from "../../../../../components/LoadingScreen";
-import useMapContext from "../../../hooks/getMapContext";
 import { CustomError } from "../../../../../components/error/CustomError";
-import useProcessImage from "../../../hooks/processImage";
+// types
 import type {
   CoordinateData,
   NotificationType,
   Report,
   ServerResponse,
 } from "../../../types";
-import useReportContext from "../../../hooks/getReportsContex";
+// data
 import { severityValues } from "../../../data";
+// helper Fn
 import { resolveData } from "../../../utils/utils";
+// hooks
+import useReports from "../../../hooks/useReports";
+import useProcessImage from "../../../hooks/processImage";
+// context
+import useMapContext from "../../../hooks/getMapContext";
 
 interface FormComponentProps {
   file: File | null;

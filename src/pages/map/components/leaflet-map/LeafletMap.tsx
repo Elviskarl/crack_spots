@@ -4,17 +4,20 @@ import {
   ZoomControl,
   LayersControl,
 } from "react-leaflet";
-
+// styles
 import "leaflet/dist/leaflet.css";
 import "../../styles/map-container.css";
+// components
 import { ReportsContainer } from "./ReportsContainer";
 import DisplayShapefile from "../sidebar/components/DisplayShapefile";
+// Helper Fn
 import {
   FlyToCoordinates,
   FlyToReport,
   ResizeMap,
   MapCorrection,
 } from "../sidebar/components/LeafletHelpers";
+// hooks
 import useMapContext from "../../hooks/getMapContext";
 import useReportContext from "../../hooks/getReportsContex";
 
