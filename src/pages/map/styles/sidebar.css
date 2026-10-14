@@ -65,6 +65,15 @@ aside.sidebar.closed .sidebar-wrapper {
 .form-container-buttons button {
   text-transform: capitalize;
 }
+/* buttons */
+button {
+  font-size: var(--text-base);
+  padding: 1rem;
+  font-family: inherit;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
 /* Clear Form button */
 .clear-form-button {
   background-color: crimson;

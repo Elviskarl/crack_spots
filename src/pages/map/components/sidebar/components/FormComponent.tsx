@@ -22,6 +22,8 @@ import useReports from "../../../hooks/useReports";
 import useProcessImage from "../../../hooks/processImage";
 // context
 import useMapContext from "../../../hooks/getMapContext";
+// styles
+import "../../../styles/formComponent.css";
 
 interface FormComponentProps {
   file: File | null;
