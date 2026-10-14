@@ -2,6 +2,9 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 
+// react query
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 // styles for the leaflet marker
 import * as L from "leaflet";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
@@ -15,15 +18,20 @@ type LeafletIconDefaultWithPrivateUrl = L.Icon.Default & {
   _getIconUrl?: () => string;
 };
 
-delete (L.Icon.Default.prototype as LeafletIconDefaultWithPrivateUrl)._getIconUrl;
+delete (L.Icon.Default.prototype as LeafletIconDefaultWithPrivateUrl)
+  ._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
 });
 
+const queryClient = new QueryClient();
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   </StrictMode>,
 );
