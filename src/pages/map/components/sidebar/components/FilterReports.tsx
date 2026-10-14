@@ -58,59 +58,7 @@ export default function FilterReports() {
         .map((item) => item.location.address?.road?.toLowerCase())
         .filter(Boolean) as string[],
     );
-  }, [cleanReports]);
-
-  /*function getSubCounty(subcounty: string) {
-    const feature = nairobiSubCountyShapefile.current?.features.find(
-      (feature) => feature.properties?.subcounty === subcounty,
-    );
-    if (!feature) return;
-    const filteredReports = originalReports.current.filter((report) => {
-      const reportPoint = point([
-        report.location.coordinates[0],
-        report.location.coordinates[1],
-      ]);
-      return booleanPointInPolygon(reportPoint, feature);
-    });
-    setReports(filteredReports);
-  }*/
-
-  const filterTheReports = useMemo(() => {
-    return cleanReports.filter((report) => {
-      if (filters.yearTaken && Number.isInteger(filters.yearTaken)) {
-        const date = new Date(report.dateTaken);
-        if (isNaN(date.getTime())) return false;
-        if (date.getUTCFullYear() !== filters.yearTaken) return false;
-      }
-      if (filters.severity && report.severity !== filters.severity)
-        return false;
-      if (filters.reportStatus && report.status !== filters.reportStatus)
-        return false;
-      if (
-        report.status === "resolved" &&
-        filters.resolutionQuality &&
-        report.resolution.quality !== filters.resolutionQuality
-      )
-        return false;
-      if (filters.location) {
-        const feature = cleanShapeFile?.features.find(
-          (f) => f.properties?.subcounty === filters.location,
-        );
-        if (!feature) return false;
-        const reportPoint = point([
-          report.location.coordinates[0],
-          report.location.coordinates[1],
-        ]);
-        if (!booleanPointInPolygon(reportPoint, feature)) return false;
-      }
-      if (filters.streetName) {
-        const road = report.location.address?.road?.toLowerCase();
-        if (!road) return false;
-        if (!road.includes(filters.streetName.toLowerCase())) return false;
-      }
-      return true;
-    });
-  }, [filters, cleanReports, cleanShapeFile]);
+  }, [cachedResults]);
 
   // Helper to update one filter field
   const updateFilter = <k extends keyof FilterValues>(
