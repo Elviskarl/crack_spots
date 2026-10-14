@@ -19,42 +19,44 @@ import useFilteredReports from "../../../hooks/filteredReports";
 import { defaultFilterValues } from "../../../data";
 
 export default function FilterReports() {
-  const [filters, setFilters] = useState<FilterValues>(defaultFilterValues);
   const [notification, setNotification] = useState<NotificationType | null>(
     null,
   );
-  const { setReports, originalReports, isLoading } = useReportContext();
+  const { filterValues, setFilterValues } = useReportContext();
+  const { data: cachedResults = [], isLoading } = useReports();
   const { nairobiSubCountyShapefile } = useMapContext();
+  const filteredReports = useFilteredReports();
 
   // To resolve a react compiler warning when working with useRef
-  const cleanReports = originalReports.current;
   const cleanShapeFile = nairobiSubCountyShapefile.current;
 
   const category = useMemo(() => {
-    return new Set(cleanReports.map((report) => report.severity));
-  }, [cleanReports]);
+    return new Set(cachedResults.map((report) => report.severity));
+  }, [cachedResults]);
 
   const yearTaken = useMemo(() => {
     return new Set(
-      cleanReports.map((report) => new Date(report.dateTaken).getUTCFullYear()),
+      cachedResults.map((report) =>
+        new Date(report.dateTaken).getUTCFullYear(),
+      ),
     );
-  }, [cleanReports]);
+  }, [cachedResults]);
 
   const resolutionStatus = useMemo(() => {
-    return new Set(cleanReports.map((report) => report.status));
-  }, [cleanReports]);
+    return new Set(cachedResults.map((report) => report.status));
+  }, [cachedResults]);
 
   const resolutionQuality = useMemo(() => {
     return new Set(
-      cleanReports
+      cachedResults
         .filter((report) => report.status === "resolved")
         .map((report) => report.resolution.quality),
     );
-  }, [cleanReports]);
+  }, [cachedResults]);
 
   const streetNames = useMemo(() => {
     return new Set(
-      cleanReports
+      cachedResults
         .map((item) => item.location.address?.road?.toLowerCase())
         .filter(Boolean) as string[],
     );
@@ -65,38 +67,8 @@ export default function FilterReports() {
     key: k,
     value: FilterValues[k],
   ) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+    setFilterValues((prev) => ({ ...prev, [key]: value }));
   };
-
-  useEffect(() => {
-    setReports(filterTheReports);
-  }, [setReports, filterTheReports]);
-
-  function handleDownload() {
-    if (isLoading) {
-      setNotification({
-        type: "Info",
-        message: "Fetching reports from the server. Please wait a moment.",
-      });
-      return;
-    }
-          try {
-            handleDownload(filteredReports, cachedResults);
-    } catch (error) {
-      if (error instanceof Error) {
-        setNotification({
-          type: "Error",
-          message: error.message,
-        });
-      }
-      console.error(error);
-    } finally {
-      setTimeout(() => {
-        URL.revokeObjectURL(anchorElement.href);
-      }, 1000);
-      anchorElement.remove();
-    }
-  }
 
   return (
     <div className="filter-report-section">
@@ -104,19 +76,37 @@ export default function FilterReports() {
       <button
         className="download-container"
         title="download"
-        onClick={handleDownload}
+        onClick={() => {
+          if (isLoading) {
+            setNotification({
+              type: "Info",
+              message:
+                "Fetching reports from the server. Please wait a moment.",
+            });
+            return;
+          }
+          try {
+            handleDownload(filteredReports, cachedResults);
+          } catch (error) {
+            if (error instanceof Error) {
+              setNotification({
+                type: "Error",
+                message: error.message,
+              });
+            }
+            console.error(error);
+          }
+        }}
       >
         <img src={downloadIcon} alt="Download" />
       </button>
       <form className="filter-report-form">
         <fieldset>
           <legend>Filter by Year</legend>
-          {/* <label htmlFor="date-input">From: </label>
-          <input type="date" name="date" id="date-input" className="date-input"/> */}
           <select
             name="date-input"
             id="date-input-input"
-            value={filters.yearTaken}
+            value={filterValues.yearTaken}
             onChange={(e) => {
               const selectedYear = e.target.value;
               updateFilter(
@@ -134,12 +124,11 @@ export default function FilterReports() {
           </select>
         </fieldset>
         <fieldset>
-          <legend>Filter by severity</legend>
-          <label htmlFor="select-input"></label>
+          <legend>Filter by severity</legend>{" "}
           <select
             name="address-category"
             id="select-input"
-            value={filters.severity}
+            value={filterValues.severity}
             onChange={(e) => {
               const selectedCategory = e.target.value as Report["severity"];
               updateFilter("severity", selectedCategory);
@@ -155,15 +144,13 @@ export default function FilterReports() {
         </fieldset>
         <fieldset>
           <legend>Filter by location</legend>
-          <label htmlFor="location-input"></label>
           <select
             name="location-category"
             id="location-input"
-            value={filters.location}
+            value={filterValues.location}
             onChange={(e) => {
               const selectedSubCounty = e.target.value;
               updateFilter("location", selectedSubCounty);
-              // getSubCounty(selectedSubCounty);
             }}
           >
             <option value="">--Please choose an option--</option>
@@ -179,11 +166,10 @@ export default function FilterReports() {
         </fieldset>
         <fieldset>
           <legend>Filter by street name</legend>
-          <label htmlFor="street-input"></label>
           <select
             name="street-name"
             id="street-input"
-            value={filters.streetName}
+            value={filterValues.streetName}
             onChange={(e) => {
               const selectedStreet = e.target.value;
               updateFilter("streetName", selectedStreet);
@@ -199,11 +185,10 @@ export default function FilterReports() {
         </fieldset>
         <fieldset>
           <legend>Filter by resolution status</legend>
-          <label htmlFor="select-input"></label>
           <select
             name="resolution-category"
             id="resolution-input"
-            value={filters.reportStatus}
+            value={filterValues.reportStatus}
             onChange={(e) => {
               const selectedCategory = e.target.value as Report["status"];
               updateFilter("reportStatus", selectedCategory);
@@ -222,11 +207,10 @@ export default function FilterReports() {
         </fieldset>
         <fieldset>
           <legend>Filter by resolution Quality</legend>
-          <label htmlFor="select-input"></label>
           <select
             name="resolution-category"
             id="resolution-quality-input"
-            value={filters.resolutionQuality}
+            value={filterValues.resolutionQuality}
             onChange={(e) => {
               const selectedCategory = e.target.value as Extract<
                 Report,
@@ -234,7 +218,7 @@ export default function FilterReports() {
               >["resolution"]["quality"];
               updateFilter("resolutionQuality", selectedCategory);
             }}
-            disabled={filters.reportStatus !== "resolved"}
+            disabled={filterValues.reportStatus !== "resolved"}
           >
             <option value="">--Please choose an option--</option>
             {Array.from(resolutionQuality).map((item, index) => (
@@ -246,10 +230,10 @@ export default function FilterReports() {
         </fieldset>
         <button
           type="reset"
-          title="Reset filters"
+          title="Reset filter"
           className="reset-btn"
           onClick={() => {
-            setFilters(defaultFilterValues);
+            setFilterValues(defaultFilterValues);
           }}
         >
           Reset
