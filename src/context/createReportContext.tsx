@@ -1,18 +1,11 @@
-import {
-  createContext,
-  type Dispatch,
-  type RefObject,
-  type SetStateAction,
-} from "react";
-import type { NotificationType, Report } from "../pages/map/types";
+import { createContext, type Dispatch, type SetStateAction } from "react";
+import type { FilterValues, NotificationType } from "../pages/map/types";
 
 interface ReportContextType {
-  reports: Report[];
-  isLoading: boolean;
+  filterValues: FilterValues;
   notification: NotificationType | null;
   setNotification: Dispatch<SetStateAction<NotificationType | null>>;
-  setReports: Dispatch<SetStateAction<Report[]>>;
-  originalReports: RefObject<Report[]>;
+  setFilterValues: Dispatch<SetStateAction<FilterValues>>;
 }
 
 export const ReportContext = createContext<ReportContextType | null>(null);
