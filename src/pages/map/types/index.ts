@@ -142,5 +142,18 @@ export interface ReportCoordinates {
   lng: number;
 }
 
+type ResolutionQuality = Extract<
+  Report,
+  { status: "resolved" }
+>["resolution"]["quality"];
+export interface FilterValues {
+  yearTaken: number | "";
+  severity: "" | Report["severity"];
+  reportStatus: "" | Report["status"];
+  resolutionQuality: "" | ResolutionQuality;
+  location: string;
+  streetName: string;
+}
+
 export type ServerResponse = SuccessServerResponse | ErrorServerResponse;
 export type FetchReportsResponse = FetchSuccessResponse | FetchErrorResponse;

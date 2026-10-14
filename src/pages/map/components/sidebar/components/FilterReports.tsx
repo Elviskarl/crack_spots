@@ -11,28 +11,12 @@ import handleDownload from "../../../utils/handleDownLoad";
 import { Notifications } from "./Notifications";
 // context
 import useMapContext from "../../../hooks/getMapContext";
-import useReportContext from "../../../hooks/getReportsContex";
-
-type ResolutionQuality = Extract<
-  Report,
-  { status: "resolved" }
->["resolution"]["quality"];
-interface FilterValues {
-  yearTaken: number | "";
-  severity: "" | Report["severity"];
-  reportStatus: "" | Report["status"];
-  resolutionQuality: "" | ResolutionQuality;
-  location: string;
-  streetName: string;
-}
-const defaultFilterValues: FilterValues = {
-  yearTaken: "",
-  location: "",
-  resolutionQuality: "",
-  reportStatus: "",
-  severity: "",
-  streetName: "",
-};
+import useReportContext from "../../../hooks/getReportsContext";
+// hooks
+import useReports from "../../../hooks/useReports";
+import useFilteredReports from "../../../hooks/filteredReports";
+// data
+import { defaultFilterValues } from "../../../data";
 
 export default function FilterReports() {
   const [filters, setFilters] = useState<FilterValues>(defaultFilterValues);
