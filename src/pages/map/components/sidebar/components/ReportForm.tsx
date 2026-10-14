@@ -8,8 +8,6 @@ import type {
 // Helper Fn
 import { uploadReports } from "../../../utils/uploadReports";
 import { Notifications } from "./Notifications";
-// styles
-import "../../../styles/report-form.css";
 // context
 import useReportContext from "../../../hooks/getReportsContext";
 import useMapContext from "../../../hooks/getMapContext";
