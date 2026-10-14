@@ -33,6 +33,9 @@ div.form-container {
   gap: 1rem;
 }
 /* form element sub-styles */
+.drop-area-text {
+  font-size: var(--text-paragraph);
+}
 .submit-button {
   align-self: center;
   transition: all 0.3s ease-in-out;

@@ -76,6 +76,7 @@
 }
 .list-heading {
   text-decoration: underline var(--secondary-shade);
+  font-size: var(--text-paragraph);
 }
 .list-heading-toggle {
   display: flex;

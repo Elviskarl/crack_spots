@@ -203,7 +203,7 @@ export default function FormComponent({
           hidden
         />
         <div className="drop-area-container">
-          <span> Drag & Drop or </span>
+          <span className="drop-area-text"> Drag & Drop or </span>
           <label htmlFor={fileInputId} className="upload-file-label">
             Take or upload a photo
           </label>
