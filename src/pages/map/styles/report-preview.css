@@ -23,6 +23,9 @@ caption {
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
 }
+tr{
+  font-size: var(--text-paragraph);
+}
 th {
   background-color: rgba(245, 209, 142, 0.897);
 }
