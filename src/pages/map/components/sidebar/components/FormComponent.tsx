@@ -24,26 +24,21 @@ import useProcessImage from "../../../hooks/processImage";
 import useMapContext from "../../../hooks/getMapContext";
 // styles
 import "../../../styles/formComponent.css";
+// types
+import type {
+  CreateFormComponentProps,
+  ResolveFormComponentProps,
+} from "../../../types";
+import useResolveReport from "../../../hooks/useResolveReport";
 
-interface FormComponentProps {
-  file: File | null;
-  onFileProcessed: (file: File) => void;
-  createPreview: (file: File) => void;
-  resetPreview: () => void;
-  confirmCoordinates: (data: CoordinateData) => void;
-  onNotified: (notification: NotificationType) => void;
-  onResponseLoad: (isLoading: boolean) => void;
-  onImageLoad: (isLoading: boolean) => void;
-  reportCoordinates: CoordinateData | null;
-  cleanUp?: () => void;
-  uploadFunction: (url: string, formData: FormData) => Promise<ServerResponse>;
-  isLoading: boolean;
-  isResolving: boolean;
-  url: string;
-  interestedReport?: Report;
-}
-
-export default function FormComponent({
+export default function FormComponent(
+  props: CreateFormComponentProps | ResolveFormComponentProps,
+) {
+  const { isCorrecting } = useMapContext();
+  const { processImage } = useProcessImage();
+  const fileInputId = useId();
+  const { isLoading: isReportLoading } = useReports();
+  const {
   createPreview,
   resetPreview,
   onFileProcessed,

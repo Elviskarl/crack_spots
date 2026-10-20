@@ -105,14 +105,12 @@ export default function ReportForm(props: ListItemOptional) {
         resetPreview={resetPreview}
         file={file}
         reportCoordinates={reportCoordinates}
-        onResponseLoad={setIsResponseLoading}
         onFileProcessed={setFile}
         isLoading={isLoading}
         onNotified={setNotification}
-        uploadFunction={uploadReports}
-        isResolving={false}
         url="https://crackspots-server.onrender.com/api/v1/reports"
         onImageLoad={setIsLoading}
+        mode="Create"
       />
 
       <div className="form-container report-upload-form">

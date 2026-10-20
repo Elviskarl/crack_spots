@@ -153,5 +153,28 @@ export interface FilterValues {
   streetName: string;
 }
 
+interface FormComponentProps {
+  file: File | null;
+  onFileProcessed: (file: File) => void;
+  createPreview: (file: File) => void;
+  resetPreview: () => void;
+  confirmCoordinates: (data: CoordinateData) => void;
+  onNotified: (notification: NotificationType) => void;
+  onImageLoad: (isLoading: boolean) => void;
+  reportCoordinates: CoordinateData | null;
+  cleanUp?: () => void;
+  isLoading: boolean;
+  url: string;
+}
+
+export interface CreateFormComponentProps extends FormComponentProps {
+  mode: "Create";
+}
+
+export interface ResolveFormComponentProps extends FormComponentProps {
+  interestedReport: Report;
+  mode: "Resolve";
+}
+
 export type ServerResponse = SuccessServerResponse | ErrorServerResponse;
-export type FetchReportsResponse = FetchSuccessResponse | FetchErrorResponse;
+export type FetchReportsResponse = FetchSuccessResponse | ErrorServerResponse;

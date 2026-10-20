@@ -118,17 +118,15 @@ export default function ResolveReport(props: ListItemOptional) {
           createPreview={createPreview}
           resetPreview={resetPreview}
           file={file}
-          isResolving={isResolving}
-          uploadFunction={resolveIssues}
           isLoading={isLoading}
           onFileProcessed={setFile}
           onNotified={setNotification}
-          onResponseLoad={setIsResponseLoading}
           reportCoordinates={reportCoordinates}
           url="https://crackspots-server.onrender.com/api/v1/resolve"
           interestedReport={interestedReport}
           cleanUp={() => setInterestedReport(null)}
           onImageLoad={setIsLoading}
+          mode="Resolve"
         />
       )}
       <LoadingScreen category="report" condition={isResponseLoading} />
