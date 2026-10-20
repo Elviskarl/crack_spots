@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 
 // react query
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 
 // styles for the leaflet marker
 import * as L from "leaflet";
@@ -13,6 +13,7 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 import "./index.css";
 import "./typography.css";
+import { queryClient } from "./queryClient.ts";
 
 type LeafletIconDefaultWithPrivateUrl = L.Icon.Default & {
   _getIconUrl?: () => string;
@@ -25,8 +26,6 @@ L.Icon.Default.mergeOptions({
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
 });
-
-const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
