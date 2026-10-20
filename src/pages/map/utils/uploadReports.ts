@@ -10,7 +10,12 @@ export async function uploadReports(param: string, data: FormData) {
 
     const response = await fetch(request);
 
-    const result = (await response.json()) as ServerResponse;
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Something went wrong");
+    }
+
+    const result = (await response.json()) as CreateReportResponse;
 
     if (!result.success) {
       throw new FetchError(result.message);

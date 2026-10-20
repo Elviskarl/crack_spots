@@ -10,7 +10,8 @@ export async function fetchReports(param: string, signal: AbortSignal) {
   const response = await fetch(request);
 
   if (!response.ok) {
-    throw new Error(`Request failed: ${response.status}`);
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Something went wrong");
   }
 
   const serverData = (await response.json()) as FetchReportsResponse;

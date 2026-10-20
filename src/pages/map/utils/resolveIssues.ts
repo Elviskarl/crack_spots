@@ -9,6 +9,12 @@ export default async function resolveIssues(url: string, data: FormData) {
     });
 
     const response = await fetch(request);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Something went wrong");
+    }
+
     const result = (await response.json()) as ServerResponse;
 
     if (!result.success) {
