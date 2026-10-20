@@ -35,7 +35,7 @@ export default function MapComponentContainer() {
       )}
       {notification && (
         <Notifications
-          message={notification?.message}
+          message={notification.message}
           func={setNotification}
           type={notification.type}
         />
