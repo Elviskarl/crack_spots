@@ -1,5 +1,5 @@
 import { FetchError } from "../../../components/error/FetchError";
-import type { ServerResponse } from "../types";
+import type { CreateReportResponse } from "../types";
 
 export async function uploadReports(param: string, data: FormData) {
   try {

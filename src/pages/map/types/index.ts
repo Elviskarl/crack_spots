@@ -128,15 +128,13 @@ interface FetchSuccessResponse {
   success: true;
   data: Report[];
 }
-interface FetchErrorResponse {
-  success: false;
-  message: string;
+
+export interface CreateReportResponse extends SuccessServerResponse {
+  report: unResolvedReport;
 }
-
-// export interface UploadResponse extends BaseResponse {
-//   message: string;
-// }
-
+export interface ResolveReportResponse extends SuccessServerResponse {
+  report: ResolvedReport;
+}
 export interface ReportCoordinates {
   lat: number;
   lng: number;
