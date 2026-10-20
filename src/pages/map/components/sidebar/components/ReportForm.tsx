@@ -6,7 +6,6 @@ import type {
   NotificationType,
 } from "../../../types";
 // Helper Fn
-import { uploadReports } from "../../../utils/uploadReports";
 import { Notifications } from "./Notifications";
 // context
 import useReportContext from "../../../hooks/getReportsContext";
@@ -15,6 +14,8 @@ import useMapContext from "../../../hooks/getMapContext";
 import ReportPreview from "./ReportPreview";
 import FormComponent from "./FormComponent";
 import LoadingScreen from "../../../../../components/LoadingScreen";
+// Hooks
+import useCreateReport from "../../../hooks/useCreateReport";
 
 export default function ReportForm(props: ListItemOptional) {
   const [file, setFile] = useState<File | null>(null);
@@ -24,8 +25,8 @@ export default function ReportForm(props: ListItemOptional) {
   const [notification, setNotification] = useState<NotificationType | null>(
     null,
   );
-  const [isResponseLoading, setIsResponseLoading] = useState(false);
   const imagePreviewUrl = useRef<string | null>(null);
+  const { isPending } = useCreateReport(setNotification);
 
   const {
     setInitialReportCoordinates,
@@ -114,7 +115,7 @@ export default function ReportForm(props: ListItemOptional) {
       />
 
       <div className="form-container report-upload-form">
-        <LoadingScreen category="report" condition={isResponseLoading} />
+        <LoadingScreen category="report" condition={isPending} />
         {notification && (
           <Notifications
             message={notification.message}

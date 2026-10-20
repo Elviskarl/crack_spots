@@ -16,10 +16,11 @@ import { Notifications } from "./components/Notifications";
 import ReportPreview from "./components/ReportPreview";
 import FormComponent from "./components/FormComponent";
 // Helper Fn
-import resolveIssues from "../../utils/resolveIssues";
 // context
 import useMapContext from "../../hooks/getMapContext";
 import useReportContext from "../../hooks/getReportsContext";
+// hooks
+import useResolveReport from "../../hooks/useResolveReport";
 
 export default function ResolveReport(props: ListItemOptional) {
   const isResolving = true;
@@ -28,7 +29,6 @@ export default function ResolveReport(props: ListItemOptional) {
   const [file, setFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [coordinates, setCoordinates] = useState<CoordinateData | null>(null);
-  const [isResponseLoading, setIsResponseLoading] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const imagePreviewUrl = useRef<string | null>(null);
   const { setInitialReportCoordinates, correctedReportCoordinates } =
@@ -38,6 +38,7 @@ export default function ResolveReport(props: ListItemOptional) {
     null,
   );
   const { setCollapsed } = props;
+  const { isPending } = useResolveReport(setNotification);
 
   useEffect(() => {
     if (notification && notificationRef.current) {
@@ -129,7 +130,7 @@ export default function ResolveReport(props: ListItemOptional) {
           mode="Resolve"
         />
       )}
-      <LoadingScreen category="report" condition={isResponseLoading} />
+      <LoadingScreen category="report" condition={isPending} />
       {notification && (
         <div className="notifications-scroll-container" ref={notificationRef}>
           <Notifications

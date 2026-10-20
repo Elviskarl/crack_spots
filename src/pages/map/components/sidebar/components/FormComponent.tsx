@@ -4,15 +4,10 @@ import {
   type DragEvent,
   type SubmitEvent,
 } from "react";
+// components
 import LoadingScreen from "../../../../../components/LoadingScreen";
+// Errors
 import { CustomError } from "../../../../../components/error/CustomError";
-// types
-import type {
-  CoordinateData,
-  NotificationType,
-  Report,
-  ServerResponse,
-} from "../../../types";
 // data
 import { severityValues } from "../../../data";
 // helper Fn
@@ -20,6 +15,7 @@ import { resolveData } from "../../../utils/utils";
 // hooks
 import useReports from "../../../hooks/useReports";
 import useProcessImage from "../../../hooks/processImage";
+import useCreateReport from "../../../hooks/useCreateReport";
 // context
 import useMapContext from "../../../hooks/getMapContext";
 // styles
@@ -39,26 +35,21 @@ export default function FormComponent(
   const fileInputId = useId();
   const { isLoading: isReportLoading } = useReports();
   const {
-  createPreview,
-  resetPreview,
-  onFileProcessed,
-  file,
-  confirmCoordinates,
-  onNotified,
-  onResponseLoad,
-  reportCoordinates,
-  uploadFunction,
-  isLoading,
-  isResolving,
-  url,
-  interestedReport,
-  cleanUp,
-  onImageLoad,
-}: FormComponentProps) {
-  const { isCorrecting } = useMapContext();
-  const { processImage } = useProcessImage();
-  const fileInputId = useId();
-  const { isLoading: isReportLoading } = useReports();
+    createPreview,
+    resetPreview,
+    onFileProcessed,
+    file,
+    confirmCoordinates,
+    onNotified,
+    reportCoordinates,
+    isLoading,
+    url,
+    cleanUp,
+    onImageLoad,
+    mode,
+  } = props;
+  const createReportMutation = useCreateReport(onNotified);
+  const resolveReportMutation = useResolveReport(onNotified);
 
   async function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.currentTarget.files?.[0];
@@ -83,16 +74,17 @@ export default function FormComponent(
     try {
       const { data, resizedImage } = await processImage({ file });
 
-      if (isResolving && interestedReport) {
+      if (mode === "Resolve") {
         resolveData(
           {
-            GPSLongitude: interestedReport.location.coordinates[0],
-            GPSLatitude: interestedReport.location.coordinates[1],
-            DateTimeOriginal: interestedReport.dateTaken,
+            GPSLongitude: props.interestedReport.location.coordinates[0],
+            GPSLatitude: props.interestedReport.location.coordinates[1],
+            DateTimeOriginal: props.interestedReport.dateTaken,
           },
           data,
         );
       }
+
       onFileProcessed(resizedImage);
       createPreview(resizedImage);
       confirmCoordinates(data);
@@ -127,7 +119,6 @@ export default function FormComponent(
       return;
     }
 
-    onResponseLoad(true);
     try {
       if (!file) {
         throw new CustomError("MISSING_FILE", "Image file is missing.");
@@ -145,16 +136,11 @@ export default function FormComponent(
       formData.append("coordinates", JSON.stringify(reportCoordinates));
       formData.append("file", file);
 
-      if (interestedReport) {
-        formData.append("_id", interestedReport._id);
-      }
-
-      const results = await uploadFunction(url, formData);
-      if (results.success) {
-        onNotified({
-          type: "Success",
-          message: `Upload successful: ${results.message}.`,
-        });
+      if (mode === "Resolve") {
+        formData.append("_id", props.interestedReport._id);
+        await resolveReportMutation.mutateAsync({ url, formData });
+      } else {
+        await createReportMutation.mutateAsync({ url, formData });
       }
     } catch (error) {
       if (error instanceof CustomError) {
@@ -173,7 +159,6 @@ export default function FormComponent(
     } finally {
       // Only clear on success
       resetPreview();
-      onResponseLoad(false);
       if (cleanUp) {
         cleanUp();
       }
@@ -209,7 +194,7 @@ export default function FormComponent(
 
       <LoadingScreen category="image" condition={isLoading} />
       {reportCoordinates &&
-        (isResolving ? (
+        (mode === "Resolve" ? (
           <>
             <fieldset className="repair-quality-fieldset">
               <legend>Repair Quality</legend>
@@ -266,7 +251,15 @@ export default function FormComponent(
         >
           clear Form
         </button>
-        <button className="submit-button" type="submit" disabled={isCorrecting}>
+        <button
+          className="submit-button"
+          type="submit"
+          disabled={
+            isCorrecting ||
+            createReportMutation.isPending ||
+            resolveReportMutation.isPending
+          }
+        >
           submit
         </button>
       </div>
