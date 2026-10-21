@@ -237,9 +237,11 @@ export default function Documentation() {
               </p>
               <p>
                 This endpoint returns a response object containing a{" "}
-                <span className="response-highlight">success</span> flag and an{" "}
+                <span className="response-highlight">success</span> flag, an{" "}
                 <span className="response-highlight">array</span> of report
-                objects.
+                objects and a{" "}
+                <span className="response-highlight">message</span> confirming
+                the reports were fetched successfully.
               </p>
               <CodeBlock content={serverResponseInterface} />
             </div>
@@ -252,9 +254,10 @@ export default function Documentation() {
               </p>
               <p>
                 This endpoint returns a response object containing a{" "}
-                <span className="response-highlight">success</span> flag and an{" "}
+                <span className="response-highlight">success</span> flag, a{" "}
                 <span className="response-highlight">message</span> confirming a
-                report has been created.
+                report has been created and the created{" "}
+                <span className="response-highlight">report</span>.
               </p>
               <p>
                 The request must use a{" "}
@@ -315,9 +318,10 @@ export default function Documentation() {
               </p>
               <p>
                 This endpoint returns a response object containing a{" "}
-                <span className="response-highlight">success</span> flag and an{" "}
+                <span className="response-highlight">success</span> flag, a{" "}
                 <span className="response-highlight">message</span> confirming
-                the report was resolved.
+                the report was resolved and the{" "}
+                <span className="response-highlight">resolved report</span>.
               </p>
               <p className="important-paragraph">
                 <span className="important-note">NOTE</span>

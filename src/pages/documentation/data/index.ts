@@ -1,5 +1,6 @@
 export const serverResponseInterface = `interface ApiResponse {
     success: boolean;
+    message: string;
     data: Report[];
 }`;
 export const reportInterface = `interface Report {
