@@ -1,5 +1,6 @@
 import {
   useId,
+  useState,
   type ChangeEvent,
   type DragEvent,
   type SubmitEvent,
@@ -30,6 +31,7 @@ import useResolveReport from "../../../hooks/useResolveReport";
 export default function FormComponent(
   props: CreateFormComponentProps | ResolveFormComponentProps,
 ) {
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
   const { isCorrecting } = useMapContext();
   const { processImage } = useProcessImage();
   const fileInputId = useId();
@@ -60,6 +62,9 @@ export default function FormComponent(
 
   function handleDragOver(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
+    if (!isDraggingOver) {
+      setIsDraggingOver(true);
+    }
   }
   async function handleDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
@@ -67,6 +72,10 @@ export default function FormComponent(
     if (file) {
       await processFile(file);
     }
+    setIsDraggingOver(false);
+  }
+  function handleDragLeave() {
+    setIsDraggingOver(false);
   }
 
   async function processFile(file: File) {
@@ -171,9 +180,10 @@ export default function FormComponent(
       encType="multipart/form-data"
     >
       <div
-        className="draggable-container"
+        className={`draggable-container ${isDraggingOver ? "drag-over" : ""}`}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
+        onDragLeave={handleDragLeave}
         hidden={isLoading || !!reportCoordinates}
       >
         <input

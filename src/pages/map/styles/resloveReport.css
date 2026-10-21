@@ -56,6 +56,13 @@ textarea {
 .resolve-reports-container .draggable-container {
   width: 100%;
 }
+.draggable-container {
+  /* background: transparent; */
+  transition: background-color 0.3s linear;
+}
+.draggable-container.drag-over {
+  background: rgba(66, 63, 63, 0.5);
+}
 .resolve-reports-container .image-details-container {
   width: 100%;
 }
