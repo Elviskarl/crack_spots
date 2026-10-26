@@ -26,7 +26,7 @@ export default function ReportForm(props: ListItemOptional) {
     null,
   );
   const imagePreviewUrl = useRef<string | null>(null);
-  const { isPending } = useCreateReport(setNotification);
+  const createReportMutation = useCreateReport(setNotification);
 
   const {
     setInitialReportCoordinates,
@@ -112,10 +112,14 @@ export default function ReportForm(props: ListItemOptional) {
         url="https://crackspots-server.onrender.com/api/v1/reports"
         onImageLoad={setIsLoading}
         mode="Create"
+        createReportMutation={createReportMutation}
       />
 
       <div className="form-container report-upload-form">
-        <LoadingScreen category="report" condition={isPending} />
+        <LoadingScreen
+          category="report"
+          condition={createReportMutation.isPending}
+        />
         {notification && (
           <Notifications
             message={notification.message}

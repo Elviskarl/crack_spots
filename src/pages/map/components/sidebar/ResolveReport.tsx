@@ -38,7 +38,7 @@ export default function ResolveReport(props: ListItemOptional) {
     null,
   );
   const { setCollapsed } = props;
-  const { isPending } = useResolveReport(setNotification);
+  const resolveReportMutation = useResolveReport(setNotification);
 
   useEffect(() => {
     if (notification && notificationRef.current) {
@@ -128,9 +128,13 @@ export default function ResolveReport(props: ListItemOptional) {
           cleanUp={() => setInterestedReport(null)}
           onImageLoad={setIsLoading}
           mode="Resolve"
+          resolveReportMutation={resolveReportMutation}
         />
       )}
-      <LoadingScreen category="report" condition={isPending} />
+      <LoadingScreen
+        category="report"
+        condition={resolveReportMutation.isPending}
+      />
       {notification && (
         <div className="notifications-scroll-container" ref={notificationRef}>
           <Notifications
