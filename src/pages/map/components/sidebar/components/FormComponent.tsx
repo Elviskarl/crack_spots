@@ -16,7 +16,6 @@ import { resolveData } from "../../../utils/utils";
 // hooks
 import useReports from "../../../hooks/useReports";
 import useProcessImage from "../../../hooks/processImage";
-import useCreateReport from "../../../hooks/useCreateReport";
 // context
 import useMapContext from "../../../hooks/getMapContext";
 // styles
@@ -26,8 +25,6 @@ import type {
   CreateFormComponentProps,
   ResolveFormComponentProps,
 } from "../../../types";
-import useResolveReport from "../../../hooks/useResolveReport";
-
 export default function FormComponent(
   props: CreateFormComponentProps | ResolveFormComponentProps,
 ) {
@@ -50,8 +47,6 @@ export default function FormComponent(
     onImageLoad,
     mode,
   } = props;
-  const createReportMutation = useCreateReport(onNotified);
-  const resolveReportMutation = useResolveReport(onNotified);
 
   async function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.currentTarget.files?.[0];
@@ -147,9 +142,9 @@ export default function FormComponent(
 
       if (mode === "Resolve") {
         formData.append("_id", props.interestedReport._id);
-        await resolveReportMutation.mutateAsync({ url, formData });
+        await props.resolveReportMutation.mutateAsync({ url, formData });
       } else {
-        await createReportMutation.mutateAsync({ url, formData });
+        await props.createReportMutation.mutateAsync({ url, formData });
       }
     } catch (error) {
       if (error instanceof CustomError) {
@@ -266,8 +261,9 @@ export default function FormComponent(
           type="submit"
           disabled={
             isCorrecting ||
-            createReportMutation.isPending ||
-            resolveReportMutation.isPending
+            (mode === "Create"
+              ? props.createReportMutation.isPending
+              : props.resolveReportMutation.isPending)
           }
         >
           submit

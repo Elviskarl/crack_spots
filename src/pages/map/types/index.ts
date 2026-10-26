@@ -1,3 +1,4 @@
+import type { UseMutationResult } from "@tanstack/react-query";
 import type { Dispatch, RefObject, SetStateAction } from "react";
 
 interface BaseReport {
@@ -169,11 +170,29 @@ interface FormComponentProps {
 
 export interface CreateFormComponentProps extends FormComponentProps {
   mode: "Create";
+  createReportMutation: UseMutationResult<
+    CreateReportResponse,
+    Error,
+    {
+      url: string;
+      formData: FormData;
+    },
+    unknown
+  >;
 }
 
 export interface ResolveFormComponentProps extends FormComponentProps {
   interestedReport: Report;
   mode: "Resolve";
+  resolveReportMutation: UseMutationResult<
+    ResolveReportResponse,
+    Error,
+    {
+      url: string;
+      formData: FormData;
+    },
+    unknown
+  >;
 }
 
 export type ServerResponse = SuccessServerResponse | ErrorServerResponse;
